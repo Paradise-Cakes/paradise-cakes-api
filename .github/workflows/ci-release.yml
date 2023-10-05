@@ -1,0 +1,49 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # - name: Run unit tests
+      #   run: |
+      #     # Add commands to run your unit tests here
+
+      - name: Login to ECR
+        run: |
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 132899756990.dkr.ecr.us-east-1.amazonaws.com
+
+      - name: Build and push Lambda Docker image to ECR
+        run: |
+          docker build -t paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} .
+          docker tag paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA}
+          docker push 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy Terraform
+        run: |
+          cd terraform-directory
+          terraform init
+          terraform apply -auto-approve
