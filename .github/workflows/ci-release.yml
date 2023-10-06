@@ -50,10 +50,12 @@ jobs:
           registry-type: public
 
       - name: Build and push Lambda Docker image to ECR
-        run: |
-          docker build -t paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} .
-          docker tag paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA}
-          docker push 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA}
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./lambdas/Dockerfile
+          push: true
+          tags: paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA}
     
   deploy:
     needs: ecr-build-push-us-east-1
