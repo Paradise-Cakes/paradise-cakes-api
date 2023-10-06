@@ -26,6 +26,11 @@ jobs:
       #   run: |
       #     # Add commands to run your unit tests here
 
+  ecr-build-push-us-east-1:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Set GIT variables
         run: |
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
@@ -38,7 +43,6 @@ jobs:
           role-session-name: paradise-cakes-api-terraform-deployer
           aws-region: us-east-1
 
-
       - name: Login to ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
@@ -50,9 +54,9 @@ jobs:
           docker build -t paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} .
           docker tag paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA}
           docker push 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA}
-
+    
   deploy:
-    needs: build
+    needs: ecr-build-push-us-east-1
     runs-on: ubuntu-latest
 
     steps:
