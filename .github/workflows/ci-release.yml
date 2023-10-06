@@ -32,9 +32,10 @@ jobs:
           echo "BRANCH_NAME=`echo ${GITHUB_REF_NAME} | tr / _`" >> $GITHUB_ENV
 
       - name: Configure AWS credentials for us-east-1
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: arn:aws:iam::132899756990:role/GitHubAction-AssumeRoleWithAction
+          role-to-assume: arn:aws:iam::132899756990:role/paradise-cakes-api-terraform-deployer
+          role-session-name: paradise-cakes-api-terraform-deployer
           aws-region: us-east-1
 
 
