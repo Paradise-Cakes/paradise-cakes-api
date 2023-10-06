@@ -5,6 +5,15 @@ on:
     branches:
       - main
 
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  id-token: write
+  pull-requests: write
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
