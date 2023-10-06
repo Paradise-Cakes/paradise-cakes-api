@@ -11,15 +11,29 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # - name: Run unit tests
       #   run: |
       #     # Add commands to run your unit tests here
 
-      - name: Login to ECR
+      - name: Set GIT variables
         run: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 132899756990.dkr.ecr.us-east-1.amazonaws.com
+          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+          echo "BRANCH_NAME=`echo ${GITHUB_REF_NAME} | tr / _`" >> $GITHUB_ENV
+
+      - name: Configure AWS credentials for us-east-1
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::132899756990:role/GitHubAction-AssumeRoleWithAction
+          aws-region: us-east-1
+
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registry-type: public
 
       - name: Build and push Lambda Docker image to ECR
         run: |
@@ -33,17 +47,38 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Set up AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Deploy Terraform
+      - name: Set GIT variables
         run: |
-          cd terraform-directory
-          terraform init
-          terraform apply -auto-approve
+          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+          echo "BRANCH_NAME=`echo ${GITHUB_REF_NAME} | tr / _`" >> $GITHUB_ENV
+      
+      - name: Configure AWS credentials for us-east-1
+        uses: aws-actions/configure-aws-credentials@v2.0.0
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2.0.0
+        with:
+          terraform_version: 1.2.7
+
+      - name: Terraform Init
+        id: tf-init-us-east-1
+        run: |
+          cd ${GITHUB_WORKSPACE}/terraform
+          terraform init \
+            --backend-config="bucket=paradise-cakes-state" \
+            --backend-config="key=remote-state.terraform.tfstate"
+
+      - name: Terraform Plan
+        run: |
+          cd ${GITHUB_WORKSPACE}/terraform
+      
+      - name: Terraform Apply
+        if: ${{ github.ref == 'refs/head/main' }}
+        run: |
+          cd ${GITHUB_WORKSPACE}/terraform
+          terraform apply --auto-approve tfplan.out
+          
+
+
