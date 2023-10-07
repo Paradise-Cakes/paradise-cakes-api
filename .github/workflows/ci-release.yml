@@ -55,7 +55,7 @@ jobs:
           context: ${{ env.GITHUB_WORKSPACE }}
           file: ./lambdas/Dockerfile
           push: true
-          tags: paradise-cakes-api-lambdas-us-east-1:${{ env.BRANCH_NAME }}-${{ env.SHORT_SHA }}
+          tags: paradise-cakes-api-lambdas-us-east-1
     
   deploy:
     needs: ecr-build-push-us-east-1
