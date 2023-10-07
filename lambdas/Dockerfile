@@ -1,9 +1,10 @@
 FROM public.ecr.aws/lambda/python:3.8
 
+RUN ls
+
 COPY . ${LAMBDA_TASK_ROOT}/
 
-RUN pip install poetry==1.4.2
-
-RUN poetry export --format requirements.txt --output requirements.txt --without-hashes
-
+RUN cd ${LAMBDA_TASK_ROOT} && \
+    python -m pip install poetry=1.4.2 && \
+    python export -f requirements.txt --without-hashes > requirements.txt
 CMD ["api.app"]
