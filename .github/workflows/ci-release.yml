@@ -52,7 +52,7 @@ jobs:
       - name: Build and push Lambda Docker image to ECR
         uses: docker/build-push-action@v4
         with:
-          context: ../../
+          context: ${{ env.GITHUB_WORKSPACE }}
           file: ./lambdas/Dockerfile
           push: true
           tags: paradise-cakes-api-lambdas-us-east-1:${{ env.BRANCH_NAME }}-${{ env.SHORT_SHA }}
