@@ -1,5 +1,7 @@
 FROM public.ecr.aws/lambda/python:3.8
 
+WORKDIR ../lambdas
+
 COPY . ${LAMBDA_TASK_ROOT}/
 
 RUN cd ${LAMBDA_TASK_ROOT} && \
