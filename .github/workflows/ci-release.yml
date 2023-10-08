@@ -61,10 +61,9 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr-east.outputs.registry }}
           REPOSITORY: paradise-cakes-api-lambdas-us-east-1
-          IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG ${GITHUB_WORKSPACE}/lambdas
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG 
+          docker build -t $REGISTRY/$REPOSITORY:${BRANCH_NAME}-${SHORT_SHA} ${GITHUB_WORKSPACE}/lambdas
+          docker push $REGISTRY/$REPOSITORY:${BRANCH_NAME}-${SHORT_SHA} 
         
   deploy:
     needs: ecr-build-push-us-east-1
