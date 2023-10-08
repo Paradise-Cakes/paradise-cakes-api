@@ -50,7 +50,7 @@ jobs:
           registry-type: public
 
       - name: Build and push Lambda Docker image to ECR
-        run: docker build -t 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${{ env.BRANCH_NAME }}-${{ env.SHORT_SHA }} ${{ env.GITHUB_WORKSPACE }}/lambdas
+        run: docker build -t 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${ BRANCH_NAME }-${ SHORT_SHA } ${ GITHUB_WORKSPACE }/lambdas
         
     
   deploy:
