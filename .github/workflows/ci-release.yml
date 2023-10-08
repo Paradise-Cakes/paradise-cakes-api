@@ -51,10 +51,13 @@ jobs:
         with:
           registry-type: public
 
-      - name: Build and push Lambda Docker image to ECR
-        run: docker build -t 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} ${GITHUB_WORKSPACE}/lambdas
+      - name: Docker build, tag us-east-1
+        run: docker build -t 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} \
+              ${GITHUB_WORKSPACE}/lambdas
         
-    
+      - name: Docker push us-east-1
+        run:  dokcer push 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA}
+        
   deploy:
     needs: ecr-build-push-us-east-1
     runs-on: ubuntu-latest
@@ -69,7 +72,10 @@ jobs:
           echo "BRANCH_NAME=`echo ${GITHUB_REF_NAME} | tr / _`" >> $GITHUB_ENV
       
       - name: Configure AWS credentials for us-east-1
-        uses: aws-actions/configure-aws-credentials@v2.0.0
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::132899756990:role/paradise-cakes-api-terraform-deployer
+          aws-region: us-east-1
       
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2.0.0
