@@ -88,9 +88,10 @@ jobs:
       - name: Terraform Plan
         run: |
           cd ${GITHUB_WORKSPACE}/terraform
+          terraform plan --out tfplan.out
       
       - name: Terraform Apply
-        if: ${{ github.ref == 'refs/head/main' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           cd ${GITHUB_WORKSPACE}/terraform
           terraform apply --auto-approve tfplan.out
