@@ -55,7 +55,7 @@ jobs:
         run: docker build -t 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} ${GITHUB_WORKSPACE}/lambdas
         
       - name: Docker push us-east-1
-        run:  dokcer push 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA}
+        run:  docker push 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA}
         
   deploy:
     needs: ecr-build-push-us-east-1
