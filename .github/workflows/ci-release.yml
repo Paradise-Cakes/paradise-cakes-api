@@ -31,6 +31,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Set GIT variables
         run: |
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
@@ -40,7 +43,6 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: arn:aws:iam::132899756990:role/paradise-cakes-api-terraform-deployer
-          role-session-name: paradise-cakes-api-terraform-deployer
           aws-region: us-east-1
 
       - name: Login to ECR
