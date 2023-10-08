@@ -82,8 +82,8 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}/terraform
           terraform init \
-            --backend-config="bucket=paradise-cakes-state" \
-            --backend-config="key=remote-state.terraform.tfstate"
+            --backend-config="bucket=paradise-cakes-api-tfstate" \
+            --backend-config="key=paradise-cakes-api.tfstate"
 
       - name: Terraform Plan
         run: |
