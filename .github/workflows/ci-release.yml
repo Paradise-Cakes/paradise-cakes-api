@@ -56,8 +56,8 @@ jobs:
         
       - name: Docker push us-east-1
         env:
-          REGISTRY: ${{ steps.login-ecr-east.outputs.registry }}
-        run:  docker push 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA}
+          REGISTRY: 132899756990.dkr.ecr.us-east-1.amazonaws.com/pc-ecr-repository
+        run:  docker push 212899756992.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA}
         
   deploy:
     needs: ecr-build-push-us-east-1
