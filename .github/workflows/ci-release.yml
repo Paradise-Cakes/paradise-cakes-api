@@ -43,8 +43,6 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: arn:aws:iam::132899756990:role/paradise-cakes-api-terraform-deployer
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
       - name: Login to ECR
@@ -52,13 +50,12 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
         with:
           registry-type: public
+          registry: 132899756990.dkr.ecr.us-east-1.amazonaws.com/pc-ecr-repository
 
       - name: Docker build, tag us-east-1
         run: docker build -t 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} ${GITHUB_WORKSPACE}/lambdas
         
       - name: Docker push us-east-1
-        env:
-          REGISTRY: 132899756990.dkr.ecr.us-east-1.amazonaws.com/pc-ecr-repository
         run:  docker push 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA}
         
   deploy:
