@@ -14,5 +14,5 @@ data "aws_route53_zone" "public" {
 
 resource "aws_acm_certificate_validation" "paradise_cakes_cloud" {
   certificate_arn         = aws_acm_certificate.paradise_cakes_cloud.arn
-  validation_record_fqdns = [for record in aws_route53_record.api_validation : record:fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.api_validation : record.fqdn]
 }
