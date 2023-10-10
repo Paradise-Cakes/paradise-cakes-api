@@ -6,6 +6,8 @@ authors = ["Anthony Viera <anthonyviera4@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+fastapi = "^0.103.2"
+mangum = "^0.17.0"
 
 [tool.poetry.dev-dependencies]
 

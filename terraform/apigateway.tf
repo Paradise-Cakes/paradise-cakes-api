@@ -9,7 +9,7 @@ resource "aws_api_gateway_resource" "proxy" {
   path_part   = "{proxy+}"
 }
 
-resource "aws_api_gateway_method" "get_example" {
+resource "aws_api_gateway_method" "paradise_cakes_proxy" {
   rest_api_id   = aws_api_gateway_rest_api.paradise_cakes_api.id
   resource_id   = aws_api_gateway_resource.proxy.id
   http_method   = "ANY"
@@ -46,4 +46,13 @@ resource "aws_api_gateway_base_path_mapping" "path_mapping_internal" {
   stage_name  = aws_api_gateway_stage.paradise_cakes.stage_name
   domain_name = aws_api_gateway_domain_name.paradise_cakes_cloud.domain_name
   base_path   = aws_api_gateway_stage.paradise_cakes.stage_name
+}
+
+resource "aws_api_gateway_integration" "paradise_cakes_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.paradise_cakes_api.id
+  resource_id             = aws_api_gateway_resource.proxy.resource_id
+  http_method             = aws_api_gateway_method.paradise_cakes_proxy.http_method
+  integration_http_method = "GET"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.app.invoke_arn
 }
