@@ -57,3 +57,23 @@ resource "aws_api_gateway_integration" "paradise_cakes_integration" {
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.app.invoke_arn
 }
+
+resource "aws_api_gateway_rest_api_policy" "paradise_cakes_api" {
+  rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Action": "execute-api:Invoke",
+      "Resource": "${aws_api_gateway_rest_api.paradise_cakes_api.execution_arn}"
+    }
+  ]
+}
+EOF
+}
