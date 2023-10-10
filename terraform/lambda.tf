@@ -8,6 +8,13 @@ resource "aws_lambda_function" "app" {
   memory_size = 1024
 
   image_config {
-    command = ["handler.handler"]
+    command = ["api.app"]
   }
+}
+
+resource "aws_lambda_permission" "allow_api_gateway_handler" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.app.arn
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = aws_api_gateway_rest_api.paradise_cakes_api.execution_arn
 }
