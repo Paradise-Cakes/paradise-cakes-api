@@ -29,7 +29,7 @@ resource "aws_iam_role_policy" "paradise_cakes_api_role_policy" {
       "Action": [
         "lambda:InvokeFunction",
       ],
-      "Resource": ["*"]
+      "Resource": "*"
     }
   ]
 }
