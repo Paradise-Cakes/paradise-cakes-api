@@ -26,7 +26,9 @@ resource "aws_iam_role_policy" "paradise_cakes_api_role_policy" {
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": "lambda:InvokeFunction",
+      "Action": [
+        "lambda:InvokeFunction"
+      ],
       "Resource": "*"
     }
   ]
