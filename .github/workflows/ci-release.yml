@@ -88,7 +88,7 @@ jobs:
       - name: Terraform Plan
         id: tf-plan-us-east-1
         env:
-          TF_VAR_docker_image_tag: "${{env.BBRANCH_NAME}}-${{env.SHORT_SHA}}"
+          TF_VAR_docker_image_tag: "${{env.BRANCH_NAME}}-${{env.SHORT_SHA}}"
         run: |
           cd ${GITHUB_WORKSPACE}/terraform
           terraform plan --out tfplan.out
