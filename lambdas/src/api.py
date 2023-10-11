@@ -1,6 +1,6 @@
 from mangum import Mangum
 from fastapi import FastAPI
-from src.routes import hello_message
+from src.routes.hello import hello_message
 
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
 
