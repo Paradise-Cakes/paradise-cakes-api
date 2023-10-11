@@ -8,7 +8,7 @@ resource "aws_lambda_function" "app" {
   memory_size = 1024
 
   image_config {
-    command = ["app.lambda_handler"]
+    command = ["src.api.lambda_handler"]
   }
 }
 
