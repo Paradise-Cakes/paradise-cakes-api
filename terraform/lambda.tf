@@ -3,13 +3,12 @@ resource "aws_lambda_function" "app" {
   package_type  = "Image"
   function_name = "paradise-cakes-api-us-east-1"
   role          = aws_iam_role.paradise_cakes_api_role.arn
-  handler       = "api.lambda_handler"
 
   timeout     = 30
   memory_size = 1024
 
   image_config {
-    command = ["api.lambda_handler"]
+    command = ["app.lambda_handler"]
   }
 }
 
