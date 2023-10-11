@@ -3,7 +3,7 @@ data "aws_route53_zone" "hosted_zone" {
 }
 
 resource "aws_route53_record" "www" {
-  zone_id = aws_route53_zone.hosted_zone.zone_id
+  zone_id = data.aws_route53_zone.hosted_zone.zone_id
   name    = "paradisecakes.cloud"
   type    = "A"
 
