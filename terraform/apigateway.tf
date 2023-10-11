@@ -71,7 +71,7 @@ resource "aws_api_gateway_rest_api_policy" "paradise_cakes_api" {
         "AWS": "*"
       },
       "Action": "execute-api:Invoke",
-      "Resource": "${aws_api_gateway_rest_api.paradise_cakes_api.execution_arn}"
+      "Resource": ["execute-api:/*"]
     }
   ]
 }
