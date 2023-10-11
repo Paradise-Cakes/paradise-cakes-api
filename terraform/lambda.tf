@@ -6,6 +6,10 @@ resource "aws_lambda_function" "app" {
 
   timeout     = 30
   memory_size = 1024
+
+  image_config {
+    command = ["api.lambda_handler"]
+  }
 }
 
 resource "aws_lambda_permission" "allow_api_gateway_handler" {
