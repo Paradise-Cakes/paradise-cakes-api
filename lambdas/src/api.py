@@ -1,11 +1,11 @@
 from mangum import Mangum
 from fastapi import FastAPI
-from src.routes.hello import hello_message
+from src.routes import hello
 
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
 
 
-app.include_router(hello_message.router)
+app.include_router(hello.router)
 
 
 def lambda_handler(event, context):
