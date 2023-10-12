@@ -1,5 +1,5 @@
 resource "aws_acm_certificate" "paradise_cakes_cloud" {
-  domain_name       = "api.paradisecakes.cloud"
+  domain_name       = "paradisecakes.cloud"
   validation_method = "DNS"
 }
 
