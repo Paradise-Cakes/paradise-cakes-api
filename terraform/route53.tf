@@ -4,12 +4,12 @@ data "aws_route53_zone" "hosted_zone" {
 
 resource "aws_route53_record" "www" {
   zone_id = data.aws_route53_zone.hosted_zone.zone_id
-  name    = "paradisecakes.cloud"
+  name    = "www.paradisecakes.cloud"
   type    = "A"
 
   alias {
-    name                   = aws_elb.main.dns_name
-    zone_id                = aws_elb.main.zone_id
+    name                   = aws_lb.paradise_cakes_lb.dns_name
+    zone_id                = aws_lb.paradise_cakes_lb.zone_id
     evaluate_target_health = true
   }
 }
