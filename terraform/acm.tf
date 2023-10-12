@@ -1,7 +1,7 @@
-# resource "aws_acm_certificate" "paradise_cakes_cloud" {
-#   domain_name       = "paradisecakes.cloud"
-#   validation_method = "DNS"
-# }
+resource "aws_acm_certificate" "paradise_cakes_cloud" {
+  domain_name       = "paradisecakes.cloud"
+  validation_method = "DNS"
+}
 
 # data "aws_route53_zone" "paradise_cakes_cloud" {
 #   name         = "paradisecakes.cloud"
