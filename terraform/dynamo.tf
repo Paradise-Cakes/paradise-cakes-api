@@ -7,12 +7,4 @@ resource "aws_dynamodb_table" "desserts" {
         name = "uid"
         type = "S"
     }
-    attribute {
-        name = "created"
-        type = "N"
-    }
-    attribute {
-        name = "last_updated"
-        type = "N"
-    }
 }
