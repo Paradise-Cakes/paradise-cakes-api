@@ -30,6 +30,15 @@ resource "aws_iam_policy" "paradise_cakes_api_policy" {
         Action   = "lambda:InvokeFunction",
         Effect   = "Allow",
         Resource = aws_lambda_function.app.arn
+      },
+      {
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Effect   = "Allow",
+        Resource = "*"
       }
     ]
   })
