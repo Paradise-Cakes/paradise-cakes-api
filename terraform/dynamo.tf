@@ -9,13 +9,13 @@ resource "aws_dynamodb_table" "desserts" {
   }
 
   attribute {
-    name = "type"
+    name = "dessert_type"
     type = "S"
   }
 
   global_secondary_index {
-    name            = "type-index"
-    hash_key        = "type"
+    name            = "dessert-type-index"
+    hash_key        = "dessert_type"
     projection_type = "ALL"
     read_capacity   = 5
     write_capacity  = 5
