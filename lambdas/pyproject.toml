@@ -8,6 +8,8 @@ authors = ["Anthony Viera <anthonyviera4@gmail.com>"]
 python = "^3.8"
 fastapi = "^0.103.2"
 mangum = "^0.17.0"
+boto3 = "^1.34.55"
+aws-lambda-powertools = "^2.34.2"
 
 [tool.poetry.dev-dependencies]
 
