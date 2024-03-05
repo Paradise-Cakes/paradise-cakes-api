@@ -11,7 +11,19 @@ client = boto3.client("dynamodb")
     "/desserts",
     status_code=200,
 )
-def get_desserts():
-  logger.info("Getting desserts")
-  response = client.scan(TableName="desserts")
+def get_desserts(type: str = None):
+  logger.info(f"Getting desserts of type {type}")
+
+  if type:
+    response = client.query(
+      TableName="desserts",
+      IndexName="type",
+      KeyConditionExpression="type = :type",
+      ExpressionAttributeValues={":type": {"S": type}}
+    )
+  else:
+    response = client.query(
+      TableName="desserts",
+      IndexName="uid",
+    )
   return response["Items"]
