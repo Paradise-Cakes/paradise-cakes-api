@@ -46,7 +46,7 @@ resource "aws_iam_policy" "paradise_cakes_api_policy" {
         Resource = "arn:aws:dynamodb:us-east-1:132899756990:table/desserts"
       },
       {
-        Action   = "dynamodb:Query",
+        Action   = "dynamodb:Scan",
         Effect   = "Allow",
         Resource = "arn:aws:dynamodb:us-east-1:132899756990:table/desserts"
       }
