@@ -12,9 +12,9 @@ client = boto3.client("dynamodb")
     status_code=200,
 )
 def get_desserts(dessert_type: str = None):
-  logger.info(f"Getting desserts of type {type}")
+  logger.info(f"Getting desserts of type {dessert_type}")
 
-  if type:
+  if dessert_type:
     response = client.query(
       TableName="desserts",
       IndexName="dessert-type-index",
