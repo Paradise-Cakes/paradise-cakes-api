@@ -22,39 +22,39 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-  ecr-build-push-us-east-1:
-    needs: build
-    runs-on: ubuntu-latest
+  # ecr-build-push-us-east-1:
+  #   needs: build
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Set GIT variables
-        run: |
-          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
-          echo "BRANCH_NAME=`echo ${GITHUB_REF_NAME} | tr / _`" >> $GITHUB_ENV
+  #     - name: Set GIT variables
+  #       run: |
+  #         echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+  #         echo "BRANCH_NAME=`echo ${GITHUB_REF_NAME} | tr / _`" >> $GITHUB_ENV
 
-      - name: Configure AWS credentials for us-east-1
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          role-to-assume: arn:aws:iam::132899756990:role/paradise-cakes-api-terraform-deployer
-          aws-region: us-east-1
+  #     - name: Configure AWS credentials for us-east-1
+  #       uses: aws-actions/configure-aws-credentials@v3
+  #       with:
+  #         role-to-assume: arn:aws:iam::132899756990:role/paradise-cakes-api-terraform-deployer
+  #         aws-region: us-east-1
 
-      - name: Login to ECR
-        id: login-ecr-east
-        uses: aws-actions/amazon-ecr-login@v2
+  #     - name: Login to ECR
+  #       id: login-ecr-east
+  #       uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build, tag, and push docker image to Amazon ECR
-        env:
-          REGISTRY: ${{ steps.login-ecr-east.outputs.registry }}
-          REPOSITORY: paradise-cakes-api-lambdas-us-east-1
-        run: |
-          docker build -t $REGISTRY/$REPOSITORY:${BRANCH_NAME}-${SHORT_SHA} ${GITHUB_WORKSPACE}/lambdas
-          docker push $REGISTRY/$REPOSITORY:${BRANCH_NAME}-${SHORT_SHA}
+  #     - name: Build, tag, and push docker image to Amazon ECR
+  #       env:
+  #         REGISTRY: ${{ steps.login-ecr-east.outputs.registry }}
+  #         REPOSITORY: paradise-cakes-api-lambdas-us-east-1
+  #       run: |
+  #         docker build -t $REGISTRY/$REPOSITORY:${BRANCH_NAME}-${SHORT_SHA} ${GITHUB_WORKSPACE}/lambdas
+  #         docker push $REGISTRY/$REPOSITORY:${BRANCH_NAME}-${SHORT_SHA}
 
   deploy:
-    needs: ecr-build-push-us-east-1
+    # needs: ecr-build-push-us-east-1
     runs-on: ubuntu-latest
 
     steps:
