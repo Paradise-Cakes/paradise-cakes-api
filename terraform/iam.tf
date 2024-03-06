@@ -46,10 +46,15 @@ resource "aws_iam_policy" "paradise_cakes_api_policy" {
         Resource = "arn:aws:dynamodb:us-east-1:132899756990:table/desserts/index/dessert-type-index"
       },
       {
-        Action   = "dynamodb:Scan",
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:UpdateItem"
+        ]
         Effect   = "Allow",
-        Resource = "arn:aws:dynamodb:us-east-1:132899756990:table/desserts"
-      }
+        Resource = "arn:aws:dynamodb:us-east-1:132899756990:table/*"
+      },
     ]
   })
 }
