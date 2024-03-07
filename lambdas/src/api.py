@@ -5,7 +5,7 @@ from src.routes import hello, get_desserts
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
 
 origins = [
-    "http://localhost*
+    "http://localhost*",
     "https://paradisecakesbymegan.com/"
 ]
 
