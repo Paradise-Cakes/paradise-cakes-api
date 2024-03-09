@@ -50,7 +50,8 @@ resource "aws_iam_policy" "paradise_cakes_api_policy" {
           "dynamodb:GetItem",
           "dynamodb:PutItem",
           "dynamodb:DeleteItem",
-          "dynamodb:UpdateItem"
+          "dynamodb:UpdateItem",
+          "dynamodb:Scan"
         ]
         Effect   = "Allow",
         Resource = "arn:aws:dynamodb:us-east-1:132899756990:table/*"
