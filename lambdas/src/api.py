@@ -5,10 +5,7 @@ from src.routes import hello, get_desserts
 
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
 
-origins = [
-    "http://localhost:5173",
-    "https://paradisecakesbymegan.com/"
-]
+origins = ["http://localhost:5173", "https://paradisecakesbymegan.com/"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,6 +18,7 @@ app.add_middleware(
 
 app.include_router(hello.router)
 app.include_router(get_desserts.router)
+
 
 def lambda_handler(event, context):
     handler = Mangum(app, lifespan="on", api_gateway_base_path="/v1")
