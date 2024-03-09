@@ -22,6 +22,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Lint code
+        run: |
+          ./ci/lint.sh
+
   ecr-build-push-us-east-1:
     needs: build
     runs-on: ubuntu-latest
