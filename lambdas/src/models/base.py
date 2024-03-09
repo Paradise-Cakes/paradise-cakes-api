@@ -19,6 +19,7 @@ def _clean(d):
         return clean_list
     return d
 
-    class Base(BaseModel):
-        def clean(self, *args, **kwargs):
-            return _clean(self.dict(*args, **kwargs))
+
+class Base(BaseModel):
+    def clean(self, *args, **kwargs):
+        return _clean(self.dict(*args, **kwargs))

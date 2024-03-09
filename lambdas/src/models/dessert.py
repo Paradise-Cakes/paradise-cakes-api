@@ -1,5 +1,5 @@
 from typing import List, Optional
-from src.models.base import Base
+from .base import Base
 
 
 class Dessert(Base):
