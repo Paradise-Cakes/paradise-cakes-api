@@ -2,7 +2,7 @@ import boto3
 from fastapi import APIRouter
 from aws_lambda_powertools import Logger
 from fastapi.exceptions import HTTPException
-from .models import Dessert
+from src.models import Dessert
 
 
 logger = Logger()
