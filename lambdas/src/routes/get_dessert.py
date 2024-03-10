@@ -22,12 +22,14 @@ dynamodb_table = DynamoConnection(
 
 @logger.inject_lambda_context
 @router.get(
-    "/desserts/{uid}",
+    "/desserts/{dessert_id}",
     status_code=200,
 )
-def get_dessert(uid: str):
-    logger.info(f"Getting dessert with uid {uid}")
-    dynamo_response = dynamodb_table.get_item(TableName="desserts", Key={"uid": uid})
+def get_dessert(dessert_id: str):
+    logger.info(f"Getting dessert with dessert_id {dessert_id}")
+    dynamo_response = dynamodb_table.get_item(
+        TableName="desserts", Key={"dessert_id": dessert_id}
+    )
 
     if "Item" not in dynamo_response:
         raise HTTPException(status_code=404, detail="Dessert not found")
