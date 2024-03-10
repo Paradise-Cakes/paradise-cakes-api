@@ -27,9 +27,7 @@ dynamodb_table = DynamoConnection(
 )
 def get_dessert(uid: str):
     logger.info(f"Getting dessert with uid {uid}")
-    dynamo_response = dynamodb_table.get_item(
-        TableName="desserts", Key={"uid": {"S": uid}}
-    )
+    dynamo_response = dynamodb_table.get_item(TableName="desserts", Key={"uid": uid})
 
     if "Item" not in dynamo_response:
         raise HTTPException(status_code=404, detail="Dessert not found")
