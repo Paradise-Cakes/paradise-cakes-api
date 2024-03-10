@@ -23,7 +23,7 @@ dynamodb_table = DynamoConnection(
     status_code=200,
 )
 def get_dessert(uid):
-    logger.info(f"Getting dessert with uid {uid}")
+    logger.info(f"Getting dessert with uid {uid} from DynamoDB")
     dynamo_response = dynamodb_table.get_item(
         TableName="desserts", Key={"uid": {"S": uid}}
     )
