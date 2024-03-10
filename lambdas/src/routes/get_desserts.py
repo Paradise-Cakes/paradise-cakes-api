@@ -1,13 +1,20 @@
 import boto3
+import os
 from fastapi import APIRouter
 from aws_lambda_powertools import Logger
 from fastapi.exceptions import HTTPException
 from src.models import Dessert
+from src.lib.dynamodb import DynamoConnection
 
 
 logger = Logger()
 router = APIRouter()
-client = boto3.client("dynamodb")
+
+dynamodb_table = DynamoConnection(
+    os.environ.get("DYNAMODB_REGION", "us-east-1"),
+    os.environ.get("DYNAMODB_ENDPOINT_URL", None),
+    os.get("DYNAMODB_DESSERTS_TABLE_NAME", "desserts"),
+).table
 
 
 @logger.inject_lambda_context
@@ -17,7 +24,7 @@ client = boto3.client("dynamodb")
 )
 def get_desserts():
     logger.info(f"Getting desserts")
-    dynamo_response = client.scan(TableName="desserts")
+    dynamo_response = dynamodb_table.scan(TableName="desserts")
 
     if "Items" not in dynamo_response:
         raise HTTPException(status_code=404, detail="No desserts found")

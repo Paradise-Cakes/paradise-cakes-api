@@ -10,6 +10,14 @@ resource "aws_lambda_function" "app" {
   image_config {
     command = ["src.api.lambda_handler"]
   }
+
+  environment {
+    variables = {
+      DYNAMODB_REGION = "us-east-1"
+      DYNAMODB_ENDPOINT_URL = "https://dynamodb.us-east-1.amazonaws.com"
+      DYNAMODB_DESSERTS_TABLE_NAME = aws_dynamodb_table.desserts.name
+    }
+  }
 }
 
 resource "aws_lambda_permission" "allow_api_gateway_handler" {
