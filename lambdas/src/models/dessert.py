@@ -3,9 +3,9 @@ from .base import Base
 
 
 class Dessert(Base):
-    uid: str
-    name: str
-    description: str
-    price: float
-    dessert_type: str
-    image: Optional[str]
+    uid: str = None
+    name: str = None
+    description: str = None
+    price: float = 0.0
+    dessert_type: str = None
+    image: Optional[str] = None
