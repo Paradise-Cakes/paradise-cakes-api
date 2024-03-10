@@ -8,4 +8,4 @@ class Dessert(Base):
     description: str = None
     price: float = 0.0
     dessert_type: str = None
-    image: Optional[str] = None
+    image_url: Optional[str] = None
