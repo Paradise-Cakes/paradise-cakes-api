@@ -6,4 +6,5 @@ class Dessert(Base):
     name: str
     description: str
     price: float
+    dessert_type: str
     image: Optional[str]

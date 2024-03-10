@@ -1,4 +1,3 @@
-import boto3
 import os
 from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
@@ -6,14 +5,18 @@ from aws_lambda_powertools import Logger
 from src.models import Dessert
 from src.lib.dynamodb import DynamoConnection
 
+import boto3
+import fastapi
+import fastapi.exceptions
+import aws_lambda_powertools
+
 logger = Logger()
 router = APIRouter()
-
 
 dynamodb_table = DynamoConnection(
     os.environ.get("DYNAMODB_REGION", "us-east-1"),
     os.environ.get("DYNAMODB_ENDPOINT_URL", None),
-    os.get("DYNAMODB_DESSERTS_TABLE_NAME", "desserts"),
+    os.environ.get("DYNAMODB_DESSERTS_TABLE_NAME", "desserts"),
 ).table
 
 
@@ -22,8 +25,8 @@ dynamodb_table = DynamoConnection(
     "/desserts/{uid}",
     status_code=200,
 )
-def get_dessert(uid):
-    logger.info(f"Getting dessert with uid {uid} from DynamoDB")
+def get_dessert(uid: str):
+    logger.info(f"Getting dessert with uid {uid}")
     dynamo_response = dynamodb_table.get_item(
         TableName="desserts", Key={"uid": {"S": uid}}
     )
