@@ -128,7 +128,7 @@ test = ["pytest (>=6)"]
 
 [[package]]
 name = "fastapi"
-version = "0.109.1"
+version = "0.110.0"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
 category = "main"
 optional = false
@@ -136,7 +136,7 @@ python-versions = ">=3.8"
 
 [package.dependencies]
 pydantic = ">=1.7.4,<1.8 || >1.8,<1.8.1 || >1.8.1,<2.0.0 || >2.0.0,<2.0.1 || >2.0.1,<2.1.0 || >2.1.0,<3.0.0"
-starlette = ">=0.35.0,<0.36.0"
+starlette = ">=0.36.3,<0.37.0"
 typing-extensions = ">=4.8.0"
 
 [package.extras]
@@ -263,7 +263,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "starlette"
-version = "0.35.1"
+version = "0.36.3"
 description = "The little ASGI library that shines."
 category = "main"
 optional = false
@@ -274,7 +274,7 @@ anyio = ">=3.4.0,<5"
 typing-extensions = {version = ">=3.10.0", markers = "python_version < \"3.10\""}
 
 [package.extras]
-full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart", "pyyaml"]
+full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7)", "pyyaml"]
 
 [[package]]
 name = "tomli"
@@ -330,7 +330,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "fa7e30ee680bd8c8aaa6f758d640922bd2be4c88eb69cca2b9cff086943a390f"
+content-hash = "017ddd92b403b6a3af53a41177b98b1892b74a575ba2561df20fa463bcd0298a"
 
 [metadata.files]
 anyio = []
