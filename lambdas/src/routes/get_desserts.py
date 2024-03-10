@@ -13,7 +13,7 @@ router = APIRouter()
 dynamodb_table = DynamoConnection(
     os.environ.get("DYNAMODB_REGION", "us-east-1"),
     os.environ.get("DYNAMODB_ENDPOINT_URL", None),
-    os.get("DYNAMODB_DESSERTS_TABLE_NAME", "desserts"),
+    os.environ.get("DYNAMODB_DESSERTS_TABLE_NAME", "desserts"),
 ).table
 
 
