@@ -13,4 +13,4 @@ class Dessert(Base):
     description: str = None
     price: float = 0.0
     dessert_type: str = None
-    image_urls: Optional[List[str]] = None
+    image_urls: Optional[List[Image]] = None
