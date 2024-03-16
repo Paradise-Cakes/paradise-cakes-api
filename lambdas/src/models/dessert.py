@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict
+from typing import List, Optional
 from .base import Base
 
 
@@ -7,10 +7,15 @@ class Image(Base):
     description: str
 
 
+class Price(Base):
+    size: str
+    base: float
+
+
 class Dessert(Base):
     dessert_id: str = None
     name: str = None
     description: str = None
-    price: Dict[str, float] = None
+    prices: List[Price] = None
     dessert_type: str = None
     image_urls: Optional[List[Image]] = None
