@@ -4,7 +4,6 @@ from .base import Base
 
 class Image(Base):
     uri: str
-    description: str
 
 
 class Price(Base):
