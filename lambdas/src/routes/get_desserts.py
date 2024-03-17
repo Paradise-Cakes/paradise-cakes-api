@@ -29,7 +29,7 @@ def get_desserts(dessert_type: str):
         TableName="desserts",
         IndexName="dessert-type-index",
         KeyConditionExpression="dessert_type = :dessert_type",
-        ExpressionAttributeValues={":dessert_type": {"S": dessert_type}},
+        ExpressionAttributeValues={":dessert_type": dessert_type},
     )
 
     if "Items" not in dynamo_response:
