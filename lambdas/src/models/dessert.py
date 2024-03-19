@@ -18,3 +18,4 @@ class Dessert(Base):
     prices: List[Price] = None
     dessert_type: str = None
     image_urls: Optional[List[Image]] = None
+    ingredients: Optional[List[str]] = None
