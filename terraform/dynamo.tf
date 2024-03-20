@@ -21,3 +21,20 @@ resource "aws_dynamodb_table" "desserts" {
     write_capacity  = 5
   }
 }
+
+
+resource "aws_dynamodb_table" "orders" {
+  name         = "orders"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "order_id"
+
+  attribute {
+    name = "order_id"
+    type = "S"
+  }
+
+  attribute {
+    name = "order_date"
+    type = "S"
+  }
+}

@@ -16,6 +16,7 @@ resource "aws_lambda_function" "app" {
       DYNAMODB_REGION = "us-east-1"
       DYNAMODB_ENDPOINT_URL = "https://dynamodb.us-east-1.amazonaws.com"
       DYNAMODB_DESSERTS_TABLE_NAME = aws_dynamodb_table.desserts.name
+      DYNAMODB_ORDERS_TABLE_NAME = aws_dynamodb_table.orders.name
     }
   }
 }
