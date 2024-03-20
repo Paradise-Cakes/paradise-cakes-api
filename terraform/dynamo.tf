@@ -32,9 +32,4 @@ resource "aws_dynamodb_table" "orders" {
     name = "order_id"
     type = "S"
   }
-
-  attribute {
-    name = "order_date"
-    type = "S"
-  }
 }
