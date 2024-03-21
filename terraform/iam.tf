@@ -35,7 +35,8 @@ resource "aws_iam_policy" "paradise_cakes_api_policy" {
         Action = [
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
-          "logs:PutLogEvents"
+          "logs:PutLogEvents",
+          "logs:PostLogEvents",
         ],
         Effect   = "Allow",
         Resource = "*"
