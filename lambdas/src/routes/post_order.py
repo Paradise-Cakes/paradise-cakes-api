@@ -28,7 +28,7 @@ order_type_count_table = DynamoConnection(
 ).table
 
 
-def PostOrderResponse(Order):
+class PostOrderResponse(Order):
     pass
 
 
