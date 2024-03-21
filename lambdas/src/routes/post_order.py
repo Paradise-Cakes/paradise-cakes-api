@@ -1,9 +1,8 @@
 import boto3
 import os
 import arrow
-from fastAPI import APIRouter, Request
+from fastapi import APIRouter, Request
 from aws_lambda_powertools import Logger
-from fastAPI.exceptions import HTTPException
 from src.lib.response import fastapi_gateway_response
 from src.models import (
     Order,
