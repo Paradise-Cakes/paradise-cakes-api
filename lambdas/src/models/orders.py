@@ -19,7 +19,7 @@ class Order(Base):
     order_date: str = None
 
 
-def PostOrderRequest(Base):
+class PostOrderRequest(Base):
     dessert_id: Optional[str] = None
     dessert_name: Optional[str] = None
     quantity: Optional[int] = None
