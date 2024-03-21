@@ -16,7 +16,7 @@ class Order(Base):
     scheduled_delivery_time: int = None
     order_total: float = None
     order_status: str = None
-    order_date: str = None
+    order_date: int = None
 
 
 class PostOrderRequest(Base):
