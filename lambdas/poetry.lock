@@ -1,4 +1,15 @@
 [[package]]
+name = "annotated-types"
+version = "0.6.0"
+description = "Reusable constraint types to use with typing.Annotated"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+typing-extensions = {version = ">=4.0.0", markers = "python_version < \"3.9\""}
+
+[[package]]
 name = "anyio"
 version = "3.7.1"
 description = "High level compatibility layer for multiple asynchronous event loop implementations"
@@ -34,25 +45,21 @@ test = ["dateparser (>=1.0.0,<2.0.0)", "pre-commit", "pytest", "pytest-cov", "py
 
 [[package]]
 name = "aws-lambda-powertools"
-version = "2.35.1"
+version = "2.22.0"
 description = "Powertools for AWS Lambda (Python) is a developer toolkit to implement Serverless best practices and increase developer velocity."
 category = "main"
 optional = false
-python-versions = ">=3.8,<4.0.0"
+python-versions = ">=3.7.4,<4.0.0"
 
 [package.dependencies]
-pydantic = {version = ">=1.8.2,<2.0.0", optional = true, markers = "extra == \"parser\" or extra == \"all\""}
 typing-extensions = ">=4.6.2,<5.0.0"
 
 [package.extras]
-datamasking = ["aws-encryption-sdk (>=3.1.1,<4.0.0)", "jsonpath-ng (>=1.6.0,<2.0.0)"]
 tracer = ["aws-xray-sdk (>=2.8.0,<3.0.0)"]
 all = ["aws-xray-sdk (>=2.8.0,<3.0.0)", "fastjsonschema (>=2.14.5,<3.0.0)", "pydantic (>=1.8.2,<2.0.0)"]
-aws-sdk = ["boto3 (>=1.26.164,<2.0.0)"]
-datadog = ["datadog-lambda (>=4.77,<6.0)"]
+aws-sdk = ["boto3 (>=1.20.32,<2.0.0)"]
 validation = ["fastjsonschema (>=2.14.5,<3.0.0)"]
 parser = ["pydantic (>=1.8.2,<2.0.0)"]
-redis = ["redis (>=4.4,<6.0)"]
 
 [[package]]
 name = "black"
@@ -223,18 +230,30 @@ test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest-cov (>=4.1)", "pytes
 
 [[package]]
 name = "pydantic"
-version = "1.10.14"
-description = "Data validation and settings management using python type hints"
+version = "2.6.4"
+description = "Data validation using Python type hints"
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 
 [package.dependencies]
-typing-extensions = ">=4.2.0"
+annotated-types = ">=0.4.0"
+pydantic-core = "2.16.3"
+typing-extensions = ">=4.6.1"
 
 [package.extras]
-dotenv = ["python-dotenv (>=0.10.4)"]
-email = ["email-validator (>=1.0.3)"]
+email = ["email-validator (>=2.0.0)"]
+
+[[package]]
+name = "pydantic-core"
+version = "2.16.3"
+description = ""
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 
 [[package]]
 name = "python-dateutil"
@@ -354,9 +373,10 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "cca53ef1648f8016a190730947a89d4c91b63e9471619c3d9a1902654078844c"
+content-hash = "46a977195e3ced5c737ea1769a9e1ceb307b88baff180267318a92a75ce860f3"
 
 [metadata.files]
+annotated-types = []
 anyio = []
 arrow = []
 aws-lambda-powertools = []
@@ -375,6 +395,7 @@ packaging = []
 pathspec = []
 platformdirs = []
 pydantic = []
+pydantic-core = []
 python-dateutil = []
 s3transfer = []
 six = []
