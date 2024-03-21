@@ -21,5 +21,5 @@ def _clean(d):
 
 
 class Base(BaseModel):
-    def clean(self, *args, **kwargs):
-        return _clean(self.dict(*args, **kwargs))
+    def clean(self):
+        return _clean(self.model_dump())
