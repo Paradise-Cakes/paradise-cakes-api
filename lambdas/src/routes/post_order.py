@@ -32,12 +32,12 @@ def PostOrderResponse(Order):
     pass
 
 
+@logger.inject_lambda_context
 @router.post(
     "/orders",
     status_code=201,
-    response_model=PostOrderRequest,
+    response_model=PostOrderResponse,
 )
-@logger.inject_lambda_context
 def post_order(request: Request, body: PostOrderRequest):
     logger.info("Incrementing order type counter")
     order_type = "ORDER"
@@ -45,11 +45,11 @@ def post_order(request: Request, body: PostOrderRequest):
 
     if "Item" not in get_response:
         order_count = 1
-        order_type_count_table.put_item_global(
+        order_type_count_table.put_item(
             Item={"order_type": order_type, "order_count": order_count}
         )
     else:
-        counter_response = order_type_count_table.update_item_global(
+        counter_response = order_type_count_table.update_item(
             Key={"order_type": "ORDER"},
             UpdateExpression="set order_count = order_count + :incr",
             ExpressionAttributeValues={":incr": 1},
