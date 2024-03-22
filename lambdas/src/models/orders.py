@@ -1,5 +1,6 @@
 from typing import List, Optional
 from .base import Base
+from decimal import Decimal
 
 
 class Order(Base):
@@ -14,7 +15,7 @@ class Order(Base):
     customer_zip_code: str = None
     delivery_address: str = None
     scheduled_delivery_time: int = None
-    order_total: float = None
+    order_total: Decimal = None
     order_status: str = None
     order_date: int = None
 

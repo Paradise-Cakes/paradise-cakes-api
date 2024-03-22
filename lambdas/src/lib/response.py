@@ -1,4 +1,5 @@
 from fastapi.responses import JSONResponse
+import simplejson
 
 
 def fastapi_gateway_response(
@@ -13,6 +14,6 @@ def fastapi_gateway_response(
 
     return JSONResponse(
         status_code=httpStatusCode,
-        content=body,
+        content=simplejson.dumps(body),
         headers=headers,
     )

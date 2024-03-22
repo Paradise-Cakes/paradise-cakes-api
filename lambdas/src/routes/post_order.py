@@ -1,6 +1,8 @@
 import boto3
 import os
 import arrow
+import simplejson
+from decimal import Decimal
 from fastapi import APIRouter, Request
 from aws_lambda_powertools import Logger
 from src.lib.response import fastapi_gateway_response
@@ -13,7 +15,7 @@ from src.lib.dynamodb import DynamoConnection
 logger = Logger()
 router = APIRouter()
 
-orders_dynamodb_table = DynamoConnection(
+orders_table = DynamoConnection(
     region_name=os.environ.get("DYNAMODB_REGION", "us-east-1"),
     endpoint_url=os.environ.get("DYNAMODB_ENDPOINT_URL", None),
     table_name=os.environ.get("DYNAMODB_ORDERS_TABLE_NAME", "orders"),
@@ -62,13 +64,13 @@ def post_order(request: Request, body: PostOrderRequest):
     logger.info(f"Creating new order for {order_id}")
 
     new_order = Order(
+        **body.clean(),
         order_id=order_id,
         order_status="NEW",
         order_date=int(arrow.utcnow().timestamp()),
-        **body.clean(),
     )
 
-    orders_dynamodb_table.put_item(Item={**new_order.clean()})
+    orders_table.put_item(Item={**new_order.clean(), "order_total": Decimal(str(new_order.order_total))})
     response = PostOrderResponse(**new_order.model_dump())
     logger.info(f"Created new order: {new_order}")
     return fastapi_gateway_response(201, {}, response.clean())
