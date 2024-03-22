@@ -21,10 +21,31 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Lint code
+      - name: Check if branch is up to date with master
         run: |
-          ./ci/lint.sh
+          scripts/ensure-up-to-date.sh
+
+      - name: Setup Python 3.8.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8.x
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.4.2
+
+      - name: Install Dependencies
+        run: bash ${GITHUB_WORKSPACE}/ci/install.sh
+
+      - name: Lint
+        run: bash ${GITHUB_WORKSPACE}/ci/lint.sh
+
+      - name: Test
+        run: bash ${GITHUB_WORKSPACE}/ci/test.sh
 
   ecr-build-push-us-east-1:
     needs: build

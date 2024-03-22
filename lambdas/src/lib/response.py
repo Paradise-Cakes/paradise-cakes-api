@@ -1,5 +1,5 @@
 from fastapi.responses import JSONResponse
-import simplejson
+from decimal import Decimal
 
 
 def fastapi_gateway_response(
@@ -12,8 +12,11 @@ def fastapi_gateway_response(
         "access-control-allow-methods", "OPTIONS,POST,PUT,PATCH,GET,DELETE"
     )
 
+    if "order_total" in body:
+        body["order_total"] = float(body["order_total"])
+
     return JSONResponse(
         status_code=httpStatusCode,
-        content=simplejson.dumps(body),
+        content=body,
         headers=headers,
     )

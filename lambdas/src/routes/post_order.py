@@ -70,7 +70,9 @@ def post_order(request: Request, body: PostOrderRequest):
         order_date=int(arrow.utcnow().timestamp()),
     )
 
-    orders_table.put_item(Item={**new_order.clean(), "order_total": Decimal(str(new_order.order_total))})
+    orders_table.put_item(
+        Item={**new_order.clean(), "order_total": Decimal(str(new_order.order_total))}
+    )
     response = PostOrderResponse(**new_order.model_dump())
     logger.info(f"Created new order: {new_order}")
     return fastapi_gateway_response(201, {}, response.clean())
