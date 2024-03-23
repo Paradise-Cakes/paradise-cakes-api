@@ -17,7 +17,6 @@ resource "aws_cognito_user_pool" "paradise_cakes_user_pool" {
 
     auto_verified_attributes = ["email"]
 
-    mfa_configuration = "OPTIONAL"
     sms_authentication_message = "Your code is {####}"
 
     device_configuration {
