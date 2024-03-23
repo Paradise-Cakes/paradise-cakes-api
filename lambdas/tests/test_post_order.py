@@ -3,7 +3,7 @@ from freezegun import freeze_time
 from botocore.stub import Stubber
 from decimal import Decimal
 from fastapi.testclient import TestClient
-from src import app
+from src.api import app
 from src.routes.post_order import orders_table, order_type_count_table
 
 test_client = TestClient(app)
