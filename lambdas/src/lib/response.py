@@ -12,6 +12,11 @@ def fastapi_gateway_response(
         "access-control-allow-methods", "OPTIONS,POST,PUT,PATCH,GET,DELETE"
     )
 
+    if type(body) is list:
+        for item in body:
+            if "order_total" in item:
+                item["order_total"] = float(item["order_total"])
+
     if "order_total" in body:
         body["order_total"] = float(body["order_total"])
 

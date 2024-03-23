@@ -5,12 +5,13 @@ from aws_lambda_powertools import Logger
 from fastapi.exceptions import HTTPException
 from src.models import Dessert
 from src.lib.dynamodb import DynamoConnection
+from src.lib.response import fastapi_gateway_response
 
 
 logger = Logger()
 router = APIRouter()
 
-dynamodb_table = DynamoConnection(
+desserts_table = DynamoConnection(
     os.environ.get("DYNAMODB_REGION", "us-east-1"),
     os.environ.get("DYNAMODB_ENDPOINT_URL", None),
     os.environ.get("DYNAMODB_DESSERTS_TABLE_NAME", "desserts"),
@@ -25,7 +26,7 @@ dynamodb_table = DynamoConnection(
 def get_desserts(dessert_type: str):
     logger.info(f"Getting desserts")
 
-    dynamo_response = dynamodb_table.query(
+    dynamo_response = desserts_table.query(
         IndexName="dessert-type-index",
         KeyConditionExpression="dessert_type = :dessert_type",
         ExpressionAttributeValues={":dessert_type": dessert_type},
@@ -37,4 +38,4 @@ def get_desserts(dessert_type: str):
     desserts = [Dessert(**d).clean() for d in dynamo_response.get("Items")]
 
     logger.info(f"Returning {len(desserts)} desserts")
-    return {"desserts": desserts}
+    return fastapi_gateway_response(200, {}, desserts)

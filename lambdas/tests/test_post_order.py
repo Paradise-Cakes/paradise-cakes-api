@@ -1,10 +1,8 @@
 import pytest
-import mock
 from freezegun import freeze_time
 from botocore.stub import Stubber
 from decimal import Decimal
 from fastapi.testclient import TestClient
-from src.models.orders import Order
 from src import app
 from src.routes.post_order import orders_table, order_type_count_table
 
@@ -25,7 +23,7 @@ def orders_type_count_dynamodb_stub():
         ddb_stubber.assert_no_pending_responses()
 
 
-@freeze_time("2024-02-15 12:00:00")
+@freeze_time("2024-03-22 12:00:00")
 def test_handler_valid_event_existing_order_type(
     orders_dynamodb_stub, orders_type_count_dynamodb_stub
 ):
@@ -57,7 +55,7 @@ def test_handler_valid_event_existing_order_type(
             "Item": {
                 "order_id": "ORDER-2",
                 "order_status": "NEW",
-                "order_date": 1707998400,
+                "order_date": 1711108800,
                 "dessert_id": "1",
                 "dessert_name": "chocolate cake",
                 "quantity": 2,
@@ -108,6 +106,91 @@ def test_handler_valid_event_existing_order_type(
             "scheduled_delivery_time": 1707998401,
             "order_total": 3.5,
             "order_status": "NEW",
-            "order_date": 1707998400,
+            "order_date": 1711108800,
+        },
+    )
+
+
+@freeze_time("2024-03-22 12:00:00")
+def test_handler_valid_event_new_order_type(
+    orders_dynamodb_stub, orders_type_count_dynamodb_stub
+):
+    orders_type_count_dynamodb_stub.add_response(
+        "get_item",
+        {},
+        expected_params={
+            "Key": {"order_type": "ORDER"},
+            "TableName": "order_type_count",
+        },
+    )
+
+    orders_type_count_dynamodb_stub.add_response(
+        "put_item",
+        {},
+        expected_params={
+            "Item": {"order_type": "ORDER", "order_count": 1},
+            "TableName": "order_type_count",
+        },
+    )
+
+    orders_dynamodb_stub.add_response(
+        "put_item",
+        {},
+        expected_params={
+            "Item": {
+                "order_id": "ORDER-1",
+                "order_status": "NEW",
+                "order_date": 1711108800,
+                "dessert_id": "1",
+                "dessert_name": "chocolate cake",
+                "quantity": 2,
+                "customer_first_name": "Anthony",
+                "customer_last_name": "Viera",
+                "customer_email": "anthony.viera@gmail.com",
+                "customer_phone_number": "911",
+                "customer_zip_code": "78643",
+                "delivery_address": "my house",
+                "scheduled_delivery_time": 1707998401,
+                "order_total": Decimal(3.50),
+            },
+            "TableName": "orders",
+        },
+    )
+
+    response = test_client.post(
+        "/orders",
+        json={
+            "dessert_id": "1",
+            "dessert_name": "chocolate cake",
+            "quantity": 2,
+            "customer_first_name": "Anthony",
+            "customer_last_name": "Viera",
+            "customer_email": "anthony.viera@gmail.com",
+            "customer_phone_number": "911",
+            "customer_zip_code": "78643",
+            "delivery_address": "my house",
+            "scheduled_delivery_time": 1707998401,
+            "order_total": 3.50,
+        },
+    )
+
+    pytest.helpers.assert_responses_equal(
+        response,
+        201,
+        {
+            "order_id": "ORDER-1",
+            "dessert_id": "1",
+            "dessert_name": "chocolate cake",
+            "quantity": 2,
+            "customer_first_name": "Anthony",
+            "customer_last_name": "Viera",
+            "customer_email": "anthony.viera@gmail.com",
+            "customer_phone_number": "911",
+            "customer_zip_code": "78643",
+            "delivery_address": "my house",
+            "scheduled_delivery_time": 1707998401,
+            "order_total": 3.5,
+            "order_status": "NEW",
+            "order_date": 1711108800,
         },
     )
