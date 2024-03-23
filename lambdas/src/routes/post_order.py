@@ -1,7 +1,6 @@
 import boto3
 import os
 import arrow
-import simplejson
 from decimal import Decimal
 from fastapi import APIRouter, Request
 from aws_lambda_powertools import Logger

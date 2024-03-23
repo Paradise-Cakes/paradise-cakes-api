@@ -1,7 +1,14 @@
 from mangum import Mangum
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.routes import get_desserts, get_dessert, get_orders, post_order
+from src.routes import (
+    get_desserts,
+    get_dessert,
+    get_orders,
+    post_order,
+    post_signup,
+    post_signin,
+)
 
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
 
@@ -20,6 +27,8 @@ app.include_router(get_desserts.router)
 app.include_router(get_dessert.router)
 app.include_router(get_orders.router)
 app.include_router(post_order.router)
+app.include_router(post_signup.router)
+app.include_router(post_signin.router)
 
 
 def lambda_handler(event, context):

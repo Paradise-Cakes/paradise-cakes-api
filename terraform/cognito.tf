@@ -2,6 +2,12 @@ resource "aws_cognito_user_pool_client" "paradise_cakes_client" {
     name = "paradise-cakes-client"
     user_pool_id = aws_cognito_user_pool.paradise_cakes_user_pool.id
 
+    generate_secret = false
+
+    explicit_auth_flows = [ 
+        "ALLOW_USER_SRP_AUTH",
+        "ALLOW_REFRESH_TOKEN_AUTH",
+     ]
 }
 
 resource "aws_cognito_user_pool" "paradise_cakes_user_pool" {
@@ -15,8 +21,8 @@ resource "aws_cognito_user_pool" "paradise_cakes_user_pool" {
         require_uppercase = true
     }
 
+    username_attributes = ["email"]
     auto_verified_attributes = ["email"]
-
     sms_authentication_message = "Your code is {####}"
 
     device_configuration {
