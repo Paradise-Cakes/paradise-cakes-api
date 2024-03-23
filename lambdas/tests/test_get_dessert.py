@@ -2,7 +2,7 @@ import pytest
 from freezegun import freeze_time
 from botocore.stub import Stubber
 from fastapi.testclient import TestClient
-from src import app
+import app
 from src.routes.get_dessert import desserts_table
 
 test_client = TestClient(app)
