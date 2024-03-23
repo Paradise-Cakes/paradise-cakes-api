@@ -31,5 +31,7 @@ def post_signup(email: str = Form(...), password: str = Form(...)):
         )
     except ClientError as e:
         if e.response["Error"]["Code"] == "UsernameExistsException":
-            raise HTTPException(status_code=400, detail="User already exists")
+            raise HTTPException(
+                status_code=400, detail="User already exists with that email"
+            )
         raise HTTPException(status_code=400, detail=str(e))

@@ -77,7 +77,33 @@ def test_handler_valid_event_signin(cognito_stub):
     )
 
 
-def test_handler_invalid_event_signin(cognito_stub):
+def test_handler_invalid_event_signin_user_not_found(cognito_stub):
+    cognito_stub.add_client_error(
+        "initiate_auth",
+        service_error_code="UserNotFoundException",
+        expected_params={
+            "AuthFlow": "USER_PASSWORD_AUTH",
+            "AuthParameters": {
+                "USERNAME": "anthony.viera@gmail.com",
+                "PASSWORD": "password",
+            },
+            "ClientId": "123456789",
+        },
+    )
+
+    request = test_client.post(
+        "/signin",
+        data={"email": "anthony.viera@gmail.com", "password": "password"},
+    )
+
+    pytest.helpers.assert_responses_equal(
+        request,
+        400,
+        {"detail": "User not found with email"},
+    )
+
+
+def test_handler_invalid_event_signin_incorrect_password(cognito_stub):
     cognito_stub.add_client_error(
         "initiate_auth",
         service_error_code="NotAuthorizedException",
@@ -99,7 +125,31 @@ def test_handler_invalid_event_signin(cognito_stub):
     pytest.helpers.assert_responses_equal(
         response,
         400,
-        {
-            "detail": "An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: "
+        {"detail": "Incorrect password"},
+    )
+
+
+def test_handler_invalid_event_signin_client_error(cognito_stub):
+    cognito_stub.add_client_error(
+        "initiate_auth",
+        service_error_code="InternalErrorException",
+        expected_params={
+            "AuthFlow": "USER_PASSWORD_AUTH",
+            "AuthParameters": {
+                "USERNAME": "anthony.viera@gmail.com",
+                "PASSWORD": "password",
+            },
+            "ClientId": "123456789",
         },
+    )
+
+    response = test_client.post(
+        "/signin",
+        data={"email": "anthony.viera@gmail.com", "password": "password"},
+    )
+
+    pytest.helpers.assert_responses_equal(
+        response,
+        400,
+        {"detail": "Something went wrong! :("},
     )

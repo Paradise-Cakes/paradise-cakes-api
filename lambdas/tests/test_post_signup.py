@@ -65,7 +65,7 @@ def test_handler_invalid_event_signup_username_exists(cognito_stub):
     )
 
     pytest.helpers.assert_responses_equal(
-        response, 400, {"detail": "User already exists"}
+        response, 400, {"detail": "User already exists with that email"}
     )
 
 
