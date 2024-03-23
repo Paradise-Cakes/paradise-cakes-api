@@ -22,6 +22,6 @@ app.include_router(get_orders.router)
 app.include_router(post_order.router)
 
 
-# def lambda_handler(event, context):
-#     handler = Mangum(app, lifespan="on", api_gateway_base_path="/v1")
-#     return handler(event, context)
+def lambda_handler(event, context):
+    handler = Mangum(app, lifespan="on", api_gateway_base_path="/v1")
+    return handler(event, context)

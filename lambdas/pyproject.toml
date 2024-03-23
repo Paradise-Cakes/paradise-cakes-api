@@ -33,6 +33,9 @@ build-backend = "poetry.core.masonry.api"
 [tool.coverage.run]
 branch = false
 source = ["src"]
+omit = [
+    "src/api.py",
+]
 
 [tool.coverage.paths]
 source = ["src"]
