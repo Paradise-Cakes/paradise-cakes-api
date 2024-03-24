@@ -22,7 +22,7 @@ orders_table = DynamoConnection(
 @router.get(
     "/orders",
     status_code=200,
-    dependencies=[Depends(admin_only)],
+    # dependencies=[Depends(admin_only)],
 )
 def get_orders():
     logger.info(f"Getting orders")
