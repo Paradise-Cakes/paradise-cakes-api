@@ -18,7 +18,7 @@ def post_signin(email: str = Form(...), password: str = Form(...)):
         response = cognito_client.initiate_auth(
             AuthFlow="USER_PASSWORD_AUTH",
             AuthParameters={"USERNAME": email, "PASSWORD": password},
-            ClientId=os.environ.get("CLIENT_ID"),
+            ClientId=os.environ.get(" COGNITO_APP_CLIENT_ID "),
         )
         return fastapi_gateway_response(200, {}, response)
     except ClientError as e:

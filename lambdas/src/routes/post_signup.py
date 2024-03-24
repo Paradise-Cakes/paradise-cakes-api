@@ -19,7 +19,7 @@ def post_signup(email: str = Form(...), password: str = Form(...)):
 
     try:
         response = cognito_client.sign_up(
-            ClientId=os.environ.get("CLIENT_ID"),
+            ClientId=os.environ.get(" COGNITO_APP_CLIENT_ID "),
             Username=email,
             Password=password,
             UserAttributes=[

@@ -24,6 +24,8 @@ pytest-helpers-namespace = "^2021.12.29"
 urllib3 = "1.26.5"
 python-multipart = "^0.0.9"
 python-jose = "^3.3.0"
+jose = "^1.0.0"
+pytest-mock = "^3.14.0"
 
 [tool.poetry.dev-dependencies]
 
