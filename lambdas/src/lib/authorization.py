@@ -66,5 +66,5 @@ def admin_only(token: str = Depends(oauth2_scheme)):
     payload = verify_cognito_token(token)
     user_groups = payload.get("cognito:groups", [])
     logger.info(f"User groups: {user_groups}")
-    if "admins" not in user_groups:
+    if "paradise-cakes-admin-group" not in user_groups:
         raise HTTPException(status_code=403, detail="Not enough permissions")

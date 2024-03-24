@@ -102,7 +102,7 @@ def test_verify_cognito_token_no_matching_kid(mocker):
 def test_admin_only_success(mocker):
     mocker.patch(
         "src.lib.authorization.verify_cognito_token",
-        return_value={"cognito:groups": ["admins"]},
+        return_value={"cognito:groups": ["paradise-cakes-admin-group"]},
     )
     assert admin_only("test_token") is None
 
