@@ -151,5 +151,5 @@ def test_handler_invalid_event_signin_client_error(cognito_stub):
     pytest.helpers.assert_responses_equal(
         response,
         400,
-        {"detail": "Something went wrong! :("},
+        {"detail": ""},
     )

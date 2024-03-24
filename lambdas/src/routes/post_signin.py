@@ -26,4 +26,4 @@ def post_signin(email: str = Form(...), password: str = Form(...)):
             raise HTTPException(status_code=400, detail="User not found with email")
         if e.response["Error"]["Code"] == "NotAuthorizedException":
             raise HTTPException(status_code=400, detail="Incorrect password")
-        raise HTTPException(status_code=400, detail="Something went wrong! :(")
+        raise HTTPException(status_code=400, detail=e.response["Error"]["Message"])
