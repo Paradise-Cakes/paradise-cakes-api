@@ -9,6 +9,7 @@ from src.routes import (
     post_signup,
     post_signin,
     post_confirm_signup,
+    post_resend_confirmation_code,
 )
 
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
@@ -31,6 +32,7 @@ app.include_router(post_order.router)
 app.include_router(post_signup.router)
 app.include_router(post_signin.router)
 app.include_router(post_confirm_signup.router)
+app.include_router(post_resend_confirmation_code.router)
 
 
 def lambda_handler(event, context):
