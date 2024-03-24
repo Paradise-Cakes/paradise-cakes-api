@@ -78,6 +78,7 @@ resource "aws_api_gateway_rest_api_policy" "paradise_cakes_api" {
 EOF
 }
 
+
 resource "aws_api_gateway_authorizer" "paradise_cakes_authorizer" {
   name            = "paradise-cakes-authorizer"
   rest_api_id     = aws_api_gateway_rest_api.paradise_cakes_api.id
