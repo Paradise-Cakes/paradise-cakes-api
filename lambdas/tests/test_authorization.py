@@ -8,7 +8,7 @@ from src.lib.authorization import get_jwks, verify_cognito_token, admin_only
 
 @pytest.fixture(autouse=True)
 def mock_env(monkeypatch):
-    monkeypatch.setenv("AWS_REGION", "us-east-1")
+    monkeypatch.setenv("REGION", "us-east-1")
     monkeypatch.setenv("COGNITO_USER_POOL_ID", "test_user_pool_id")
     monkeypatch.setenv("COGNITO_APP_CLIENT_ID", "test_app_client_id")
 

@@ -8,10 +8,10 @@ from aws_lambda_powertools.logging import Logger
 
 logger = Logger()
 
-AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
+REGION = os.environ.get("REGION", "us-east-1")
 USER_POOL_ID = os.environ.get("COGNITO_USER_POOL_ID")
 APP_CLIENT_ID = os.environ.get("COGNITO_APP_CLIENT_ID")
-COGNITO_ISSUER = f"https://cognito-idp.{AWS_REGION}.amazonaws.com/{USER_POOL_ID}"
+COGNITO_ISSUER = f"https://cognito-idp.{REGION}.amazonaws.com/{USER_POOL_ID}"
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
