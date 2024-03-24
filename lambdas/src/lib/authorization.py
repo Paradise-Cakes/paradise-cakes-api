@@ -45,7 +45,6 @@ def verify_cognito_token(token: str) -> dict:
                     "e": key["e"],
                 }
                 break
-        logger.info(f"RSA key: {rsa_key}")
         if rsa_key:
             payload = jwt.decode(
                 token,

@@ -75,27 +75,28 @@ def test_verify_cognito_token_jwt_error(mocker):
         verify_cognito_token("test_token")
 
 
-# def test_verify_cognito_token_no_matching_kid(mocker):
-#     mocker.patch(
-#         "src.lib.authorization.get_jwks",
-#         return_value={
-#             "keys": [
-#                 {
-#                     "kid": "test_kid",
-#                     "kty": "RS256",
-#                     "use": "sig",
-#                     "n": "test_n",
-#                     "e": "test_e",
-#                 }
-#             ]
-#         },
-#     )
-#     mocker.patch(
-#         "src.lib.authorization.jwt.get_unverified_headers",
-#         return_value={"kid": "wrong_kid"},
-#     )
-#     with pytest.raises(JWTError):
-#         verify_cognito_token("test_token")
+def test_verify_cognito_token_no_matching_kid(mocker):
+    mocker.patch(
+        "src.lib.authorization.get_jwks",
+        return_value={
+            "keys": [
+                {
+                    "kid": "test_kid",
+                    "kty": "RS256",
+                    "use": "sig",
+                    "n": "test_n",
+                    "e": "test_e",
+                }
+            ]
+        },
+    )
+    mocker.patch(
+        "src.lib.authorization.jwt.get_unverified_headers",
+        return_value={"kid": "wrong_kid"},
+    )
+    with pytest.raises(HTTPException):
+        with pytest.raises(JWTError):
+            verify_cognito_token("test_token")
 
 
 def test_admin_only_success(mocker):
