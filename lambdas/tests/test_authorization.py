@@ -4,6 +4,11 @@ from fastapi import HTTPException
 from jose import JWTError
 import requests
 from src.lib.authorization import get_jwks, verify_cognito_token, admin_only
+import pytest
+from unittest.mock import patch
+from fastapi import HTTPException
+from jose import JWTError
+from src.lib.authorization import get_jwks, verify_cognito_token, admin_only
 
 
 @pytest.fixture(autouse=True)
@@ -112,5 +117,6 @@ def test_admin_only_failure(mocker):
         "src.lib.authorization.verify_cognito_token",
         return_value={"cognito:groups": ["users"]},
     )
-    with pytest.raises(HTTPException):
+    with pytest.raises(HTTPException) as e:
         admin_only("test_token")
+    assert str(e.value) == "404: Not found"

@@ -78,13 +78,3 @@ resource "aws_api_gateway_rest_api_policy" "paradise_cakes_api" {
 EOF
 }
 
-
-resource "aws_api_gateway_authorizer" "paradise_cakes_authorizer" {
-  name            = "paradise-cakes-authorizer"
-  rest_api_id     = aws_api_gateway_rest_api.paradise_cakes_api.id
-  type            = "COGNITO_USER_POOLS"
-  provider_arns   = [aws_cognito_user_pool.paradise_cakes_user_pool.arn]
-  identity_source = "method.request.header.Authorization"
-}
-
-
