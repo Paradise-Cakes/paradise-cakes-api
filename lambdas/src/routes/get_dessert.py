@@ -20,7 +20,7 @@ class GetDessertResponse(Dessert):
     pass
 
 
-@logger.inject_lambda_context
+@logger.inject_lambda_context(log_event=True)
 @router.get(
     "/desserts/{dessert_id}",
     status_code=200,

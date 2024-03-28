@@ -33,7 +33,7 @@ class PostOrderResponse(Order):
     pass
 
 
-@logger.inject_lambda_context
+@logger.inject_lambda_context(log_event=True)
 @router.post(
     "/orders",
     status_code=201,

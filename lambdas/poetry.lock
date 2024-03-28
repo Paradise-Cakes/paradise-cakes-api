@@ -59,6 +59,21 @@ doc = ["doc8", "sphinx (>=7.0.0)", "sphinx-autobuild", "sphinx-autodoc-typehints
 test = ["dateparser (>=1.0.0,<2.0.0)", "pre-commit", "pytest", "pytest-cov", "pytest-mock", "pytz (==2021.1)", "simplejson (>=3.0.0,<4.0.0)"]
 
 [[package]]
+name = "aws-lambda-context"
+version = "1.1.0"
+description = "AWS Lambda Context class for type checking and testing"
+category = "main"
+optional = false
+python-versions = ">= 3.6"
+files = [
+    {file = "aws-lambda-context-1.1.0.tar.gz", hash = "sha256:b6a6d3360671b25bb171335c7e6510b22e60c6fd5db99803f478c986d3230220"},
+    {file = "aws_lambda_context-1.1.0-py3-none-any.whl", hash = "sha256:d03b16aaf8abac30b71bc5d66ed8edadd8805e0d581f73f1e9b4b171635c817d"},
+]
+
+[package.extras]
+tests = ["black (==19.3b0)", "bump2version (==0.5.10)", "flake8 (==3.7.8)", "isort (==4.3.21)", "mypy (==0.720)", "pre-commit (==1.17.0)", "pytest (==5.0.1)", "pytest-cov (==2.7.1)"]
+
+[[package]]
 name = "aws-lambda-powertools"
 version = "2.22.0"
 description = "Powertools for AWS Lambda (Python) is a developer toolkit to implement Serverless best practices and increase developer velocity."
@@ -1190,4 +1205,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "4995b077285cec17ec2ebd5abc2fa0569288191300a08d72d1d6f8684a353b5d"
+content-hash = "edc88d2c1598a7fd65ff32c7c62e61eb484d62cef6dc8963a4ee04b727dc318c"

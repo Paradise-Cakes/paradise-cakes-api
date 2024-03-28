@@ -11,7 +11,7 @@ router = APIRouter()
 cognito_client = boto3.client("cognito-idp", region_name="us-east-1")
 
 
-@logger.inject_lambda_context
+@logger.inject_lambda_context(log_event=True)
 @router.post("/forgot_password", status_code=200)
 def post_forgot_password(email: str = Form(...)):
     logger.info(f"Sending reset password request to email {email}")

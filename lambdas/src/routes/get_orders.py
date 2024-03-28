@@ -18,7 +18,7 @@ orders_table = DynamoConnection(
 ).table
 
 
-@logger.inject_lambda_context
+@logger.inject_lambda_context(log_event=True)
 @router.get(
     "/orders",
     status_code=200,

@@ -18,7 +18,7 @@ desserts_table = DynamoConnection(
 ).table
 
 
-@logger.inject_lambda_context
+@logger.inject_lambda_context(log_event=True)
 @router.get(
     "/desserts",
     status_code=200,

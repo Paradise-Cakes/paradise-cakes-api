@@ -11,7 +11,7 @@ router = APIRouter()
 cognito_client = boto3.client("cognito-idp", region_name="us-east-1")
 
 
-@logger.inject_lambda_context
+@logger.inject_lambda_context(log_event=True)
 @router.post("/resend_confirmation_code", status_code=200)
 def post_resend_confirmation_code(email: str = Form(...)):
     logger.info(f"Resending confirmation code to user with email {email}")
