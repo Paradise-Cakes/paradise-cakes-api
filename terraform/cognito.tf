@@ -37,6 +37,28 @@ resource "aws_cognito_user_pool" "paradise_cakes_user_pool" {
     from_email_address    = "do-not-reply@paradisecakesbymegan.com"
   }
 
+  schema {
+    name                = "given_name"
+    attribute_data_type = "String"
+    mutable             = true
+    required            = true
+    string_attribute_constraints {
+      min_length = "1"
+      max_length = "50"
+    }
+  }
+
+  schema {
+    name                = "family_name"
+    attribute_data_type = "String"
+    mutable             = true
+    required            = true
+    string_attribute_constraints {
+      min_length = "1"
+      max_length = "50"
+    }
+  }
+
   account_recovery_setting {
     recovery_mechanism {
       name     = "verified_email"

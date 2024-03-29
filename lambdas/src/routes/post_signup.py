@@ -14,7 +14,12 @@ cognito_client = boto3.client("cognito-idp", region_name="us-east-1")
 
 @logger.inject_lambda_context(log_event=True)
 @router.post("/signup", status_code=201)
-def post_signup(email: str = Form(...), password: str = Form(...)):
+def post_signup(
+    email: str = Form(...),
+    password: str = Form(...),
+    first_name: str = Form(...),
+    last_name: str = Form(...),
+):
     logger.info(f"Creating user with email {email}")
 
     try:
@@ -24,6 +29,8 @@ def post_signup(email: str = Form(...), password: str = Form(...)):
             Password=password,
             UserAttributes=[
                 {"Name": "email", "Value": email},
+                {"Name": "given_name", "Value": first_name},
+                {"Name": "family_name", "Value": last_name},
             ],
         )
         return fastapi_gateway_response(

@@ -32,13 +32,22 @@ def test_handler_valid_event_signup(cognito_stub):
             "ClientId": "123456789",
             "Username": "anthony.viera@gmail.com",
             "Password": "password",
-            "UserAttributes": [{"Name": "email", "Value": "anthony.viera@gmail.com"}],
+            "UserAttributes": [
+                {"Name": "email", "Value": "anthony.viera@gmail.com"},
+                {"Name": "given_name", "Value": "Anthony"},
+                {"Name": "family_name", "Value": "Viera"},
+            ],
         },
     )
 
     response = test_client.post(
         "/signup",
-        data={"email": "anthony.viera@gmail.com", "password": "password"},
+        data={
+            "email": "anthony.viera@gmail.com",
+            "password": "password",
+            "first_name": "Anthony",
+            "last_name": "Viera",
+        },
     )
     pytest.helpers.assert_responses_equal(
         response,
@@ -55,13 +64,22 @@ def test_handler_invalid_event_signup_username_exists(cognito_stub):
             "ClientId": "123456789",
             "Username": "anthony.viera@gmail.com",
             "Password": "password",
-            "UserAttributes": [{"Name": "email", "Value": "anthony.viera@gmail.com"}],
+            "UserAttributes": [
+                {"Name": "email", "Value": "anthony.viera@gmail.com"},
+                {"Name": "given_name", "Value": "Anthony"},
+                {"Name": "family_name", "Value": "Viera"},
+            ],
         },
     )
 
     response = test_client.post(
         "/signup",
-        data={"email": "anthony.viera@gmail.com", "password": "password"},
+        data={
+            "email": "anthony.viera@gmail.com",
+            "password": "password",
+            "first_name": "Anthony",
+            "last_name": "Viera",
+        },
     )
 
     pytest.helpers.assert_responses_equal(
@@ -77,13 +95,22 @@ def test_handler_invalid_event_signup_client_error(cognito_stub):
             "ClientId": "123456789",
             "Username": "anthony.viera@gmail.com",
             "Password": "password",
-            "UserAttributes": [{"Name": "email", "Value": "anthony.viera@gmail.com"}],
+            "UserAttributes": [
+                {"Name": "email", "Value": "anthony.viera@gmail.com"},
+                {"Name": "given_name", "Value": "Anthony"},
+                {"Name": "family_name", "Value": "Viera"},
+            ],
         },
     )
 
     response = test_client.post(
         "/signup",
-        data={"email": "anthony.viera@gmail.com", "password": "password"},
+        data={
+            "email": "anthony.viera@gmail.com",
+            "password": "password",
+            "first_name": "Anthony",
+            "last_name": "Viera",
+        },
     )
 
     pytest.helpers.assert_responses_equal(
