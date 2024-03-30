@@ -30,16 +30,63 @@ def test_handler_valid_event_confirm_signup(cognito_stub):
             "ConfirmationCode": "123456",
         },
     )
+    cognito_stub.add_response(
+        "initiate_auth",
+        {
+            "ChallengeName": "PASSWORD_VERIFIER",
+            "Session": "my-session-super-secret",
+            "ChallengeParameters": {},
+            "AuthenticationResult": {
+                "AccessToken": "my-super-secret-token",
+                "ExpiresIn": 3600,
+                "TokenType": "Bearer",
+                "RefreshToken": "my-super-secret-refresh-token",
+                "IdToken": "my-super-secret-id-token",
+                "NewDeviceMetadata": {
+                    "DeviceKey": "my-device",
+                    "DeviceGroupKey": "my-device-group",
+                },
+            },
+        },
+        expected_params={
+            "AuthFlow": "USER_PASSWORD_AUTH",
+            "AuthParameters": {
+                "USERNAME": "anthony.viera@gmail.com",
+                "PASSWORD": "password",
+            },
+            "ClientId": "123456789",
+        },
+    )
 
     response = test_client.post(
         "/confirm_signup",
-        data={"email": "anthony.viera@gmail.com", "confirmation_code": "123456"},
+        data={
+            "email": "anthony.viera@gmail.com",
+            "password": "password",
+            "confirmation_code": "123456",
+        },
     )
 
     pytest.helpers.assert_responses_equal(
         response,
         200,
-        {"message": "User confirmed"},
+        {
+            "message": "User confirmed and signed in",
+            "ChallengeName": "PASSWORD_VERIFIER",
+            "Session": "my-session-super-secret",
+            "ChallengeParameters": {},
+            "AuthenticationResult": {
+                "AccessToken": "my-super-secret-token",
+                "ExpiresIn": 3600,
+                "TokenType": "Bearer",
+                "RefreshToken": "my-super-secret-refresh-token",
+                "IdToken": "my-super-secret-id-token",
+                "NewDeviceMetadata": {
+                    "DeviceKey": "my-device",
+                    "DeviceGroupKey": "my-device-group",
+                },
+            },
+        },
     )
 
 
@@ -56,7 +103,11 @@ def test_handler_invalid_confirmation_code(cognito_stub):
 
     response = test_client.post(
         "/confirm_signup",
-        data={"email": "anthony.viera@gmail.com", "confirmation_code": "123456"},
+        data={
+            "email": "anthony.viera@gmail.com",
+            "password": "password",
+            "confirmation_code": "123456",
+        },
     )
 
     pytest.helpers.assert_responses_equal(
@@ -79,7 +130,11 @@ def test_handler_expired_confirmation_code(cognito_stub):
 
     response = test_client.post(
         "/confirm_signup",
-        data={"email": "anthony.viera@gmail.com", "confirmation_code": "123456"},
+        data={
+            "email": "anthony.viera@gmail.com",
+            "password": "password",
+            "confirmation_code": "123456",
+        },
     )
 
     pytest.helpers.assert_responses_equal(
@@ -102,7 +157,11 @@ def test_handler_client_error(cognito_stub):
 
     response = test_client.post(
         "/confirm_signup",
-        data={"email": "anthony.viera@gmail.com", "confirmation_code": "123456"},
+        data={
+            "email": "anthony.viera@gmail.com",
+            "password": "password",
+            "confirmation_code": "123456",
+        },
     )
 
     pytest.helpers.assert_responses_equal(

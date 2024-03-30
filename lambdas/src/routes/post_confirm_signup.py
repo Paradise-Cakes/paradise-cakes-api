@@ -13,16 +13,25 @@ cognito_client = boto3.client("cognito-idp", region_name="us-east-1")
 
 @logger.inject_lambda_context(log_event=True)
 @router.post("/confirm_signup", status_code=200)
-def post_confirm_signup(email: str = Form(...), confirmation_code: str = Form(...)):
+def post_confirm_signup(
+    email: str = Form(...),
+    password: str = Form(...),
+    confirmation_code: str = Form(...),
+):
     logger.info(f"Confirming user with email {email}")
     try:
-        response = cognito_client.confirm_sign_up(
+        cognito_client.confirm_sign_up(
             ClientId=os.environ.get("COGNITO_APP_CLIENT_ID"),
             Username=email,
             ConfirmationCode=confirmation_code,
         )
+        response = cognito_client.initiate_auth(
+            AuthFlow="USER_PASSWORD_AUTH",
+            AuthParameters={"USERNAME": email, "PASSWORD": password},
+            ClientId=os.environ.get("COGNITO_APP_CLIENT_ID"),
+        )
         return fastapi_gateway_response(
-            200, {}, {"message": "User confirmed", **response}
+            200, {}, {"message": "User confirmed and signed in", **response}
         )
     except ClientError as e:
         if e.response["Error"]["Code"] == "CodeMismatchException":
