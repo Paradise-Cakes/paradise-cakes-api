@@ -22,8 +22,9 @@ def post_signin(email: str = Form(...), password: str = Form(...)):
         )
         return fastapi_gateway_response(200, {}, response)
     except ClientError as e:
-        if e.response["Error"]["Code"] == "UserNotFoundException":
-            raise HTTPException(status_code=400, detail="User not found with email")
-        if e.response["Error"]["Code"] == "NotAuthorizedException":
-            raise HTTPException(status_code=400, detail="Incorrect password")
+        if (
+            e.response["Error"]["Code"] == "UserNotFoundException"
+            or e.response["Error"]["Code"] == "NotAuthorizedException"
+        ):
+            raise HTTPException(status_code=400, detail="Incorrect email or password")
         raise HTTPException(status_code=400, detail=str(e))

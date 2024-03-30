@@ -99,7 +99,7 @@ def test_handler_invalid_event_signin_user_not_found(cognito_stub):
     pytest.helpers.assert_responses_equal(
         request,
         400,
-        {"detail": "User not found with email"},
+        {"detail": "Incorrect email or password"},
     )
 
 
@@ -125,7 +125,7 @@ def test_handler_invalid_event_signin_incorrect_password(cognito_stub):
     pytest.helpers.assert_responses_equal(
         response,
         400,
-        {"detail": "Incorrect password"},
+        {"detail": "Incorrect email or password"},
     )
 
 
