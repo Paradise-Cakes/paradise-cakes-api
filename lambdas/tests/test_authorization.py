@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch, Mock
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 from jose import JWTError
 import requests
 from src.lib.authorization import get_jwks, verify_cognito_token, admin_only
@@ -16,6 +16,17 @@ def mock_env(monkeypatch):
     monkeypatch.setenv("REGION", "us-east-1")
     monkeypatch.setenv("COGNITO_USER_POOL_ID", "test_user_pool_id")
     monkeypatch.setenv("COGNITO_APP_CLIENT_ID", "test_app_client_id")
+
+
+def create_request_with_cookie(token: str):
+    request = Request(
+        scope={
+            "type": "http",
+            "headers": [],
+        }
+    )
+    request._cookies = {"access_token": token}  # Simulating having a cookie
+    return request
 
 
 def test_get_jwks_success(mocker):
@@ -53,7 +64,9 @@ def test_verify_cognito_token_success(mocker):
     mocker.patch(
         "src.lib.authorization.jwt.decode", return_value={"payload": "test_payload"}
     )
-    assert verify_cognito_token("test_token") == {"payload": "test_payload"}
+    assert verify_cognito_token(create_request_with_cookie("test_token")) == {
+        "payload": "test_payload"
+    }
 
 
 def test_verify_cognito_token_jwt_error(mocker):
@@ -77,7 +90,7 @@ def test_verify_cognito_token_jwt_error(mocker):
     )
     mocker.patch("src.lib.authorization.jwt.decode", side_effect=JWTError)
     with pytest.raises(HTTPException):
-        verify_cognito_token("test_token")
+        verify_cognito_token(create_request_with_cookie("test_token"))
 
 
 def test_verify_cognito_token_no_matching_kid(mocker):
@@ -101,7 +114,7 @@ def test_verify_cognito_token_no_matching_kid(mocker):
     )
     with pytest.raises(HTTPException):
         with pytest.raises(JWTError):
-            verify_cognito_token("test_token")
+            verify_cognito_token(create_request_with_cookie("test_token"))
 
 
 def test_admin_only_success(mocker):
@@ -109,7 +122,7 @@ def test_admin_only_success(mocker):
         "src.lib.authorization.verify_cognito_token",
         return_value={"cognito:groups": ["paradise-cakes-admin-group"]},
     )
-    assert admin_only("test_token") is None
+    assert admin_only(create_request_with_cookie("test_token")) is None
 
 
 def test_admin_only_failure(mocker):
@@ -118,5 +131,5 @@ def test_admin_only_failure(mocker):
         return_value={"cognito:groups": ["users"]},
     )
     with pytest.raises(HTTPException) as e:
-        admin_only("test_token")
+        admin_only(create_request_with_cookie("test_token"))
     assert str(e.value) == "404: Not found"

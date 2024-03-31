@@ -1,5 +1,4 @@
-from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException, Request
 from jose import JWTError, jwt
 import boto3
 import os
@@ -12,9 +11,6 @@ REGION = os.environ.get("REGION", "us-east-1")
 USER_POOL_ID = os.environ.get("COGNITO_USER_POOL_ID")
 APP_CLIENT_ID = os.environ.get("COGNITO_APP_CLIENT_ID")
 COGNITO_ISSUER = f"https://cognito-idp.{REGION}.amazonaws.com/{USER_POOL_ID}"
-
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def get_jwks():
@@ -61,8 +57,9 @@ def verify_cognito_token(token: str) -> dict:
         raise HTTPException(status_code=403, detail="Token verification failed")
 
 
-def admin_only(token: str = Depends(oauth2_scheme)):
-    logger.info(f"Checking token: {token}")
+def admin_only(request: Request):
+    logger.info("Checking token")
+    token = request.cookies.get("access_token")
     payload = verify_cognito_token(token)
     user_groups = payload.get("cognito:groups", [])
     logger.info(f"User groups: {user_groups}")

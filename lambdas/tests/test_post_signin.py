@@ -58,22 +58,7 @@ def test_handler_valid_event_signin(cognito_stub):
     pytest.helpers.assert_responses_equal(
         response,
         200,
-        {
-            "ChallengeName": "PASSWORD_VERIFIER",
-            "Session": "my-session-super-secret",
-            "ChallengeParameters": {},
-            "AuthenticationResult": {
-                "AccessToken": "my-super-secret-token",
-                "ExpiresIn": 3600,
-                "TokenType": "Bearer",
-                "RefreshToken": "my-super-secret-refresh-token",
-                "IdToken": "my-super-secret-id-token",
-                "NewDeviceMetadata": {
-                    "DeviceKey": "my-device",
-                    "DeviceGroupKey": "my-device-group",
-                },
-            },
-        },
+        {"message": "User signed in"},
     )
 
 
