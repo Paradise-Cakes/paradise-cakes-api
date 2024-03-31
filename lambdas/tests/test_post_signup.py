@@ -52,7 +52,13 @@ def test_handler_valid_event_signup(cognito_stub):
     pytest.helpers.assert_responses_equal(
         response,
         201,
-        {"message": "User created", "UserConfirmed": True, "UserSub": "123456789"},
+        {
+            "message": "User created",
+            "UserConfirmed": True,
+            "UserSub": "123456789",
+            "given_name": "Anthony",
+            "family_name": "Viera",
+        },
     )
 
 

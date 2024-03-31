@@ -34,7 +34,14 @@ def post_signup(
             ],
         )
         return fastapi_gateway_response(
-            201, {}, {"message": "User created", **response}
+            201,
+            {},
+            {
+                "message": "User created",
+                "given_name": first_name,
+                "family_name": last_name,
+                **response,
+            },
         )
     except ClientError as e:
         if e.response["Error"]["Code"] == "UsernameExistsException":
