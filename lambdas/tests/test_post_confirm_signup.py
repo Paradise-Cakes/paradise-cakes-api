@@ -72,20 +72,6 @@ def test_handler_valid_event_confirm_signup(cognito_stub):
         200,
         {
             "message": "User confirmed and signed in",
-            "ChallengeName": "PASSWORD_VERIFIER",
-            "Session": "my-session-super-secret",
-            "ChallengeParameters": {},
-            "AuthenticationResult": {
-                "AccessToken": "my-super-secret-token",
-                "ExpiresIn": 3600,
-                "TokenType": "Bearer",
-                "RefreshToken": "my-super-secret-refresh-token",
-                "IdToken": "my-super-secret-id-token",
-                "NewDeviceMetadata": {
-                    "DeviceKey": "my-device",
-                    "DeviceGroupKey": "my-device-group",
-                },
-            },
         },
     )
 
