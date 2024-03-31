@@ -27,4 +27,9 @@ def post_signin(email: str = Form(...), password: str = Form(...)):
             or e.response["Error"]["Code"] == "NotAuthorizedException"
         ):
             raise HTTPException(status_code=400, detail="Incorrect email or password")
+        if e.response["Error"]["Code"] == "UserNotConfirmedException":
+            raise HTTPException(
+                status_code=400,
+                detail="User is not confirmed",
+            )
         raise HTTPException(status_code=400, detail=str(e))

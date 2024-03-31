@@ -129,6 +129,32 @@ def test_handler_invalid_event_signin_incorrect_password(cognito_stub):
     )
 
 
+def test_handler_invalid_event_signin_user_not_confirmed(cognito_stub):
+    cognito_stub.add_client_error(
+        "initiate_auth",
+        service_error_code="UserNotConfirmedException",
+        expected_params={
+            "AuthFlow": "USER_PASSWORD_AUTH",
+            "AuthParameters": {
+                "USERNAME": "anthony.viera@gmail.com",
+                "PASSWORD": "password",
+            },
+            "ClientId": "123456789",
+        },
+    )
+
+    response = test_client.post(
+        "/signin",
+        data={"email": "anthony.viera@gmail.com", "password": "password"},
+    )
+
+    pytest.helpers.assert_responses_equal(
+        response,
+        400,
+        {"detail": "User is not confirmed"},
+    )
+
+
 def test_handler_invalid_event_signin_client_error(cognito_stub):
     cognito_stub.add_client_error(
         "initiate_auth",
