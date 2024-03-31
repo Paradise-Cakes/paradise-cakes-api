@@ -11,6 +11,16 @@ router = APIRouter()
 cognito_client = boto3.client("cognito-idp", region_name="us-east-1")
 
 
+def get_user_info(access_token):
+    try:
+        response = cognito_client.get_user(AccessToken=access_token)
+        user_attributes = response["UserAttributes"]
+        user_info = {attr["Name"]: attr["Value"] for attr in user_attributes}
+        return user_info
+    except ClientError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @logger.inject_lambda_context(log_event=True)
 @router.post("/confirm_signup", status_code=200)
 def post_confirm_signup(
@@ -54,8 +64,10 @@ def post_confirm_signup(
             samesite="strict",
         )
 
+        user_info = get_user_info(access_token)
+
         return fastapi_gateway_response(
-            200, {}, {"message": "User confirmed and signed in"}
+            200, {}, {"message": "User confirmed and signed in", **user_info}
         )
     except ClientError as e:
         if e.response["Error"]["Code"] == "CodeMismatchException":
