@@ -19,3 +19,12 @@ class Dessert(Base):
     dessert_type: str = None
     image_urls: Optional[List[Image]] = None
     ingredients: Optional[List[str]] = None
+
+
+class PostDessertRequest(Base):
+    name: str
+    description: str
+    prices: List[Price]
+    dessert_type: str
+    image_urls: List[Image]
+    ingredients: List[str]
