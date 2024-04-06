@@ -5,9 +5,14 @@ from .base import (
 
 from .desserts import (
     Dessert,
+    PostDessertRequest,
 )
 
 from .orders import (
     Order,
     PostOrderRequest,
+)
+
+from .image import (
+    DessertImage,
 )

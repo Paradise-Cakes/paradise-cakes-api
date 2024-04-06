@@ -32,11 +32,6 @@ def test_handler_valid_event_get_dessert(desserts_dynamodb_stub):
                     ]
                 },
                 "dessert_type": {"S": "cake"},
-                "image_urls": {
-                    "L": [
-                        {"M": {"uri": {"S": "https://example.com/chocolate-cake.jpg"}}}
-                    ]
-                },
                 "ingredients": {
                     "L": [
                         {"S": "flour"},
@@ -69,7 +64,6 @@ def test_handler_valid_event_get_dessert(desserts_dynamodb_stub):
                 {"size": "10in", "base": 20.00},
             ],
             "dessert_type": "cake",
-            "image_urls": [{"uri": "https://example.com/chocolate-cake.jpg"}],
             "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
         },
     )

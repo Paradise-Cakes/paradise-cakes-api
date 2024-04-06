@@ -11,14 +11,24 @@ def fastapi_gateway_response(
     headers.setdefault(
         "access-control-allow-methods", "OPTIONS,POST,PUT,PATCH,GET,DELETE"
     )
-
+    print("HELLO")
     if type(body) is list:
         for item in body:
             if "order_total" in item:
                 item["order_total"] = float(item["order_total"])
 
+            if "prices" in item:
+                print("H")
+                for price in item["prices"]:
+                    price["base"] = float(price["base"])
+
     if "order_total" in body:
         body["order_total"] = float(body["order_total"])
+
+    if "prices" in body:
+        print("L")
+        for price in body["prices"]:
+            price["base"] = float(price["base"])
 
     return JSONResponse(
         status_code=httpStatusCode,

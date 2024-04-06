@@ -36,7 +36,6 @@ def test_handler_valid_event_logout(cognito_stub):
     pytest.helpers.assert_responses_equal(
         response,
         200,
-        {},
         {"message": "User logged out successfully"},
     )
 
@@ -49,7 +48,6 @@ def test_handler_no_access_token():
     pytest.helpers.assert_responses_equal(
         response,
         200,
-        {},
         {"message": "User logged out successfully"},
     )
 
@@ -69,8 +67,7 @@ def test_handler_invalid_access_token(cognito_stub):
     pytest.helpers.assert_responses_equal(
         response,
         400,
-        {},
         {
-            "detail": "An error occurred (NotAuthorizedException) when calling the GlobalSignOut operation: Invalid access token"
+            "detail": "An error occurred (NotAuthorizedException) when calling the GlobalSignOut operation: "
         },
     )

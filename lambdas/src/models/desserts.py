@@ -17,8 +17,9 @@ class Dessert(Base):
     description: str = None
     prices: List[Price] = None
     dessert_type: str = None
-    image_urls: Optional[List[Image]] = None
     ingredients: Optional[List[str]] = None
+    created_at: str = None
+    updated_at: str = None
 
 
 class PostDessertRequest(Base):
@@ -26,5 +27,4 @@ class PostDessertRequest(Base):
     description: str
     prices: List[Price]
     dessert_type: str
-    image_urls: List[Image]
     ingredients: List[str]

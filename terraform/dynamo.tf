@@ -49,3 +49,33 @@ data "aws_dynamodb_table" "order_type_count_created" {
   name       = "order_type_count"
   depends_on = [aws_dynamodb_table.order_type_count]
 }
+
+
+resource "aws_dynamodb_table" "dessert_images" {
+  name         = "dessert_images"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "dessert_id"
+  range_key    = "image_id"
+
+  attribute {
+    name = "dessert_id"
+    type = "S"
+  }
+
+  attribute {
+    name = "image_id"
+    type = "S"
+  }
+
+  attribute {
+    name = "created_at"
+    type = "N"
+  }
+
+  global_secondary_index {
+    name            = "dessert_id_by_created_at_index"
+    hash_key        = "dessert_id"
+    range_key       = "created_at"
+    projection_type = "ALL"
+  }
+}
