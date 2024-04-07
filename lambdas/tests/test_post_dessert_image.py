@@ -55,7 +55,7 @@ def test_handler_create_image(mock_uuid, s3_client_stub, dessert_images_dynamodb
                 "created_at": "2024-03-22T12:00:00",
                 "last_updated_at": "2024-03-22T12:00:00",
                 "position": 1,
-                "file_url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000001.jpg",
+                "file_url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001.jpg",
             },
             "TableName": "dessert_images",
         },
@@ -79,7 +79,7 @@ def test_handler_create_image(mock_uuid, s3_client_stub, dessert_images_dynamodb
             "created_at": "2024-03-22T12:00:00",
             "last_updated_at": "2024-03-22T12:00:00",
             "position": 1,
-            "file_url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000001.jpg",
+            "file_url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001.jpg",
         },
     )
 

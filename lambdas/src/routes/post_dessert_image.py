@@ -51,7 +51,7 @@ def create_image(
         s3_client.upload_fileobj(
             file.file, os.environ.get("DESSERT_IMAGES_BUCKET_NAME"), object_name
         )
-        file_url = f"https://{os.environ.get('DESSERT_IMAGES_BUCKET_NAME')}.s3.amazonaws.com/{object_name}"
+        file_url = f"https://{os.environ.get('DESSERT_IMAGES_BUCKET_NAME')}.s3.amazonaws.com/{dessert_id}/{object_name}"
 
         new_image = DessertImage(
             position=position,
