@@ -11,7 +11,6 @@ def fastapi_gateway_response(
     headers.setdefault(
         "access-control-allow-methods", "OPTIONS,POST,PUT,PATCH,GET,DELETE"
     )
-    print("HELLO")
     if type(body) is list:
         for item in body:
             if "order_total" in item:
