@@ -57,6 +57,18 @@ resource "aws_iam_policy" "paradise_cakes_api_policy" {
         Effect   = "Allow",
         Resource = "arn:aws:dynamodb:us-east-1:${data.aws_caller_identity.current.account_id}:table/*"
       },
+      {
+        Action = [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:ListBucket",
+        ]
+        Effect   = "Allow",
+        Resource = [
+          "arn:aws:s3:::paradise-cakes-images",
+          "arn:aws:s3:::paradise-cakes-images/*"
+        ]
+      }
     ]
   })
 }
