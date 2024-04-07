@@ -1,4 +1,4 @@
-import os 
+import os
 import boto3
 from fastapi import APIRouter, Request
 from aws_lambda_powertools import Logger
@@ -35,8 +35,6 @@ def get_dessert_images(dessert_id: str):
 
     images = [DessertImage(**i).clean() for i in response.get("Items")]
     images.sort(key=lambda x: x["position"])
-
-    logger.info(images)
 
     logger.info(f"Returning {len(images)} images")
     return fastapi_gateway_response(200, {}, images)

@@ -14,7 +14,7 @@ from src.routes import (
     post_logout,
     post_dessert,
     post_dessert_image,
-    get_dessert_images
+    get_dessert_images,
 )
 
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
