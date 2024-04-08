@@ -32,7 +32,7 @@ class PostDessertImageResponse(DessertImage):
     status_code=201,
     response_model=PostDessertImageResponse,
 )
-def create_image(
+def post_dessert_image(
     request: Request,
     dessert_id: str,
     file: UploadFile = File(...),
