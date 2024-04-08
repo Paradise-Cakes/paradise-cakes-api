@@ -5,6 +5,7 @@ from aws_lambda_powertools import Logger
 from src.lib.response import fastapi_gateway_response
 from src.models import DessertImage
 from src.lib.dynamodb import DynamoConnection
+from typing import List
 
 logger = Logger()
 router = APIRouter()
@@ -20,7 +21,7 @@ dessert_images_table = DynamoConnection(
 @router.get(
     "/desserts/{dessert_id}/images",
     status_code=200,
-    response_model=list[DessertImage],
+    response_model=List[DessertImage],
 )
 def get_dessert_images(dessert_id: str):
     logger.info(f"Getting images for dessert: {dessert_id}")
