@@ -9,13 +9,6 @@ resource "aws_api_gateway_resource" "proxy" {
   path_part   = "{proxy+}"
 }
 
-resource "aws_api_gateway_method" "paradise_cakes_proxy" {
-  rest_api_id   = aws_api_gateway_rest_api.paradise_cakes_api.id
-  resource_id   = aws_api_gateway_resource.proxy.id
-  http_method   = "ANY"
-  authorization = "NONE"
-}
-
 resource "aws_api_gateway_stage" "paradise_cakes" {
   stage_name           = "v1"
   rest_api_id          = aws_api_gateway_rest_api.paradise_cakes_api.id
