@@ -63,7 +63,7 @@ resource "aws_iam_policy" "paradise_cakes_api_policy" {
           "s3:GetObject",
           "s3:ListBucket",
         ]
-        Effect   = "Allow",
+        Effect = "Allow",
         Resource = [
           "arn:aws:s3:::paradise-cakes-images",
           "arn:aws:s3:::paradise-cakes-images/*"
