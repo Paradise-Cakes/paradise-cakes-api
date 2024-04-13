@@ -110,12 +110,6 @@ jobs:
             --backend-config="bucket=paradise-cakes-api-tfstate" \
             --backend-config="key=paradise-cakes-api.tfstate"
 
-      - name: Terraform Refresh
-        id: tf-refresh-us-east-1
-        run: |
-          cd ${GITHUB_WORKSPACE}/terraform
-          terraform refresh
-
       - name: Terraform Plan
         id: tf-plan-us-east-1
         env:

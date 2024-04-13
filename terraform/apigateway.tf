@@ -26,7 +26,7 @@ resource "aws_api_gateway_deployment" "paradise_cakes_api" {
   }
 
   lifecycle {
-    create_before_destroy = true
+    create_before_destroy = false
   }
 }
 
