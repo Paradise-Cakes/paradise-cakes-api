@@ -26,7 +26,7 @@ resource "aws_api_gateway_deployment" "paradise_cakes_api" {
   }
 
   lifecycle {
-    create_before_destroy = false
+    create_before_destroy = true
   }
 }
 
@@ -62,54 +62,54 @@ resource "aws_api_gateway_rest_api_policy" "paradise_cakes_api" {
 EOF
 }
 
-resource "aws_api_gateway_method" "cors" {
-  rest_api_id   = aws_api_gateway_rest_api.paradise_cakes_api.id
-  resource_id   = aws_api_gateway_resource.proxy.id
-  http_method   = "OPTIONS"
-  authorization = "NONE"
-}
+# resource "aws_api_gateway_method" "cors" {
+#   rest_api_id   = aws_api_gateway_rest_api.paradise_cakes_api.id
+#   resource_id   = aws_api_gateway_resource.proxy.id
+#   http_method   = "OPTIONS"
+#   authorization = "NONE"
+# }
 
-resource "aws_api_gateway_integration" "cors" {
-  rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
-  resource_id = aws_api_gateway_resource.proxy.id
-  http_method = aws_api_gateway_method.cors.http_method
-  type        = "MOCK"
-  request_templates = {
-    "application/json" = <<EOF
-{
-  "statusCode": 200
-}
-EOF
-  }
-}
+# resource "aws_api_gateway_integration" "cors" {
+#   rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
+#   resource_id = aws_api_gateway_resource.proxy.id
+#   http_method = aws_api_gateway_method.cors.http_method
+#   type        = "MOCK"
+#   request_templates = {
+#     "application/json" = <<EOF
+# {
+#   "statusCode": 200
+# }
+# EOF
+#   }
+# }
 
-resource "aws_api_gateway_method_response" "cors" {
-  rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
-  resource_id = aws_api_gateway_resource.proxy.id
-  http_method = aws_api_gateway_method.cors.http_method
-  status_code = 200
+# resource "aws_api_gateway_method_response" "cors" {
+#   rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
+#   resource_id = aws_api_gateway_resource.proxy.id
+#   http_method = aws_api_gateway_method.cors.http_method
+#   status_code = 200
 
-  response_models = {
-    "application/json" = "Empty"
-  }
+#   response_models = {
+#     "application/json" = "Empty"
+#   }
 
-  response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = true
-    "method.response.header.Access-Control-Allow-Methods" = true
-    "method.response.header.Access-Control-Allow-Origin"  = true
-  }
-}
+#   response_parameters = {
+#     "method.response.header.Access-Control-Allow-Headers" = true
+#     "method.response.header.Access-Control-Allow-Methods" = true
+#     "method.response.header.Access-Control-Allow-Origin"  = true
+#   }
+# }
 
-resource "aws_api_gateway_integration_response" "cors" {
-  rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
-  resource_id = aws_api_gateway_resource.proxy.id
-  http_method = aws_api_gateway_method.cors.http_method
-  status_code = 200
+# resource "aws_api_gateway_integration_response" "cors" {
+#   rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
+#   resource_id = aws_api_gateway_resource.proxy.id
+#   http_method = aws_api_gateway_method.cors.http_method
+#   status_code = 200
 
-  response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization,User-Agent'"
-    "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS,GET,PUT,DELETE,PATCH'"
-    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
-  }
-}
+#   response_parameters = {
+#     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization,User-Agent'"
+#     "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS,GET,PUT,DELETE,PATCH'"
+#     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+#   }
+# }
 
