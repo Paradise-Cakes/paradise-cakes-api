@@ -19,7 +19,7 @@ resource "aws_api_gateway_stage" "paradise_cakes" {
 
 resource "aws_api_gateway_deployment" "paradise_cakes_api" {
   rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
-  depends_on  = [aws_api_gateway_integration.paradise_cakes_integration]
+  depends_on  = [aws_api_gateway_integration.cors]
 
   triggers = {
     redeployment = timestamp()
