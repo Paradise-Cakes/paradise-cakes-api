@@ -42,15 +42,6 @@ resource "aws_api_gateway_base_path_mapping" "path_mapping_internal" {
   base_path   = aws_api_gateway_stage.paradise_cakes.stage_name
 }
 
-resource "aws_api_gateway_integration" "paradise_cakes_integration" {
-  rest_api_id             = aws_api_gateway_rest_api.paradise_cakes_api.id
-  resource_id             = aws_api_gateway_resource.proxy.id
-  http_method             = aws_api_gateway_method.paradise_cakes_proxy.http_method
-  integration_http_method = "POST"
-  type                    = "AWS_PROXY"
-  uri                     = aws_lambda_function.app.invoke_arn
-}
-
 resource "aws_api_gateway_rest_api_policy" "paradise_cakes_api" {
   rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
 
