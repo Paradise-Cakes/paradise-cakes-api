@@ -3,8 +3,7 @@ resource "aws_api_gateway_rest_api" "paradise_cakes_api" {
   description = "Proxy to handle requests to paradise cakes API"
 
   binary_media_types = [
-    "image/jpeg",
-    "image/png"
+    "multipart/form-data"
   ]
 }
 
