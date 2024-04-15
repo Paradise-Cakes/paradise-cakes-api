@@ -67,8 +67,8 @@ def post_dessert_image(
         image_id=image_id,
         dessert_id=dessert_id,
         position=body.position,
-        created_at=arrow.utcnow().format("YYYY-MM-DDTHH:mm:ss"),
-        last_updated_at=arrow.utcnow().format("YYYY-MM-DDTHH:mm:ss"),
+        created_at=int(arrow.utcnow().timestamp()),
+        last_updated_at=int(arrow.utcnow().timestamp()),
         file_extension=body.file_extension,
         url=object_url,
     )

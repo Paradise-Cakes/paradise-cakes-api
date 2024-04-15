@@ -24,8 +24,8 @@ def test_handler_get_dessert_images(dessert_images_dynamodb_stub):
                 {
                     "image_id": {"S": "00000000-0000-0000-0000-000000000001"},
                     "dessert_id": {"S": "00000000-0000-0000-0000-000000000002"},
-                    "created_at": {"S": "2024-03-22T12:00:00"},
-                    "last_updated_at": {"S": "2024-03-22T12:00:00"},
+                    "created_at": {"N": "1711108800"},
+                    "last_updated_at": {"N": "1711108800"},
                     "position": {"N": "2"},
                     "url": {
                         "S": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001.jpg"
@@ -35,8 +35,8 @@ def test_handler_get_dessert_images(dessert_images_dynamodb_stub):
                 {
                     "image_id": {"S": "00000000-0000-0000-0000-000000000001"},
                     "dessert_id": {"S": "00000000-0000-0000-0000-000000000002"},
-                    "created_at": {"S": "2024-03-22T12:00:00"},
-                    "last_updated_at": {"S": "2024-03-22T12:00:00"},
+                    "created_at": {"N": "1711108800"},
+                    "last_updated_at": {"N": "1711108800"},
                     "position": {"N": "1"},
                     "url": {
                         "S": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001.jpg"
@@ -63,8 +63,8 @@ def test_handler_get_dessert_images(dessert_images_dynamodb_stub):
             {
                 "image_id": "00000000-0000-0000-0000-000000000001",
                 "dessert_id": "00000000-0000-0000-0000-000000000002",
-                "created_at": "2024-03-22T12:00:00",
-                "last_updated_at": "2024-03-22T12:00:00",
+                "created_at": 1711108800,
+                "last_updated_at": 1711108800,
                 "position": 1,
                 "url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001.jpg",
                 "file_extension": "jpg",
@@ -72,8 +72,8 @@ def test_handler_get_dessert_images(dessert_images_dynamodb_stub):
             {
                 "image_id": "00000000-0000-0000-0000-000000000001",
                 "dessert_id": "00000000-0000-0000-0000-000000000002",
-                "created_at": "2024-03-22T12:00:00",
-                "last_updated_at": "2024-03-22T12:00:00",
+                "created_at": 1711108800,
+                "last_updated_at": 1711108800,
                 "position": 2,
                 "url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001.jpg",
                 "file_extension": "jpg",
