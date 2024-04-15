@@ -22,8 +22,13 @@ dessert_images_table = DynamoConnection(
 ).table
 
 
+class postDessertImageRequest(Base):
+    position: int
+    file_extension: str
+
+
 class PostDessertImageResponse(DessertImage):
-    pass
+    upload_url: str
 
 
 @logger.inject_lambda_context(log_event=True)
@@ -34,39 +39,45 @@ class PostDessertImageResponse(DessertImage):
 )
 def post_dessert_image(
     request: Request,
+    body: postDessertImageRequest,
     dessert_id: str,
-    file: UploadFile = File(...),
-    position: int = Form(...),
 ):
     logger.info(f"Creating new image for dessert: {dessert_id}")
 
-    image_id = uuid.uuid4()
-    created_at = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ss")
-    last_updated_at = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ss")
-
-    file_extension = file.filename.split(".")[-1]
-    object_name = f"{uuid.uuid4()}.{file_extension}"
-
-    try:
-        s3_client.upload_fileobj(
-            file.file, os.environ.get("DESSERT_IMAGES_BUCKET_NAME"), object_name
+    def upload_url(dessert_image):
+        bucket_name = os.environ.get("DESSERT_IMAGES_BUCKET_NAME")
+        upload_url = s3_client.generate_presigned_url(
+            ClientMethod="put_object",
+            Params={
+                "Bucket": bucket_name,
+                "Key": "/".join([dessert_image.dessert_id, dessert_image.image_id]),
+                "ContentType": f"{dessert_image.file_extension}",
+            },
+            ExpiresIn=60 * 60 * 24,
         )
-        file_url = f"https://{os.environ.get('DESSERT_IMAGES_BUCKET_NAME')}.s3.amazonaws.com/{dessert_id}/{object_name}"
+        return upload_url
 
-        new_image = DessertImage(
-            position=position,
-            file_url=file_url,
-            image_id=image_id,
-            dessert_id=dessert_id,
-            created_at=created_at,
-            last_updated_at=last_updated_at,
-        )
+    image_id = str(uuid.uuid4())
+    file_name = f"{image_id}.{body.file_extension}"
 
-        dessert_images_table.put_item(Item={**new_image.clean()})
-        response = PostDessertImageResponse(**new_image.model_dump())
-        logger.info(f"Created new image for dessert: {new_image}")
-        return fastapi_gateway_response(201, {}, response.clean())
+    # calculate the object url
+    object_url = f"https://{os.environ.get('DESSERT_IMAGES_BUCKET_NAME')}.s3.{os.environ.get('REGION')}.amazonaws.com/{file_name}"
 
-    except Exception as e:
-        logger.exception(f"Error uploading file to S3: {e}")
-        raise HTTPException(status_code=500, detail="Error uploading file to S3")
+    new_dessert_image = DessertImage(
+        image_id=image_id,
+        dessert_id=dessert_id,
+        position=body.position,
+        created_at=arrow.utcnow().format("YYYY-MM-DDTHH:mm:ss"),
+        last_updated_at=arrow.utcnow().format("YYYY-MM-DDTHH:mm:ss"),
+        file_extension=body.file_extension,
+        url=object_url,
+    )
+
+    # storing the image metadata
+    dessert_images_table.put_item(Item=new_dessert_image.clean())
+
+    logger.info(f"Created new dessert image: {new_dessert_image.image_id}")
+    response = PostDessertImageResponse(
+        **new_dessert_image.model_dump(), upload_url=upload_url(new_dessert_image)
+    )
+    return fastapi_gateway_response(200, {}, response.clean())

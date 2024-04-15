@@ -27,9 +27,10 @@ def test_handler_get_dessert_images(dessert_images_dynamodb_stub):
                     "created_at": {"S": "2024-03-22T12:00:00"},
                     "last_updated_at": {"S": "2024-03-22T12:00:00"},
                     "position": {"N": "2"},
-                    "file_url": {
+                    "url": {
                         "S": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001.jpg"
                     },
+                    "file_extension": {"S": "jpg"},
                 },
                 {
                     "image_id": {"S": "00000000-0000-0000-0000-000000000001"},
@@ -37,9 +38,10 @@ def test_handler_get_dessert_images(dessert_images_dynamodb_stub):
                     "created_at": {"S": "2024-03-22T12:00:00"},
                     "last_updated_at": {"S": "2024-03-22T12:00:00"},
                     "position": {"N": "1"},
-                    "file_url": {
+                    "url": {
                         "S": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001.jpg"
                     },
+                    "file_extension": {"S": "jpg"},
                 },
             ]
         },
@@ -64,7 +66,8 @@ def test_handler_get_dessert_images(dessert_images_dynamodb_stub):
                 "created_at": "2024-03-22T12:00:00",
                 "last_updated_at": "2024-03-22T12:00:00",
                 "position": 1,
-                "file_url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001.jpg",
+                "url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001.jpg",
+                "file_extension": "jpg",
             },
             {
                 "image_id": "00000000-0000-0000-0000-000000000001",
@@ -72,7 +75,8 @@ def test_handler_get_dessert_images(dessert_images_dynamodb_stub):
                 "created_at": "2024-03-22T12:00:00",
                 "last_updated_at": "2024-03-22T12:00:00",
                 "position": 2,
-                "file_url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001.jpg",
+                "url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001.jpg",
+                "file_extension": "jpg",
             },
         ],
     )
