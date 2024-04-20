@@ -19,6 +19,15 @@ resource "aws_s3_bucket_cors_configuration" "pc_dessert_images_bucket_cors" {
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "pc_dessert_images_bucket_pab" {
+  bucket = aws_s3_bucket.pc_dessert_images_bucket.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
 data "aws_iam_policy_document" "dessert_images_bucket_policy" {
   statement {
     actions   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket"]
@@ -33,4 +42,5 @@ data "aws_iam_policy_document" "dessert_images_bucket_policy" {
 resource "aws_s3_bucket_policy" "pc_dessert_images_bucket_policy" {
   bucket = aws_s3_bucket.pc_dessert_images_bucket.id
   policy = data.aws_iam_policy_document.dessert_images_bucket_policy.json
+  depends_on = [aws_s3_bucket_public_access_block.pc_dessert_images_bucket_pab]
 }
