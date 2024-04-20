@@ -69,8 +69,11 @@ def post_dessert_image(
 
     desserts_table.update_item(
         Key={"dessert_id": dessert_id},
-        UpdateExpression="SET images = list_append(images, :i)",
-        ExpressionAttributeValues={":i": [new_dessert_image.clean()]},
+        UpdateExpression="SET images = list_append(if_not_exists(images, :empty_list), :i)",
+        ExpressionAttributeValues={
+            ":i": [new_dessert_image.clean()],
+            ":empty_list": [],
+        },
     )
 
     response = PostDessertImageResponse(

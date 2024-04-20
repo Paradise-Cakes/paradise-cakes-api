@@ -34,8 +34,9 @@ def test_handler_create_image(mock_uuid, desserts_dynamodb_stub):
         expected_params={
             "TableName": "desserts",
             "Key": {"dessert_id": "00000000-0000-0000-0000-000000000002"},
-            "UpdateExpression": "SET images = list_append(images, :i)",
+            "UpdateExpression": "SET images = list_append(if_not_exists(images, :empty_list), :i)",
             "ExpressionAttributeValues": {
+                ":empty_list": [],
                 ":i": [
                     {
                         "position": 1,
