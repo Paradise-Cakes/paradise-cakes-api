@@ -45,6 +45,9 @@ def post_dessert_image(
     logger.info(f"Creating new image for dessert: {dessert_id}")
 
     def upload_url(dessert_image):
+        logger.info(dessert_id)
+        logger.info(dessert_image.image_id)
+        logger.info(dessert_image.file_type)
         bucket_name = os.environ.get("DESSERT_IMAGES_BUCKET_NAME")
         upload_url = s3_client.generate_presigned_url(
             ClientMethod="put_object",
