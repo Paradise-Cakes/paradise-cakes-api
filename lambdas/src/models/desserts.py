@@ -3,7 +3,9 @@ from .base import Base
 
 
 class Image(Base):
-    uri: str
+    image_id: str
+    url: str
+    position: int
 
 
 class Price(Base):
@@ -20,6 +22,7 @@ class Dessert(Base):
     ingredients: Optional[List[str]] = None
     created_at: str = None
     updated_at: str = None
+    images: Optional[List[Image]] = None
 
 
 class PostDessertRequest(Base):

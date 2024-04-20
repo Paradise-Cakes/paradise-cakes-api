@@ -2,10 +2,10 @@ import os
 import arrow
 import boto3
 import uuid
-from fastapi import APIRouter, Request, File, UploadFile, Form, HTTPException
+from fastapi import APIRouter, Request
 from aws_lambda_powertools import Logger
 from src.lib.response import fastapi_gateway_response
-from src.models import DessertImage
+from src.models.desserts import Image as DessertImage
 from src.models.base import Base
 from src.lib.dynamodb import DynamoConnection
 
@@ -15,16 +15,15 @@ router = APIRouter()
 s3_client = boto3.client("s3")
 
 
-dessert_images_table = DynamoConnection(
+desserts_table = DynamoConnection(
     os.environ.get("DYNAMODB_REGION", "us-east-1"),
     os.environ.get("DYNAMODB_ENDPOINT_URL", None),
-    os.environ.get("DYNAMODB_DESSERT_IMAGES_TABLE_NAME", "dessert_images"),
+    os.environ.get("DYNAMODB_DESSERTS_TABLE_NAME", "desserts"),
 ).table
 
 
 class postDessertImageRequest(Base):
     position: int
-    file_extension: str
 
 
 class PostDessertImageResponse(DessertImage):
@@ -50,8 +49,8 @@ def post_dessert_image(
             ClientMethod="put_object",
             Params={
                 "Bucket": bucket_name,
-                "Key": "/".join([dessert_image.dessert_id, dessert_image.image_id]),
-                "ContentType": f"{dessert_image.file_extension}",
+                "Key": "/".join([dessert_id, dessert_image.image_id]),
+                "ContentType": f"{dessert_image.url.split('.')[-1]}",
             },
             ExpiresIn=60 * 60 * 24,
         )
@@ -64,18 +63,16 @@ def post_dessert_image(
 
     new_dessert_image = DessertImage(
         image_id=image_id,
-        dessert_id=dessert_id,
-        position=body.position,
-        created_at=int(arrow.utcnow().timestamp()),
-        last_updated_at=int(arrow.utcnow().timestamp()),
-        file_extension=body.file_extension,
         url=object_url,
+        position=body.position,
     )
 
-    # storing the image metadata
-    dessert_images_table.put_item(Item=new_dessert_image.clean())
+    desserts_table.update_item(
+        Key={"dessert_id": dessert_id},
+        UpdateExpression="SET images = list_append(images, :i)",
+        ExpressionAttributeValues={":i": [new_dessert_image.clean()]},
+    )
 
-    logger.info(f"Created new dessert image: {new_dessert_image.image_id}")
     response = PostDessertImageResponse(
         **new_dessert_image.model_dump(), upload_url=upload_url(new_dessert_image)
     )
