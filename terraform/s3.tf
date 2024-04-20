@@ -18,3 +18,19 @@ resource "aws_s3_bucket_cors_configuration" "pc_dessert_images_bucket_cors" {
     allowed_origins = ["*"]
   }
 }
+
+data "aws_iam_policy_document" "dessert_images_bucket_policy" {
+  statement {
+    actions   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket"]
+    resources = [aws_s3_bucket.pc_dessert_images_bucket.arn]
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "pc_dessert_images_bucket_policy" {
+  bucket = aws_s3_bucket.pc_dessert_images_bucket.id
+  policy = data.aws_iam_policy_document.dessert_images_bucket_policy.json
+}
