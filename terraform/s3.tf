@@ -22,7 +22,7 @@ resource "aws_s3_bucket_cors_configuration" "pc_dessert_images_bucket_cors" {
 data "aws_iam_policy_document" "dessert_images_bucket_policy" {
   statement {
     actions   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket"]
-    resources = [aws_s3_bucket.pc_dessert_images_bucket.arn]
+    resources = [aws_s3_bucket.pc_dessert_images_bucket.arn, "${aws_s3_bucket.pc_dessert_images_bucket.arn}/*"]
     principals {
       type        = "AWS"
       identifiers = ["*"]
