@@ -39,7 +39,7 @@ def test_handler_create_image(mock_uuid, dessert_images_dynamodb_stub):
                 "created_at": 1711108800,
                 "last_updated_at": 1711108800,
                 "file_extension": "jpg",
-                "url": "https://dessert-images.s3.us-east-1.amazonaws.com/00000000-0000-0000-0000-000000000001.jpg",
+                "url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001",
             },
             "TableName": "dessert_images",
         },

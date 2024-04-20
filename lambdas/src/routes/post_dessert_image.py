@@ -58,10 +58,9 @@ def post_dessert_image(
         return upload_url
 
     image_id = str(uuid.uuid4())
-    file_name = f"{image_id}.{body.file_extension}"
 
     # calculate the object url
-    object_url = f"https://{os.environ.get('DESSERT_IMAGES_BUCKET_NAME')}.s3.{os.environ.get('REGION')}.amazonaws.com/{file_name}"
+    object_url = f"https://{os.environ.get('DESSERT_IMAGES_BUCKET_NAME')}.s3.amazonaws.com/{dessert_id}/{image_id}"
 
     new_dessert_image = DessertImage(
         image_id=image_id,
