@@ -12,7 +12,3 @@ from .orders import (
     Order,
     PostOrderRequest,
 )
-
-from .image import (
-    DessertImage,
-)

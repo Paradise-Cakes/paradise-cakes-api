@@ -24,6 +24,7 @@ desserts_table = DynamoConnection(
 
 class postDessertImageRequest(Base):
     position: int
+    file_type: str
 
 
 class PostDessertImageResponse(DessertImage):
@@ -50,7 +51,7 @@ def post_dessert_image(
             Params={
                 "Bucket": bucket_name,
                 "Key": "/".join([dessert_id, dessert_image.image_id]),
-                "ContentType": f"{dessert_image.url.split('.')[-1]}",
+                "ContentType": dessert_image.file_type,
             },
             ExpiresIn=60 * 60 * 24,
         )
@@ -65,6 +66,7 @@ def post_dessert_image(
         image_id=image_id,
         url=object_url,
         position=body.position,
+        file_type=body.file_type,
     )
 
     desserts_table.update_item(

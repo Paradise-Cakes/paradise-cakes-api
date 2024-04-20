@@ -6,6 +6,7 @@ class Image(Base):
     image_id: str
     url: str
     position: int
+    file_type: str
 
 
 class Price(Base):

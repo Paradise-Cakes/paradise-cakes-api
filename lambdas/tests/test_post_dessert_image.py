@@ -40,6 +40,7 @@ def test_handler_create_image(mock_uuid, desserts_dynamodb_stub):
                 ":i": [
                     {
                         "position": 1,
+                        "file_type": "image/jpeg",
                         "image_id": "00000000-0000-0000-0000-000000000001",
                         "url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001",
                     }
@@ -50,7 +51,7 @@ def test_handler_create_image(mock_uuid, desserts_dynamodb_stub):
 
     response = test_client.post(
         "/desserts/00000000-0000-0000-0000-000000000002/images",
-        json={"position": 1},
+        json={"position": 1, "file_type": "image/jpeg"},
     )
 
     pytest.helpers.assert_responses_equal(
