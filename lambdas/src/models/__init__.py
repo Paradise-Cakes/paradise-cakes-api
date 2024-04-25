@@ -3,10 +3,7 @@ from .base import (
     Base,
 )
 
-from .desserts import (
-    Dessert,
-    PostDessertRequest,
-)
+from .desserts import Dessert, PostDessertRequest, PatchDessertRequest
 
 from .orders import (
     Order,

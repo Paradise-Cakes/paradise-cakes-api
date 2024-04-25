@@ -4,6 +4,7 @@ from fastapi import APIRouter, Request
 from aws_lambda_powertools import Logger
 from decimal import Decimal, ROUND_HALF_UP
 from src.lib.response import fastapi_gateway_response
+from datetime import datetime
 from src.models import (
     Dessert,
     PostDessertRequest,
@@ -34,15 +35,11 @@ class PostDessertResponse(Dessert):
 def post_dessert(request: Request, body: PostDessertRequest):
     logger.info("Creating new dessert")
 
-    dessert_id = str(uuid.uuid4())
-    created_at = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ss")
-    updated_at = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ss")
-
     new_dessert = Dessert(
         **body.clean(),
-        dessert_id=dessert_id,
-        created_at=created_at,
-        updated_at=updated_at,
+        dessert_id=str(uuid.uuid4()),
+        created_at=int(arrow.utcnow().timestamp()),
+        last_updated_at=int(arrow.utcnow().timestamp()),
     )
 
     # TODO: FIGURE OUT HOW TO DO THIS IN A CLEANER WAY

@@ -63,6 +63,7 @@ def test_handler_valid_event_get_desserts(desserts_dynamodb_stub):
                             {"S": "vanilla"},
                         ]
                     },
+                    "visible": {"BOOL": False},
                 },
             ]
         },
@@ -91,6 +92,7 @@ def test_handler_valid_event_get_desserts(desserts_dynamodb_stub):
                 ],
                 "dessert_type": "cake",
                 "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
+                "visible": False,
             },
             {
                 "dessert_id": "DESSERT-2",
@@ -103,6 +105,7 @@ def test_handler_valid_event_get_desserts(desserts_dynamodb_stub):
                 ],
                 "dessert_type": "cake",
                 "ingredients": ["cream cheese", "sugar", "eggs", "vanilla"],
+                "visible": False,
             },
         ],
     )

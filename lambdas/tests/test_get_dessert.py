@@ -41,6 +41,29 @@ def test_handler_valid_event_get_dessert(desserts_dynamodb_stub):
                         {"S": "eggs"},
                     ]
                 },
+                "created_at": {"N": "1711108800"},
+                "last_updated_at": {"N": "1711108800"},
+                "images": {
+                    "L": [
+                        {
+                            "M": {
+                                "image_id": {"S": "IMAGE-1"},
+                                "url": {"S": "https://example.com/image1.jpg"},
+                                "position": {"N": "1"},
+                                "file_type": {"S": "jpg"},
+                            }
+                        },
+                        {
+                            "M": {
+                                "image_id": {"S": "IMAGE-2"},
+                                "url": {"S": "https://example.com/image2.jpg"},
+                                "position": {"N": "2"},
+                                "file_type": {"S": "jpg"},
+                            }
+                        },
+                    ]
+                },
+                "visible": {"BOOL": False},
             }
         },
         expected_params={
@@ -65,6 +88,23 @@ def test_handler_valid_event_get_dessert(desserts_dynamodb_stub):
             ],
             "dessert_type": "cake",
             "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
+            "created_at": 1711108800,
+            "last_updated_at": 1711108800,
+            "images": [
+                {
+                    "image_id": "IMAGE-1",
+                    "url": "https://example.com/image1.jpg",
+                    "position": 1,
+                    "file_type": "jpg",
+                },
+                {
+                    "image_id": "IMAGE-2",
+                    "url": "https://example.com/image2.jpg",
+                    "position": 2,
+                    "file_type": "jpg",
+                },
+            ],
+            "visible": False,
         },
     )
 
