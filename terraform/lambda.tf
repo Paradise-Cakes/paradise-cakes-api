@@ -16,7 +16,6 @@ resource "aws_lambda_function" "app" {
       DYNAMODB_REGION                    = "us-east-1"
       DYNAMODB_ENDPOINT_URL              = "https://dynamodb.us-east-1.amazonaws.com"
       DYNAMODB_DESSERTS_TABLE_NAME       = aws_dynamodb_table.desserts.name
-      DYNAMODB_DESSERT_IMAGES_TABLE_NAME = aws_dynamodb_table.dessert_images.name
       DYNAMODB_ORDERS_TABLE_NAME         = aws_dynamodb_table.orders.name
       COGNITO_APP_CLIENT_ID              = aws_cognito_user_pool_client.paradise_cakes_client.id
       COGNITO_USER_POOL_ID               = aws_cognito_user_pool.paradise_cakes_user_pool.id
