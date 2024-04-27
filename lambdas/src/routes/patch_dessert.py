@@ -45,6 +45,18 @@ def patch_dessert(request: Request, body: PatchDessertRequest, dessert_id: str):
         "last_updated_at": int(arrow.utcnow().timestamp()),
     }
 
+    if "prices" in updated_dessert:
+        updated_dessert["prices"] = [
+            {
+                **price,
+                "base": Decimal(price["base"]).quantize(
+                    Decimal("0.01"), rounding=ROUND_HALF_UP
+                ),
+            }
+            for price in updated_dessert["prices"]
+        ]
+        # TODO: FIGURE OUT HOW TO DO THIS IN A CLEANER WAY
+
     update_response = desserts_table.update_item(
         Key={"dessert_id": dessert_id},
         ReturnValues="ALL_NEW",

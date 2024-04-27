@@ -60,7 +60,7 @@ def test_handler_patch_dessert(desserts_dynamodb_stub):
                 "description": {"S": "A delicious chocolate cake"},
                 "prices": {
                     "L": [
-                        {"M": {"size": {"S": "6in"}, "base": {"N": "10.00"}}},
+                        {"M": {"size": {"S": "6in"}, "base": {"N": "100.00"}}},
                         {"M": {"size": {"S": "8in"}, "base": {"N": "15.00"}}},
                         {"M": {"size": {"S": "10in"}, "base": {"N": "20.00"}}},
                     ]
@@ -83,14 +83,18 @@ def test_handler_patch_dessert(desserts_dynamodb_stub):
         expected_params={
             "Key": {"dessert_id": "00000000-0000-0000-0000-000000000001"},
             "ReturnValues": "ALL_NEW",
-            "UpdateExpression": "SET #visible = :visible, #last_updated_at = :last_updated_at",
+            "UpdateExpression": "SET #prices = :prices, #visible = :visible, #last_updated_at = :last_updated_at",
             "ExpressionAttributeNames": {
                 "#last_updated_at": "last_updated_at",
                 "#visible": "visible",
+                "#prices": "prices",
             },
             "ExpressionAttributeValues": {
                 ":last_updated_at": 1711108800,
                 ":visible": True,
+                ":prices": [
+                    {"size": "6in", "base": Decimal(100.00).quantize(Decimal("0.01"))},
+                ],
             },
             "TableName": "desserts",
         },
@@ -98,7 +102,7 @@ def test_handler_patch_dessert(desserts_dynamodb_stub):
 
     response = test_client.patch(
         "/desserts/00000000-0000-0000-0000-000000000001",
-        json={"visible": True},
+        json={"visible": True, "prices": [{"size": "6in", "base": 100.00}]},
     )
 
     pytest.helpers.assert_responses_equal(
@@ -109,7 +113,7 @@ def test_handler_patch_dessert(desserts_dynamodb_stub):
             "name": "Chocolate Cake",
             "description": "A delicious chocolate cake",
             "prices": [
-                {"size": "6in", "base": 10.00},
+                {"size": "6in", "base": 100.00},
                 {"size": "8in", "base": 15.00},
                 {"size": "10in", "base": 20.00},
             ],
