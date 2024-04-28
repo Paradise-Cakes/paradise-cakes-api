@@ -15,6 +15,7 @@ from src.routes import (
     post_dessert,
     post_dessert_image,
     patch_dessert,
+    delete_dessert,
 )
 
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
@@ -43,6 +44,7 @@ app.include_router(post_logout.router)
 app.include_router(post_dessert.router)
 app.include_router(post_dessert_image.router)
 app.include_router(patch_dessert.router)
+app.include_router(delete_dessert.router)
 
 
 def lambda_handler(event, context):
