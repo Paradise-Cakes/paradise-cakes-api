@@ -45,12 +45,16 @@ def post_dessert_image(
 
     def upload_url(dessert_image):
         bucket_name = os.environ.get("DESSERT_IMAGES_BUCKET_NAME")
+        logger.info(bucket_name)
+        logger.info(dessert_image.image_id)
+        logger.info(dessert_id)
+        logger.info("/".join([dessert_id, dessert_image.image_id]))
+        logger.info(dessert_image.file_type)
         upload_url = s3_client.generate_presigned_url(
             ClientMethod="put_object",
             Params={
                 "Bucket": bucket_name,
                 "Key": "/".join([dessert_id, dessert_image.image_id]),
-                "ContentType": dessert_image.file_type,
             },
             ExpiresIn=60 * 60 * 24,
         )
