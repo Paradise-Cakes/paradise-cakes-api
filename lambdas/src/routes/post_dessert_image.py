@@ -21,7 +21,7 @@ desserts_table = DynamoConnection(
 ).table
 
 
-class postDessertImageRequest(Base):
+class PostDessertImageRequest(Base):
     position: int
     file_type: str
 
@@ -38,18 +38,19 @@ class PostDessertImageResponse(DessertImage):
 )
 def post_dessert_image(
     request: Request,
-    body: postDessertImageRequest,
+    body: PostDessertImageRequest,
     dessert_id: str,
 ):
     logger.info(f"Creating new image for dessert: {dessert_id}")
 
-    def upload_url(dessert_image):
+    def generate_upload_url(dessert_image):
         bucket_name = os.environ.get("DESSERT_IMAGES_BUCKET_NAME")
         upload_url = s3_client.generate_presigned_url(
             ClientMethod="put_object",
             Params={
                 "Bucket": bucket_name,
-                "Key": "/".join([dessert_id, dessert_image.image_id]),
+                "Key": f"{dessert_id}/{dessert_image.image_id}",
+                "ContentType": dessert_image.file_type,
             },
             ExpiresIn=60 * 60 * 24,
         )
@@ -77,6 +78,7 @@ def post_dessert_image(
     )
 
     response = PostDessertImageResponse(
-        **new_dessert_image.model_dump(), upload_url=upload_url(new_dessert_image)
+        **new_dessert_image.model_dump(),
+        upload_url=generate_upload_url(new_dessert_image),
     )
-    return fastapi_gateway_response(200, {}, response.clean())
+    return fastapi_gateway_response(201, {}, response.clean())

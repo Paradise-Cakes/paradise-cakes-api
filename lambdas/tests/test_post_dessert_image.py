@@ -56,12 +56,12 @@ def test_handler_create_image(mock_uuid, desserts_dynamodb_stub):
 
     pytest.helpers.assert_responses_equal(
         response,
-        200,
+        201,
         {
             "position": 1,
             "file_type": "image/jpeg",
             "image_id": "00000000-0000-0000-0000-000000000001",
             "url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001",
-            "upload_url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=fakekey%2F20240322%2Ftest%2Fs3%2Faws4_request&X-Amz-Date=20240322T120000Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Security-Token=fake&X-Amz-Signature=f7e96c9de60026e904b465f1835a4e97602081e3e7231003b8d20575c523416f",
+            "upload_url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000001?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=fakekey%2F20240322%2Ftest%2Fs3%2Faws4_request&X-Amz-Date=20240322T120000Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=content-type%3Bhost&X-Amz-Security-Token=fake&X-Amz-Signature=d95bbed9e22b51b27cc48ef989c10c3a015b91c909b7eae58b8d5d7f14578541",
         },
     )
