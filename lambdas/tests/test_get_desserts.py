@@ -18,7 +18,7 @@ def desserts_dynamodb_stub():
 @freeze_time("2024-03-22 12:00:00")
 def test_handler_valid_event_get_desserts(desserts_dynamodb_stub):
     desserts_dynamodb_stub.add_response(
-        "query",
+        "scan",
         {
             "Items": [
                 {
@@ -67,12 +67,7 @@ def test_handler_valid_event_get_desserts(desserts_dynamodb_stub):
                 },
             ]
         },
-        expected_params={
-            "IndexName": "dessert-type-index",
-            "KeyConditionExpression": "dessert_type = :dessert_type",
-            "ExpressionAttributeValues": {":dessert_type": "cake"},
-            "TableName": "desserts",
-        },
+        expected_params={"TableName": "desserts"},
     )
 
     response = test_client.get("/desserts?dessert_type=cake")
@@ -114,14 +109,9 @@ def test_handler_valid_event_get_desserts(desserts_dynamodb_stub):
 @freeze_time("2024-03-22 12:00:00")
 def test_handler_valid_event_get_desserts_no_items(desserts_dynamodb_stub):
     desserts_dynamodb_stub.add_response(
-        "query",
+        "scan",
         {},
-        expected_params={
-            "IndexName": "dessert-type-index",
-            "KeyConditionExpression": "dessert_type = :dessert_type",
-            "ExpressionAttributeValues": {":dessert_type": "cake"},
-            "TableName": "desserts",
-        },
+        expected_params={"TableName": "desserts"},
     )
 
     response = test_client.get("/desserts?dessert_type=cake")

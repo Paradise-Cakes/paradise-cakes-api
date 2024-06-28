@@ -26,11 +26,7 @@ desserts_table = DynamoConnection(
 def get_desserts(dessert_type: str):
     logger.info(f"Getting desserts")
 
-    dynamo_response = desserts_table.query(
-        IndexName="dessert-type-index",
-        KeyConditionExpression="dessert_type = :dessert_type",
-        ExpressionAttributeValues={":dessert_type": dessert_type},
-    )
+    dynamo_response = desserts_table.scan()
 
     if "Items" not in dynamo_response:
         raise HTTPException(status_code=404, detail="No desserts found")
