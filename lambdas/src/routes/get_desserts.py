@@ -23,7 +23,7 @@ desserts_table = DynamoConnection(
     "/desserts",
     status_code=200,
 )
-def get_desserts(dessert_type: str):
+def get_desserts():
     logger.info(f"Getting desserts")
 
     dynamo_response = desserts_table.scan()
