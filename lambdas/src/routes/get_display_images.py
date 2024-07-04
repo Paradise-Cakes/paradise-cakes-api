@@ -26,11 +26,11 @@ def get_display_images():
     if "Contents" not in response:
         raise HTTPException(status_code=404, detail="No display images found")
 
-    logger.info(f"Found display images: {response['Contents']}")
     urls = []
     for obj in response["Contents"]:
         # Construct the public URL for each object
         url = f"https://{bucket_name}.s3.amazonaws.com/{obj['Key']}"
         urls.append(url)
 
-        return fastapi_gateway_response(200, {}, urls)
+    urls.pop(0)
+    return fastapi_gateway_response(200, {}, urls)
