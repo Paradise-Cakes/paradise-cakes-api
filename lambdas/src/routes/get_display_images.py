@@ -20,7 +20,7 @@ def get_display_images():
     logger.info(f"Getting display images")
 
     bucket_name = os.environ.get("DESSERT_IMAGES_BUCKET_NAME")
-    prefix = "display-images/"
+    prefix = "homepage-display/"
     response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
 
     if "Contents" not in response:

@@ -24,7 +24,7 @@ def test_get_image_urls_empty_bucket(s3_stub):
     s3_stub.add_response(
         "list_objects_v2",
         {},
-        expected_params={"Bucket": "dessert-images", "Prefix": "display-images/"},
+        expected_params={"Bucket": "dessert-images", "Prefix": "homepage-display/"},
     )
     response = client.get("/display-images")
     pytest.helpers.assert_responses_equal(
@@ -37,11 +37,11 @@ def test_get_image_urls(s3_stub):
         "list_objects_v2",
         {
             "Contents": [
-                {"Key": "display-images/image1.jpg"},
-                {"Key": "display-images/image2.jpg"},
+                {"Key": "homepage-display/image1.jpg"},
+                {"Key": "homepage-display/image2.jpg"},
             ]
         },
-        expected_params={"Bucket": "dessert-images", "Prefix": "display-images/"},
+        expected_params={"Bucket": "dessert-images", "Prefix": "homepage-display/"},
     )
     response = client.get("/display-images")
     pytest.helpers.assert_responses_equal(
