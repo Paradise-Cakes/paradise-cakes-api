@@ -17,7 +17,6 @@ def fastapi_gateway_response(
                 item["order_total"] = float(item["order_total"])
 
             if "prices" in item:
-                print("H")
                 for price in item["prices"]:
                     price["base"] = float(price["base"])
 
@@ -25,7 +24,6 @@ def fastapi_gateway_response(
         body["order_total"] = float(body["order_total"])
 
     if "prices" in body:
-        print("L")
         for price in body["prices"]:
             price["base"] = float(price["base"])
 

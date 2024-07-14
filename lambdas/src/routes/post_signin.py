@@ -41,7 +41,7 @@ def post_signin(response: Response, email: str = Form(...), password: str = Form
             max_age=expires_in,
             secure=False,
             httponly=True,
-            samesite="strict",
+            samesite=None,
         )
 
         refresh_token_expires_in = 30 * 24 * 60 * 60  # 30 days
@@ -51,7 +51,7 @@ def post_signin(response: Response, email: str = Form(...), password: str = Form
             max_age=refresh_token_expires_in,
             secure=False,
             httponly=True,
-            samesite="strict",
+            samesite=None,
         )
 
         user_info = get_user_info(access_token)
