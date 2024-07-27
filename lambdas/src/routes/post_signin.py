@@ -56,7 +56,6 @@ def post_signin(response: Response, email: str = Form(...), password: str = Form
 
         logger.info(response.headers)
         logger.info(response.body)
-        logger.info(response.cookies)
 
         user_info = get_user_info(access_token)
 
