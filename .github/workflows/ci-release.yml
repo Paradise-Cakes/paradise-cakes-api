@@ -74,7 +74,7 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr-east.outputs.registry }}
         run: |
-          docker build -t 010526276358/dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} ${GITHUB_WORKSPACE}/lambdas
+          docker build -t 010526276358.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} ${GITHUB_WORKSPACE}/lambdas
 
       - name: Docker push us-east-1 - DEV
         env:
@@ -110,7 +110,7 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr-east.outputs.registry }}
         run: |
-          docker build -t 132899756990/dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} ${GITHUB_WORKSPACE}/lambdas
+          docker build -t 132899756990.dkr.ecr.us-east-1.amazonaws.com/paradise-cakes-api-lambdas-us-east-1:${BRANCH_NAME}-${SHORT_SHA} ${GITHUB_WORKSPACE}/lambdas
 
       - name: Docker push us-east-1 - PROD
         env:
