@@ -150,8 +150,8 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}/terraform
           terraform init \
-            --backend-config="bucket=paradise-cakes-api-tfstate" \
-            --backend-config="key=paradise-cakes-api.tfstate"
+            --backend-config="bucket=paradise-cakes-dev-api-tfstate" \
+            --backend-config="key=paradise-cakes-dev-api.tfstate"
 
       - name: Terraform Plan - PROD
         id: tf-plan-dev
