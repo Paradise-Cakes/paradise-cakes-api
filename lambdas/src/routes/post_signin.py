@@ -39,7 +39,7 @@ def post_signin(response: Response, email: str = Form(...), password: str = Form
             key="access_token",
             value=access_token,
             max_age=expires_in,
-            secure=True,
+            secure=False,
             httponly=True,
             samesite="none",
         )
@@ -49,7 +49,7 @@ def post_signin(response: Response, email: str = Form(...), password: str = Form
             key="refresh_token",
             value=refresh_token,
             max_age=refresh_token_expires_in,
-            secure=True,
+            secure=False,
             httponly=True,
             samesite="none",
         )
