@@ -54,13 +54,11 @@ def post_signin(response: Response, email: str = Form(...), password: str = Form
             samesite="none",
         )
 
-        logger.info(response.headers)
-        logger.info(response.body)
 
         user_info = get_user_info(access_token)
 
         return fastapi_gateway_response(
-            200, {}, {"message": "User signed in", **user_info}
+            200, response.headers, {"message": "User signed in", **user_info}
         )
     except ClientError as e:
         if (
