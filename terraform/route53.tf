@@ -1,10 +1,7 @@
 data "aws_route53_zone" "hosted_zone" {
-  name = "paradisecakes.cloud"
+  name = var.environment == "prod" ? "paradisecakes.cloud" : "paradisecakes-dev.cloud"
 }
 
-data "aws_route53_zone" "hosted_zone_dev" {
-  name = "paradisecakes-dev.cloud"
-}
 
 resource "aws_route53_record" "main" {
   zone_id = data.aws_route53_zone.hosted_zone.zone_id
@@ -19,7 +16,7 @@ resource "aws_route53_record" "main" {
 }
 
 resource "aws_route53_record" "dev" {
-  zone_id = data.aws_route53_zone.hosted_zone_dev.zone_id
+  zone_id = data.aws_route53_zone.hosted_zone.zone_id
   name    = "paradisecakes-dev.cloud"
   type    = "A"
 
