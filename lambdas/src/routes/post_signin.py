@@ -36,12 +36,12 @@ def post_signin(response: Response, email: str = Form(...), password: str = Form
         expires_in = auth_response["AuthenticationResult"]["ExpiresIn"]
 
         response.set_cookie(
-            key="access_token",
             value=access_token,
+            key="access_token",
             max_age=expires_in,
             secure=False,
             httponly=True,
-            samesite=None,
+            samesite="none",
         )
 
         refresh_token_expires_in = 30 * 24 * 60 * 60  # 30 days
@@ -51,7 +51,7 @@ def post_signin(response: Response, email: str = Form(...), password: str = Form
             max_age=refresh_token_expires_in,
             secure=False,
             httponly=True,
-            samesite=None,
+            samesite="none",
         )
 
         user_info = get_user_info(access_token)
