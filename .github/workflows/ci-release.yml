@@ -137,7 +137,7 @@ jobs:
       - name: Configure AWS credentials for us-east-1
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: arn:aws:iam::010526276358:role/paradise-cakes-api-terraform-deployer
+          role-to-assume: arn:aws:iam::010526276358:role/paradise-cakes-api-development-terraform-deployer
           aws-region: us-east-1
 
       - name: Setup Terraform
