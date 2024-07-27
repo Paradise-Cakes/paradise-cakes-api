@@ -145,7 +145,7 @@ jobs:
         with:
           terraform_version: 1.2.7
 
-      - name: Terraform Init - PROD
+      - name: Terraform Init - DEV
         id: tf-init-dev
         run: |
           cd ${GITHUB_WORKSPACE}/terraform
@@ -153,15 +153,18 @@ jobs:
             --backend-config="bucket=paradise-cakes-dev-api-tfstate" \
             --backend-config="key=paradise-cakes-dev-api.tfstate"
 
-      - name: Terraform Plan - PROD
+      - name: Terraform Plan - DEV
         id: tf-plan-dev
         env:
           TF_VAR_environment: dev
+          TF_VAR_region: us-east-1
+          TF_VAR_docker_image_tag: "${{env.BRANCH_NAME}}-${{env.SHORT_SHA}}"
+          TF_VAR_short_version: "${{env.SHORT_SHA}}"
         run: |
           cd ${GITHUB_WORKSPACE}/terraform
           terraform plan --out tfplan.out
 
-      - name: Terraform Apply - PROD
+      - name: Terraform Apply - DEV
         id: tf-apply-dev
         run: |
           cd ${GITHUB_WORKSPACE}/terraform
@@ -207,6 +210,9 @@ jobs:
         id: tf-plan-prod
         env:
           TF_VAR_environment: prod
+          TF_VAR_region: us-east-1
+          TF_VAR_docker_image_tag: "${{env.BRANCH_NAME}}-${{env.SHORT_SHA}}"
+          TF_VAR_short_version: "${{env.SHORT_SHA}}"
         run: |
           cd ${GITHUB_WORKSPACE}/terraform
           terraform plan --out tfplan.out
