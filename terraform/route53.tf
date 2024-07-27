@@ -1,4 +1,4 @@
-data "aws_route53_zone" "hosted_zone_prod" {
+data "aws_route53_zone" "hosted_zone" {
   name = "paradisecakes.cloud"
 }
 
@@ -7,7 +7,7 @@ data "aws_route53_zone" "hosted_zone_dev" {
 }
 
 resource "aws_route53_record" "main" {
-  zone_id = data.aws_route53_zone.hosted_zone_prod.zone_id
+  zone_id = data.aws_route53_zone.hosted_zone.zone_id
   name    = "paradisecakes.cloud"
   type    = "A"
 
