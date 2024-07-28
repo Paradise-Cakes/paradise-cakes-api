@@ -45,8 +45,8 @@ resource "aws_api_gateway_deployment" "paradise_cakes_api" {
 }
 
 resource "aws_api_gateway_domain_name" "paradise_cakes_cloud" {
-  certificate_arn = aws_acm_certificate.paradise_cakes_cloud.arn
-  domain_name     = aws_acm_certificate.paradise_cakes_cloud.domain_name
+  certificate_arn = data.aws_acm_certificate.paradise_cakes_cloud.arn
+  domain_name     = data.aws_acm_certificate.paradise_cakes_cloud.domain_name
 }
 
 resource "aws_api_gateway_base_path_mapping" "path_mapping_internal" {
