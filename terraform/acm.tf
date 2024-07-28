@@ -1,5 +1,5 @@
 data "aws_acm_certificate" "paradise_cakes" {
-  domain = "paradisecakesbymegan.com"
+  domain = var.environment == "prod" ? "paradisecakesbymegan.com" : "dev.paradisecakesbymegan.com"
 }
 
 resource "aws_acm_certificate_validation" "paradise_cakes" {
