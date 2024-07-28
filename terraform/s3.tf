@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "pc_dessert_images_bucket" {
-  bucket = "pc-dessert-images-bucket"
+  bucket = "pc-dessert-images-bucket-${var.environment}"
 }
 
 resource "aws_s3_bucket_cors_configuration" "pc_dessert_images_bucket_cors" {
@@ -40,7 +40,7 @@ data "aws_iam_policy_document" "dessert_images_bucket_policy" {
 }
 
 resource "aws_s3_bucket_policy" "pc_dessert_images_bucket_policy" {
-  bucket = aws_s3_bucket.pc_dessert_images_bucket.id
-  policy = data.aws_iam_policy_document.dessert_images_bucket_policy.json
+  bucket     = aws_s3_bucket.pc_dessert_images_bucket.id
+  policy     = data.aws_iam_policy_document.dessert_images_bucket_policy.json
   depends_on = [aws_s3_bucket_public_access_block.pc_dessert_images_bucket_pab]
 }
