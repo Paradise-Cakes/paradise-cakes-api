@@ -44,15 +44,27 @@ resource "aws_api_gateway_deployment" "paradise_cakes_api" {
   }
 }
 
-resource "aws_api_gateway_domain_name" "paradise_cakes" {
+resource "aws_api_gateway_domain_name" "api" {
   certificate_arn = aws_acm_certificate.paradise_cakes.arn
-  domain_name     = aws_acm_certificate.paradise_cakes.domain_name
+  domain_name     = "api.paradisecakesbymegan.com"
+}
+
+resource "aws_api_gateway_domain_name" "dev_api" {
+  certificate_arn = aws_acm_certificate.paradise_cakes.arn
+  domain_name     = "dev-api.paradisecakesbymegan.com"
 }
 
 resource "aws_api_gateway_base_path_mapping" "path_mapping_internal" {
   api_id      = aws_api_gateway_rest_api.paradise_cakes_api.id
   stage_name  = aws_api_gateway_stage.paradise_cakes.stage_name
-  domain_name = aws_api_gateway_domain_name.paradise_cakes.domain_name
+  domain_name = aws_api_gateway_domain_name.api.domain_name
+  base_path   = aws_api_gateway_stage.paradise_cakes.stage_name
+}
+
+resource "aws_api_gateway_base_path_mapping" "dev_path_mapping_internal" {
+  api_id      = aws_api_gateway_rest_api.paradise_cakes_api.id
+  stage_name  = aws_api_gateway_stage.paradise_cakes.stage_name
+  domain_name = aws_api_gateway_domain_name.dev_api.domain_name
   base_path   = aws_api_gateway_stage.paradise_cakes.stage_name
 }
 
