@@ -1,5 +1,5 @@
 data "aws_route53_zone" "hosted_zone" {
-  name = var.environment == "prod" ? "paradisecakesbymegan.com" : "dev.paradisecakesbymegan.com"
+  name = var.environment == "prod" ? "api.paradisecakesbymegan.com" : "dev-api.paradisecakesbymegan.com"
 }
 
 resource "aws_route53_record" "api" {
