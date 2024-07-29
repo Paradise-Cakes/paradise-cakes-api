@@ -3,7 +3,7 @@ resource "aws_route53_zone" "paradise_cakes" {
 }
 
 resource "aws_route53_record" "api" {
-  zone_id = aws_route53_zone.hosted_zone.zone_id
+  zone_id = aws_route53_zone.paradise_cakes.zone_id
   name    = var.environment == "prod" ? "api.paradisecakesbymegan.com" : "dev-api.paradisecakesbymegan.com"
   type    = "A"
 
