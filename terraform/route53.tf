@@ -2,12 +2,12 @@ provider "aws" {
   region = "us-east-1"
 }
 
-data "aws_route53_zone" "paradise_cakes" {
+resource "aws_route53_zone" "paradise_cakes" {
   name = "paradisecakesbymegan.com"
 }
 
 resource "aws_route53_record" "api_record" {
-  zone_id = data.aws_route53_zone.paradise_cakes.zone_id
+  zone_id = aws_route53_zone.paradise_cakes.zone_id
   name    = var.environment == "prod" ? "api.paradisecakesbymegan.com" : "dev-api.paradisecakesbymegan.com"
   type    = "A"
 
