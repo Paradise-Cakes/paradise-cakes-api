@@ -3,11 +3,13 @@ provider "aws" {
 }
 
 data "aws_route53_zone" "paradise_cakes" {
-  name = "paradisecakesbymegan.com"
+  count = var.environment == "prod" ? 1 : 0
+  name  = "paradisecakesbymegan.com"
 }
 
 resource "aws_route53_record" "api_record" {
-  zone_id = data.aws_route53_zone.paradise_cakes.zone_id
+  count   = var.environment == "prod" ? 1 : 0
+  zone_id = data.aws_route53_zone.paradise_cakes[0].zone_id
   name    = "api.paradisecakesbymegan.com"
   type    = "A"
 
@@ -19,7 +21,8 @@ resource "aws_route53_record" "api_record" {
 }
 
 resource "aws_route53_record" "api_record_dev" {
-  zone_id = data.aws_route53_zone.paradise_cakes.zone_id
+  count   = var.environment == "prod" ? 1 : 0
+  zone_id = data.aws_route53_zone.paradise_cakes[0].zone_id
   name    = "dev-api.paradisecakesbymegan.com"
   type    = "A"
 
