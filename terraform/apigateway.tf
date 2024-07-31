@@ -61,7 +61,7 @@ resource "aws_api_gateway_base_path_mapping" "path_mapping_internal" {
 resource "aws_api_gateway_domain_name" "api_dev" {
   count           = var.environment == "prod" ? 0 : 1
   certificate_arn = data.aws_acm_certificate.paradise_cakes_dev[0].arn
-  domain_name     = data.aws_acm_certificate.paradise_cakes_dev[0].domain_name
+  domain_name     = data.aws_acm_certificate.paradise_cakes_dev[0].domain
 }
 
 resource "aws_api_gateway_base_path_mapping" "path_mapping_internal_dev" {
