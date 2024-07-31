@@ -45,26 +45,30 @@ resource "aws_api_gateway_deployment" "paradise_cakes_api" {
 }
 
 resource "aws_api_gateway_domain_name" "api" {
-  certificate_arn = aws_acm_certificate.paradise_cakes.arn
-  domain_name     = aws_acm_certificate.paradise_cakes.domain_name
+  count           = var.environment == "prod" ? 1 : 0
+  certificate_arn = aws_acm_certificate.paradise_cakes[0].arn
+  domain_name     = aws_acm_certificate.paradise_cakes[0].domain_name
 }
 
 resource "aws_api_gateway_domain_name" "api_dev" {
-  certificate_arn = data.aws_acm_certificate.paradise_cakes_dev.arn
-  domain_name     = data.aws_acm_certificate.paradise_cakes_dev.domain
+  count           = var.environment == "prod" ? 0 : 1
+  certificate_arn = data.aws_acm_certificate.paradise_cakes_dev[0].arn
+  domain_name     = data.aws_acm_certificate.paradise_cakes_dev[0].domain
 }
 
 resource "aws_api_gateway_base_path_mapping" "path_mapping_internal" {
+  count       = var.environment == "prod" ? 1 : 0
   api_id      = aws_api_gateway_rest_api.paradise_cakes_api.id
   stage_name  = aws_api_gateway_stage.paradise_cakes.stage_name
-  domain_name = aws_api_gateway_domain_name.api.domain_name
+  domain_name = aws_api_gateway_domain_name.api[0].domain_name
   base_path   = aws_api_gateway_stage.paradise_cakes.stage_name
 }
 
 resource "aws_api_gateway_base_path_mapping" "path_mapping_internal_dev" {
+  count       = var.environment == "prod" ? 0 : 1
   api_id      = aws_api_gateway_rest_api.paradise_cakes_api.id
   stage_name  = aws_api_gateway_stage.paradise_cakes.stage_name
-  domain_name = aws_api_gateway_domain_name.api_dev.domain_name
+  domain_name = aws_api_gateway_domain_name.api_dev[0].domain_name
   base_path   = aws_api_gateway_stage.paradise_cakes.stage_name
 
 }
