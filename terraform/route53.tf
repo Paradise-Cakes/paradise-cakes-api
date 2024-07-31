@@ -20,6 +20,11 @@ resource "aws_route53_record" "api_record" {
   }
 }
 
+data "aws_api_gateway_domain_name" "api_dev" {
+  count       = var.environment == "prod" ? 1 : 0
+  domain_name = "dev-api.paradisecakesbymegan.com"
+}
+
 resource "aws_route53_record" "api_record_dev" {
   count   = var.environment == "prod" ? 1 : 0
   zone_id = data.aws_route53_zone.paradise_cakes[0].zone_id
@@ -27,8 +32,8 @@ resource "aws_route53_record" "api_record_dev" {
   type    = "A"
 
   alias {
-    name                   = aws_api_gateway_domain_name.api_dev[0].cloudfront_domain_name
-    zone_id                = aws_api_gateway_domain_name.api_dev[0].cloudfront_zone_id
+    name                   = data.aws_api_gateway_domain_name.api_dev[0].cloudfront_domain_name
+    zone_id                = data.aws_api_gateway_domain_name.api_dev[0].cloudfront_zone_id
     evaluate_target_health = true
   }
 }
