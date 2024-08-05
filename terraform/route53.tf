@@ -30,8 +30,6 @@ resource "aws_route53_record" "paradise_cakes_validation_record" {
   ttl             = 60
   type            = each.value.type
   zone_id         = each.value.zone_id
-
-  depends_on = [aws_route53_record.paradise_cakes_api_ns]
 }
 
 data "aws_route53_zone" "paradise_cakes" {
