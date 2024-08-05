@@ -20,7 +20,7 @@ resource "aws_route53_record" "paradise_cakes_validation_record" {
       name    = dvo.resource_record_name
       record  = dvo.resource_record_value
       type    = dvo.resource_record_type
-      zone_id = data.aws_route53_zone.paradise_cakes.zone_id
+      zone_id = aws_route53_zone.paradise_cakes.zone_id
     }
   }
 
