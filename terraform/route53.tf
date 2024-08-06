@@ -33,15 +33,32 @@ resource "aws_route53_record" "paradise_cakes_validation_record" {
 }
 
 data "aws_route53_zone" "paradise_cakes" {
+  count        = var.environment == "prod" ? 1 : 0
   name         = "paradisecakesbymegan.com"
   private_zone = false
 }
 
 resource "aws_route53_record" "paradise_cakes_api_ns" {
+  count   = var.environment == "prod" ? 1 : 0
   zone_id = data.aws_route53_zone.paradise_cakes.zone_id
-  name    = var.environment == "prod" ? "api.paradisecakesbymegan.com" : "dev-api.paradisecakesbymegan.com"
+  name    = "api.paradisecakesbymegan.com"
   type    = "NS"
   ttl     = 300
 
   records = data.aws_route53_zone.paradise_cakes_api.name_servers
+}
+
+resource "aws_route53_record" "paradise_cakes_dev_api_ns" {
+  count   = var.environment == "prod" ? 1 : 0
+  zone_id = data.aws_route53_zone.paradise_cakes.zone_id
+  name    = "dev-api.paradisecakesbymegan.com"
+  type    = "NS"
+  ttl     = 300
+
+  records = [
+    "ns-510.awsdns-63.com",
+    "ns-1870.awsdns-41.co.uk",
+    "ns-647.awsdns-16.net",
+    "ns-1266.awsdns-30.org"
+  ]
 }
