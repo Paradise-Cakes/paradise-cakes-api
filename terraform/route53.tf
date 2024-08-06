@@ -39,7 +39,7 @@ data "aws_route53_zone" "paradise_cakes" {
 
 resource "aws_route53_record" "paradise_cakes_api_ns" {
   zone_id = data.aws_route53_zone.paradise_cakes.zone_id
-  name    = data.aws_route53_zone.paradise_cakes_api.name
+  name    = var.environment == "prod" ? "api.paradisecakesbymegan.com" : "dev-api.paradisecakesbymegan.com"
   type    = "NS"
   ttl     = 300
 
@@ -49,4 +49,6 @@ resource "aws_route53_record" "paradise_cakes_api_ns" {
     data.aws_route53_zone.paradise_cakes_api.name_servers[2],
     data.aws_route53_zone.paradise_cakes_api.name_servers[3],
   ]
+
+  depends_on = [aws_route53_record.api_record]
 }
