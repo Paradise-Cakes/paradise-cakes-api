@@ -49,6 +49,4 @@ resource "aws_route53_record" "paradise_cakes_api_ns" {
     data.aws_route53_zone.paradise_cakes_api.name_servers[2],
     data.aws_route53_zone.paradise_cakes_api.name_servers[3],
   ]
-
-  depends_on = [aws_route53_record.api_record]
 }
