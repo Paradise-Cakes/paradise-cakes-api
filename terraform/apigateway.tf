@@ -47,6 +47,8 @@ resource "aws_api_gateway_deployment" "paradise_cakes_api" {
 resource "aws_api_gateway_domain_name" "api" {
   certificate_arn = aws_acm_certificate.paradise_cakes.arn
   domain_name     = aws_acm_certificate.paradise_cakes.domain_name
+
+  depends_on = [aws_acm_certificate_validation.paradise_cakes]
 }
 
 resource "aws_api_gateway_base_path_mapping" "path_mapping_internal" {
