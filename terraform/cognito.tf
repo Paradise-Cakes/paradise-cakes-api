@@ -9,6 +9,31 @@ resource "aws_cognito_user_pool_client" "paradise_cakes_client" {
     "ALLOW_REFRESH_TOKEN_AUTH",
     "ALLOW_USER_PASSWORD_AUTH",
   ]
+  allowed_oauth_flows_user_pool_client = true
+
+  allowed_oauth_flows = [
+    "code", # Authorization code grant flow
+    "implicit",
+    "client_credentials",
+  ]
+
+  allowed_oauth_scopes = [
+    "openid",
+    "profile",
+    "email",
+  ]
+
+  callback_urls = [
+    "https://dev.paradisecakesbymegan.com/callback",
+  ]
+
+  logout_urls = [
+    "https://dev.paradisecakesbymegan.com/logout",
+  ]
+
+  supported_identity_providers = [
+    "COGNITO",
+  ]
 }
 
 resource "aws_cognito_user_pool" "paradise_cakes_user_pool" {
@@ -74,5 +99,10 @@ resource "aws_cognito_user_pool" "paradise_cakes_user_pool" {
 resource "aws_cognito_user_group" "paradise_cakes_admin_group" {
   name         = "paradise-cakes-admin-group"
   description  = "paradise cakes admin group"
+  user_pool_id = aws_cognito_user_pool.paradise_cakes_user_pool.id
+}
+
+resource "aws_cognito_user_pool_domain" "dev_user_pool_domain" {
+  domain       = "dev-paradisecakesbymegan"
   user_pool_id = aws_cognito_user_pool.paradise_cakes_user_pool.id
 }
