@@ -6,7 +6,6 @@ from botocore.stub import Stubber
 from fastapi.testclient import TestClient
 from src.api import app
 from src.routes.get_orders import orders_table
-from src.routes.get_orders import admin_only
 
 logger = logging.getLogger()
 test_client = TestClient(app, headers={"Authorization": "Bearer TOKEN"})
@@ -20,11 +19,7 @@ def orders_dynamodb_stub():
 
 
 @freeze_time("2024-03-22 12:00:00")
-@patch("src.routes.get_orders.admin_only")
-def test_handler_valid_event_get_orders(mock_admin_only, orders_dynamodb_stub):
-    mock_user = {"email": "anthony.viera@gmail.com", "password": "password"}
-    mock_admin_only.return_value = mock_user
-    app.dependency_overrides[admin_only] = mock_admin_only
+def test_handler_valid_event_get_orders(orders_dynamodb_stub):
     orders_dynamodb_stub.add_response(
         "scan",
         {
@@ -77,14 +72,7 @@ def test_handler_valid_event_get_orders(mock_admin_only, orders_dynamodb_stub):
 
 
 @freeze_time("2024-03-22 12:00:00")
-@patch("src.routes.get_orders.admin_only")
-def test_handler_valid_event_get_orders_no_orders(
-    mock_admin_only, orders_dynamodb_stub
-):
-    mock_user = {"email": "anthony.viera@gmail.com", "password": "password"}
-    mock_admin_only.return_value = mock_user
-    app.dependency_overrides[admin_only] = mock_admin_only
-
+def test_handler_valid_event_get_orders_no_orders(orders_dynamodb_stub):
     orders_dynamodb_stub.add_response(
         "scan", {}, expected_params={"TableName": "orders"}
     )

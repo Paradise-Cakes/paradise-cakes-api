@@ -6,7 +6,6 @@ from fastapi.exceptions import HTTPException
 from src.models import Order
 from src.lib.dynamodb import DynamoConnection
 from src.lib.response import fastapi_gateway_response
-from src.lib.authorization import admin_only
 
 logger = Logger()
 router = APIRouter()
@@ -22,7 +21,6 @@ orders_table = DynamoConnection(
 @router.get(
     "/orders",
     status_code=200,
-    dependencies=[Depends(admin_only)],
 )
 def get_orders():
     logger.info(f"Getting orders")
