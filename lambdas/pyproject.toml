@@ -25,6 +25,8 @@ urllib3 = "^1.26.19"
 python-multipart = "^0.0.9"
 pytest-mock = "^3.14.0"
 aws-lambda-context = "^1.1.0"
+requests = "^2.32.0"
+idna = "^3.7"
 
 [tool.poetry.dev-dependencies]
 
