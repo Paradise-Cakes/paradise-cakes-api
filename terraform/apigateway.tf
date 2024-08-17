@@ -1,5 +1,5 @@
 module "api_gateway" {
-  source = "git::https://github.com/Paradise-Cakes/pc-terraform-modules.git"
+  source = "git::ssh://git@github.com:Paradise-Cakes/pc-terraform-modules.git"
 
   api_name           = "paradise-cakes-api-gateway"
   api_description    = "Proxy to handle requests to paradise cakes API"
