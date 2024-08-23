@@ -14,8 +14,8 @@ module "api_gateway" {
   api_zone_id                                   = data.aws_route53_zone.paradise_cakes_api.zone_id
   prod_api_name                                 = "api.paradisecakesbymegan.com"
   dev_api_name                                  = "dev-api.paradisecakesbymegan.com"
-  website_zone_id                               = data.aws_route53_zone.paradise_cakes[0].zone_id
-  prod_api_name_servers                         = data.aws_route53_zone.paradise_cakes_api.name_servers
+  primary_hosted_zone_id                        = "Z0435985FGL0G1X378KK"
+  prod_api_name_servers                         = ["ns-1937.awsdns-50.co.uk", "ns-1013.awsdns-62.net", "ns-1115.awsdns-11.org", "ns-362.awsdns-45.com"]
   dev_api_name_servers                          = ["ns-510.awsdns-63.com", "ns-1870.awsdns-41.co.uk", "ns-647.awsdns-16.net", "ns-1266.awsdns-30.org"]
 
 
