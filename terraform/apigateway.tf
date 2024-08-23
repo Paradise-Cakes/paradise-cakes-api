@@ -1,11 +1,12 @@
 module "api_gateway" {
-  source = "git@github.com:Paradise-Cakes/pc-terraform-modules.git//apiGateway?ref=v1.1.0"
+  source = "git@github.com:Paradise-Cakes/pc-terraform-modules.git//apiGateway"
 
+  app_arn                                       = aws_lambda_function.app.arn
   api_gateway_name                              = "paradise-cakes-api-gateway"
   api_description                               = "Proxy to handle requests to paradise cakes API"
   binary_media_types                            = ["multipart/form-data"]
   stage_name                                    = "v1"
-  certificate_arn                               = aws_acm_certificate.paradise_cakes.arn
+  api_acm_certificate_arn                       = aws_acm_certificate.paradise_cakes.arn
   acm_certificate_api_domain_validation_options = aws_acm_certificate.paradise_cakes.domain_validation_options
   api_domain_name                               = aws_acm_certificate.paradise_cakes.domain_name
   lambda_function_arn                           = aws_lambda_function.app.invoke_arn
