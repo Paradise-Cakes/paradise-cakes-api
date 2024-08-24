@@ -118,6 +118,7 @@ jobs:
 
   tf-dev:
     runs-on: ubuntu-latest
+    if: "!contains(github.ref, 'revert')"
     environment: dev
     concurrency: tf-dev
     timeout-minutes: 30
@@ -126,13 +127,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
 
       - name: Set GIT variables
         run: |
@@ -186,13 +180,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
 
       - name: Set GIT variables
         run: |
