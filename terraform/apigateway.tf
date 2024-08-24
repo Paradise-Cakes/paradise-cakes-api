@@ -1,74 +1,23 @@
-resource "aws_api_gateway_rest_api" "paradise_cakes_api" {
-  name        = "paradise-cakes-api-gateway"
-  description = "Proxy to handle requests to paradise cakes API"
+module "api_gateway" {
+  source = "git@github.com:Paradise-Cakes/pc-terraform-modules.git//apiGateway?ref=v1.1.2"
 
-  binary_media_types = [
-    "multipart/form-data"
-  ]
-}
+  app_arn                                       = aws_lambda_function.app.arn
+  api_gateway_name                              = "paradise-cakes-api-gateway"
+  api_description                               = "Proxy to handle requests to paradise cakes API"
+  binary_media_types                            = ["multipart/form-data"]
+  stage_name                                    = "v1"
+  api_acm_certificate_arn                       = aws_acm_certificate.paradise_cakes.arn
+  acm_certificate_api_domain_validation_options = aws_acm_certificate.paradise_cakes.domain_validation_options
+  api_domain_name                               = aws_acm_certificate.paradise_cakes.domain_name
+  lambda_function_arn                           = aws_lambda_function.app.invoke_arn
+  environment                                   = var.environment
+  api_zone_id                                   = data.aws_route53_zone.paradise_cakes_api.zone_id
+  prod_api_name                                 = "api.paradisecakesbymegan.com"
+  dev_api_name                                  = "dev-api.paradisecakesbymegan.com"
+  primary_hosted_zone_id                        = "Z0435985FGL0G1X378KK"
+  prod_api_name_servers                         = ["ns-1937.awsdns-50.co.uk", "ns-1013.awsdns-62.net", "ns-1115.awsdns-11.org", "ns-362.awsdns-45.com"]
+  dev_api_name_servers                          = ["ns-510.awsdns-63.com", "ns-1870.awsdns-41.co.uk", "ns-647.awsdns-16.net", "ns-1266.awsdns-30.org"]
 
-resource "aws_api_gateway_resource" "proxy" {
-  rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
-  parent_id   = aws_api_gateway_rest_api.paradise_cakes_api.root_resource_id
-  path_part   = "{proxy+}"
-}
-
-resource "aws_api_gateway_method" "paradise_cakes_proxy" {
-  rest_api_id   = aws_api_gateway_rest_api.paradise_cakes_api.id
-  resource_id   = aws_api_gateway_resource.proxy.id
-  http_method   = "ANY"
-  authorization = "NONE"
-}
-
-resource "aws_api_gateway_stage" "paradise_cakes" {
-  stage_name           = "v1"
-  rest_api_id          = aws_api_gateway_rest_api.paradise_cakes_api.id
-  deployment_id        = aws_api_gateway_deployment.paradise_cakes_api.id
-  xray_tracing_enabled = true
-  cache_cluster_size   = "0.5"
-}
-
-resource "aws_api_gateway_deployment" "paradise_cakes_api" {
-  rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
-  depends_on = [
-    aws_api_gateway_integration.paradise_cakes_integration,
-    aws_api_gateway_integration.cors
-  ]
-
-  triggers = {
-    redeployment = timestamp()
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_api_gateway_domain_name" "api" {
-  certificate_arn = aws_acm_certificate.paradise_cakes.arn
-  domain_name     = aws_acm_certificate.paradise_cakes.domain_name
-
-  depends_on = [aws_acm_certificate_validation.paradise_cakes]
-}
-
-resource "aws_api_gateway_base_path_mapping" "path_mapping_internal" {
-  api_id      = aws_api_gateway_rest_api.paradise_cakes_api.id
-  stage_name  = aws_api_gateway_stage.paradise_cakes.stage_name
-  domain_name = aws_api_gateway_domain_name.api.domain_name
-  base_path   = aws_api_gateway_stage.paradise_cakes.stage_name
-}
-
-resource "aws_api_gateway_integration" "paradise_cakes_integration" {
-  rest_api_id             = aws_api_gateway_rest_api.paradise_cakes_api.id
-  resource_id             = aws_api_gateway_resource.proxy.id
-  http_method             = aws_api_gateway_method.paradise_cakes_proxy.http_method
-  integration_http_method = "POST"
-  type                    = "AWS_PROXY"
-  uri                     = aws_lambda_function.app.invoke_arn
-}
-
-resource "aws_api_gateway_rest_api_policy" "paradise_cakes_api" {
-  rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
 
   policy = <<EOF
 {
@@ -86,56 +35,3 @@ resource "aws_api_gateway_rest_api_policy" "paradise_cakes_api" {
 }
 EOF
 }
-
-
-resource "aws_api_gateway_method" "cors" {
-  rest_api_id   = aws_api_gateway_rest_api.paradise_cakes_api.id
-  resource_id   = aws_api_gateway_resource.proxy.id
-  http_method   = "OPTIONS"
-  authorization = "NONE"
-}
-
-resource "aws_api_gateway_integration" "cors" {
-  rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
-  resource_id = aws_api_gateway_resource.proxy.id
-  http_method = aws_api_gateway_method.cors.http_method
-  type        = "MOCK"
-  request_templates = {
-    "application/json" = <<EOF
-{
-  "statusCode": 200
-}
-EOF
-  }
-}
-
-resource "aws_api_gateway_method_response" "cors" {
-  rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
-  resource_id = aws_api_gateway_resource.proxy.id
-  http_method = aws_api_gateway_method.cors.http_method
-  status_code = 200
-
-  response_models = {
-    "application/json" = "Empty"
-  }
-
-  response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = true
-    "method.response.header.Access-Control-Allow-Methods" = true
-    "method.response.header.Access-Control-Allow-Origin"  = true
-  }
-}
-
-resource "aws_api_gateway_integration_response" "cors" {
-  rest_api_id = aws_api_gateway_rest_api.paradise_cakes_api.id
-  resource_id = aws_api_gateway_resource.proxy.id
-  http_method = aws_api_gateway_method.cors.http_method
-  status_code = 200
-
-  response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization,User-Agent'"
-    "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS,GET,PUT,DELETE,PATCH'"
-    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
-  }
-}
-
