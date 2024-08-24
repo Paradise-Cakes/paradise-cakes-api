@@ -118,6 +118,7 @@ jobs:
 
   tf-dev:
     runs-on: ubuntu-latest
+    if: "!startsWith(github.event.head_commit.message, 'Revert')"
     environment: dev
     concurrency: tf-dev
     timeout-minutes: 30
