@@ -118,7 +118,7 @@ jobs:
 
   tf-dev:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'revert')"
+    if: "!contains(github.ref, 'revert')"
     environment: dev
     concurrency: tf-dev
     timeout-minutes: 30
