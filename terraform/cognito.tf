@@ -14,7 +14,6 @@ resource "aws_cognito_user_pool_client" "paradise_cakes_client" {
   allowed_oauth_flows = [
     "code", # Authorization code grant flow
     "implicit",
-    "client_credentials",
   ]
 
   allowed_oauth_scopes = [
