@@ -88,12 +88,12 @@ data "aws_iam_policy_document" "user_assume_role_policy" {
       type        = "Federated"
       identifiers = ["cognito-idp.amazonaws.com"]
     }
-  }
 
-  condition {
-    test     = "StringEquals"
-    variable = "cognito-identity.amazonaws.com:aud"
-    values   = [aws_cognito_identity_pool.orders_identity_pool.id]
+    condition {
+      test     = "StringEquals"
+      variable = "cognito-identity.amazonaws.com:aud"
+      values   = [aws_cognito_identity_pool.orders_identity_pool.id]
+    }
   }
 }
 
