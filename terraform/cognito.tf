@@ -77,7 +77,7 @@ resource "aws_cognito_identity_pool" "orders_identity_pool" {
 
   cognito_identity_providers {
     client_id               = aws_cognito_user_pool_client.paradise_cakes_client.id
-    provider_name           = aws_cognito_user_pool.paradise_cakes_user_pool.provider_name
+    provider_name           = aws_cognito_user_pool.paradise_cakes_user_pool.endpoint
     server_side_token_check = false
   }
 }

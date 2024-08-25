@@ -79,7 +79,7 @@ resource "aws_iam_role_policy_attachment" "api_gateway_attachment" {
   role       = aws_iam_role.lambda_execution_role.name
 }
 
-resource "aws_iam_policy_document" "user_assume_role_policy" {
+data "aws_iam_policy_document" "user_assume_role_policy" {
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
     effect  = "Allow"
@@ -97,7 +97,7 @@ resource "aws_iam_policy_document" "user_assume_role_policy" {
   }
 }
 
-resource "aws_iam_policy_document" "admin_assume_role_policy" {
+data "aws_iam_policy_document" "admin_assume_role_policy" {
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
 
@@ -118,12 +118,12 @@ resource "aws_iam_policy_document" "admin_assume_role_policy" {
 
 resource "aws_iam_role" "user_role" {
   name               = "user-role"
-  assume_role_policy = aws_iam_policy_document.user_assume_role_policy.json
+  assume_role_policy = data.aws_iam_policy_document.user_assume_role_policy.json
 }
 
 resource "aws_iam_role" "admin_role" {
   name               = "admin-role"
-  assume_role_policy = aws_iam_policy_document.admin_assume_role_policy.json
+  assume_role_policy = data.aws_iam_policy_document.admin_assume_role_policy.json
 }
 
 resource "aws_iam_policy" "user_order_access_policy" {
