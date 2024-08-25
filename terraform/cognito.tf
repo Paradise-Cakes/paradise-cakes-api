@@ -71,8 +71,26 @@ resource "aws_cognito_user_pool" "paradise_cakes_user_pool" {
   }
 }
 
+resource "aws_cognito_identity_pool" "orders_identity_pool" {
+  identity_pool_name               = "orders-identity-pool"
+  allow_unauthenticated_identities = false
+
+  cognito_identity_providers {
+    client_id               = aws_cognito_user_pool_client.paradise_cakes_client.id
+    provider_name           = aws_cognito_user_pool.paradise_cakes_user_pool.endpoint
+    server_side_token_check = false
+  }
+}
+
 resource "aws_cognito_user_group" "paradise_cakes_admin_group" {
   name         = "paradise-cakes-admin-group"
   description  = "paradise cakes admin group"
   user_pool_id = aws_cognito_user_pool.paradise_cakes_user_pool.id
 }
+
+resource "aws_cognito_user_group" "paradise_cakes_user_group" {
+  name         = "paradise-cakes-user-group"
+  description  = "paradise cakes user group"
+  user_pool_id = aws_cognito_user_pool.paradise_cakes_user_pool.id
+}
+
