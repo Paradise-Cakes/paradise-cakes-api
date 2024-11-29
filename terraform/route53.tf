@@ -3,5 +3,5 @@ data "aws_route53_zone" "paradise_cakes_api" {
 }
 
 data "aws_route53_zone" "paradise_cakes" {
-  name = var.environment == "prod" ? "megsparadisecakes.com" : "dev-megsparadisecakes.com"
+  name = var.environment == "prod" ? "megsparadisecakes.com" : "dev.megsparadisecakes.com"
 }
