@@ -7,7 +7,7 @@ module "api_gateway" {
   binary_media_types      = ["multipart/form-data"]
   stage_name              = "v1"
   api_acm_certificate_arn = data.aws_acm_certificate.paradise_cakes.arn
-  api_domain_name         = data.aws_acm_certificate.paradise_cakes.domain_name
+  api_domain_name         = data.aws_acm_certificate.paradise_cakes.domain
   lambda_function_arn     = aws_lambda_function.app.invoke_arn
   environment             = var.environment
   api_zone_id             = data.aws_route53_zone.paradise_cakes_api.zone_id
