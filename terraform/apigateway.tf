@@ -15,8 +15,8 @@ module "api_gateway" {
   prod_api_name                                 = "api.megsparadisecakes.com"  
   dev_api_name                                  = "dev-api.megsparadisecakes.com"    
   primary_hosted_zone_id                        = "Z07149123H5T9UU1DMO2K"
-  prod_api_name_servers                         = [""]
-  dev_api_name_servers                          = [""]
+  prod_api_name_servers                         = ["ns-1901.awsdns-45.co.uk", "ns-683.awsdns-21.net", "ns-1142.awsdns-14.org", "ns-121.awsdns-15.com"]
+  dev_api_name_servers                          = ["ns-774.awsdns-32.net", "ns-1930.awsdns-49.co.uk", "ns-102.awsdns-12.com", "ns-1099.awsdns-09.org"]
 
 
   policy = <<EOF
