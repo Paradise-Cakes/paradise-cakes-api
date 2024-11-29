@@ -1,5 +1,5 @@
 module "api_gateway" {
-  source = "git@github.com:Paradise-Cakes/pc-terraform-modules.git//apiGateway?ref=v1.2.0"
+  source = "git@github.com:Paradise-Cakes/pc-terraform-modules.git//apiGateway?ref=v1.3.0"
 
   app_arn                 = aws_lambda_function.app.arn
   api_gateway_name        = "paradise-cakes-api-gateway"
@@ -11,6 +11,7 @@ module "api_gateway" {
   lambda_function_arn     = aws_lambda_function.app.invoke_arn
   environment             = var.environment
   api_zone_id             = data.aws_route53_zone.paradise_cakes_api.zone_id
+  website_zone_id         = data.aws_route53_zone.paradise_cakes.zone_id
 
   policy = <<EOF
 {
