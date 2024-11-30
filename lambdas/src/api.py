@@ -21,7 +21,11 @@ from src.routes import (
 
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
 
-origins = ["http://localhost:5173", "https://paradisecakesbymegan.com"]
+origins = [
+    "http://localhost:5173",
+    "https://megsparadisecakes.com",
+    "https://www.megsparadisecakes.com",
+]
 
 app.add_middleware(
     CORSMiddleware,
