@@ -19,9 +19,7 @@ module "api_gateway" {
   "Statement": [
     {
       "Effect": "Allow",
-      "Principal": {
-        "AWS": "*"
-      },
+      "Principal": "*",
       "Action": "execute-api:Invoke",
       "Resource": ["execute-api:/*/*/*"]
     }
