@@ -25,6 +25,8 @@ origins = [
     "http://localhost:5173",
     "https://megsparadisecakes.com",
     "https://www.megsparadisecakes.com",
+    "https://dev.megsparadisecakes.com",
+    "https://www.dev.megsparadisecakes.com",
 ]
 
 app.add_middleware(
