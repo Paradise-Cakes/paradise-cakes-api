@@ -19,6 +19,19 @@ resource "aws_dynamodb_table" "orders" {
     name = "order_id"
     type = "S"
   }
+
+  attribute {
+    name = "scheduled_delivery_time"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name               = "scheduled_delivery_time_index"
+    hash_key           = "scheduled_delivery_time"
+    projection_type    = "ALL"
+    read_capacity      = 5
+    write_capacity     = 5
+  }
 }
 
 resource "aws_dynamodb_table" "order_type_count" {
