@@ -33,7 +33,7 @@ resource "aws_cognito_user_pool" "paradise_cakes_user_pool" {
 
   email_configuration {
     email_sending_account = "DEVELOPER"
-    source_arn            = "arn:aws:ses:us-east-1:132899756990:identity/do-not-reply@megsparadisecakes.com"
+    source_arn            = "arn:aws:ses:us-east-1:${data.aws_caller_identity.current.account_id}:identity/do-not-reply@megsparadisecakes.com"
     from_email_address    = "do-not-reply@megsparadisecakes.com"
   }
 
