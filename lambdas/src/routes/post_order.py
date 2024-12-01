@@ -10,6 +10,9 @@ from src.models import (
     PostOrderRequest,
 )
 from src.lib.dynamodb import DynamoConnection
+from datetime import datetime, timezone
+
+MAX_ORDERS_FOR_DAY = 2
 
 logger = Logger()
 router = APIRouter()
@@ -33,6 +36,30 @@ class PostOrderResponse(Order):
     pass
 
 
+class OrderLimitExceededException(Exception):
+    pass
+
+
+def count_orders_for_date(date):
+    start_of_day = int(
+        datetime.combine(date, datetime.min.time()).timestamp()
+    )  # 00:00:00
+    end_of_day = int(
+        datetime.combine(date, datetime.max.time()).timestamp()
+    )  # 23:59:59
+
+    response = orders_table.query(
+        IndexName="ScheduledDeliveryIndex",
+        KeyConditionExpression="scheduled_delivery_time BETWEEN :start AND :end",
+        ExpressionAttributeValues={
+            ":start": start_of_day,
+            ":end": end_of_day,
+        },
+    )
+
+    return len(response["Items"])
+
+
 @logger.inject_lambda_context(log_event=True)
 @router.post(
     "/orders",
@@ -40,45 +67,65 @@ class PostOrderResponse(Order):
     response_model=PostOrderResponse,
 )
 def post_order(request: Request, body: PostOrderRequest):
-    logger.info("Incrementing order type counter")
+    logger.info("checking if order limit has been exceeded")
     order_type = "ORDER"
-    get_response = order_type_count_table.get_item(Key={"order_type": order_type})
 
-    if "Item" not in get_response:
-        order_count = 1
-        order_type_count_table.put_item(
-            Item={"order_type": order_type, "order_count": order_count}
-        )
-    else:
-        counter_response = order_type_count_table.update_item(
-            Key={"order_type": "ORDER"},
-            UpdateExpression="set order_count = order_count + :incr",
-            ExpressionAttributeValues={":incr": 1},
-            ReturnValues="ALL_NEW",
-        )
-        logger.info(counter_response)
-        order_count = counter_response.get("Attributes").get("order_count")
-
-    order_id = f"{order_type}-{order_count}"
-    logger.info(f"Creating new order for {order_id}")
-
-    new_order = Order(
-        **body.clean(),
-        order_id=order_id,
-        order_status="NEW",
-        order_date=int(arrow.utcnow().timestamp()),
-    )
-
-    if new_order.custom_order:
-        orders_table.put_item(Item={**new_order.clean()})
-    else:
-        orders_table.put_item(
-            Item={
-                **new_order.clean(),
-                "order_total": Decimal(str(new_order.order_total)),
-            }
+    # are there more than two orders for this date?
+    try:
+        new_order = Order(
+            **body.clean(),
+            order_id="",
+            order_status="NEW",
+            order_date=int(arrow.utcnow().timestamp()),
         )
 
-    response = PostOrderResponse(**new_order.model_dump())
-    logger.info(f"Created new order: {new_order}")
-    return fastapi_gateway_response(201, {}, response.clean())
+        new_order_date = datetime.fromtimestamp(
+            new_order.scheduled_delivery_time, timezone.utc
+        ).date()
+
+        orders_for_date = count_orders_for_date(new_order_date)
+        if orders_for_date >= MAX_ORDERS_FOR_DAY:
+            raise OrderLimitExceededException(
+                f"Order limit exceeded for {new_order_date}. Max orders: {MAX_ORDERS_FOR_DAY}"
+            )
+
+        logger.info("Incrementing order type counter")
+        get_response = order_type_count_table.get_item(Key={"order_type": order_type})
+
+        if "Item" not in get_response:
+            order_count = 1
+            order_type_count_table.put_item(
+                Item={"order_type": order_type, "order_count": order_count}
+            )
+        else:
+            counter_response = order_type_count_table.update_item(
+                Key={"order_type": "ORDER"},
+                UpdateExpression="set order_count = order_count + :incr",
+                ExpressionAttributeValues={":incr": 1},
+                ReturnValues="ALL_NEW",
+            )
+            logger.info(counter_response)
+            order_count = counter_response.get("Attributes").get("order_count")
+
+        order_id = f"{order_type}-{order_count}"
+        new_order.order_id = order_id
+
+        logger.info(f"Creating new order for {order_id}")
+
+        if new_order.custom_order:
+            orders_table.put_item(Item={**new_order.clean()})
+        else:
+            orders_table.put_item(
+                Item={
+                    **new_order.clean(),
+                    "order_total": Decimal(str(new_order.order_total)),
+                }
+            )
+
+        response = PostOrderResponse(**new_order.model_dump())
+        logger.info(f"Created new order: {new_order}")
+        return fastapi_gateway_response(201, {}, response.clean())
+
+    except OrderLimitExceededException as e:
+        logger.error(e)
+        return fastapi_gateway_response(400, {}, {"error": str(e)})
