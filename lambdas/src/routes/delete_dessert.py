@@ -49,5 +49,5 @@ def delete_dessert(request: Request, dessert_id: str):
 
     desserts_table.delete_item(Key={"dessert_id": dessert_id})
     response = DeleteDessertResponse(**get_dessert_response["Item"])
-    logger.info(f"Deleted dessert: {response}") 
+    logger.info(f"Deleted dessert: {response}")
     return fastapi_gateway_response(200, {}, response.clean())

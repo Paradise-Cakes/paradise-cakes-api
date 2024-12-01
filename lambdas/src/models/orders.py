@@ -5,9 +5,9 @@ from decimal import Decimal
 
 class Order(Base):
     order_id: str = None
-    dessert_id: str = None
-    dessert_name: str = None
-    quantity: int = None
+    dessert_id: Optional[str] = None
+    dessert_name: Optional[str] = None
+    quantity: Optional[int] = None
     customer_first_name: str = None
     customer_last_name: str = None
     customer_email: str = None
@@ -16,7 +16,7 @@ class Order(Base):
     delivery_address_line_1: str = None
     delivery_address_line_2: str = None
     scheduled_delivery_time: int = None
-    order_total: Decimal = None
+    order_total: Optional[Decimal] = None
     order_status: str = None
     order_date: int = None
 

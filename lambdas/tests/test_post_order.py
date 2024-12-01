@@ -204,3 +204,85 @@ def test_handler_valid_event_new_order_type(
             "custom_order": False,
         },
     )
+
+
+@freeze_time("2024-03-22 12:00:00")
+def test_handler_accepts_customer_order(
+    orders_dynamodb_stub, orders_type_count_dynamodb_stub
+):
+    orders_type_count_dynamodb_stub.add_response(
+        "get_item",
+        {"Item": {"order_type": {"S": "ORDER"}, "order_count": {"S": "1"}}},
+        expected_params={
+            "Key": {"order_type": "ORDER"},
+            "TableName": "order_type_count",
+        },
+    )
+
+    orders_type_count_dynamodb_stub.add_response(
+        "update_item",
+        {"Attributes": {"order_count": {"S": "2"}}},
+        expected_params={
+            "Key": {"order_type": "ORDER"},
+            "TableName": "order_type_count",
+            "UpdateExpression": "set order_count = order_count + :incr",
+            "ExpressionAttributeValues": {":incr": 1},
+            "ReturnValues": "ALL_NEW",
+        },
+    )
+
+    orders_dynamodb_stub.add_response(
+        "put_item",
+        {},
+        expected_params={
+            "Item": {
+                "order_id": "ORDER-2",
+                "order_status": "NEW",
+                "order_date": 1711108800,
+                "customer_first_name": "Anthony",
+                "customer_last_name": "Viera",
+                "customer_email": "anthony.viera@gmail.com",
+                "customer_phone_number": "911",
+                "delivery_zip_code": "78643",
+                "delivery_address_line_1": "my house",
+                "delivery_address_line_2": "APT 1",
+                "scheduled_delivery_time": 1707998401,
+                "custom_order": True,
+            },
+            "TableName": "orders",
+        },
+    )
+
+    response = test_client.post(
+        "/orders",
+        json={
+            "customer_first_name": "Anthony",
+            "customer_last_name": "Viera",
+            "customer_email": "anthony.viera@gmail.com",
+            "customer_phone_number": "911",
+            "delivery_zip_code": "78643",
+            "delivery_address_line_1": "my house",
+            "delivery_address_line_2": "APT 1",
+            "scheduled_delivery_time": 1707998401,
+            "custom_order": True,
+        },
+    )
+
+    pytest.helpers.assert_responses_equal(
+        response,
+        201,
+        {
+            "order_id": "ORDER-2",
+            "customer_first_name": "Anthony",
+            "customer_last_name": "Viera",
+            "customer_email": "anthony.viera@gmail.com",
+            "customer_phone_number": "911",
+            "delivery_zip_code": "78643",
+            "delivery_address_line_1": "my house",
+            "delivery_address_line_2": "APT 1",
+            "scheduled_delivery_time": 1707998401,
+            "order_status": "NEW",
+            "order_date": 1711108800,
+            "custom_order": True,
+        },
+    )
