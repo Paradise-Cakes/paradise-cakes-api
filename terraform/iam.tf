@@ -53,6 +53,7 @@ resource "aws_iam_policy" "paradise_cakes_api_policy" {
           "dynamodb:DeleteItem",
           "dynamodb:UpdateItem",
           "dynamodb:Scan"
+          "dynamodb:Query"
         ]
         Effect   = "Allow",
         Resource = "arn:aws:dynamodb:us-east-1:${data.aws_caller_identity.current.account_id}:table/*"
