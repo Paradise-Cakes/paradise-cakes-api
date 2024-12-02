@@ -49,7 +49,7 @@ def count_orders_for_date(date):
     )  # 23:59:59
 
     response = orders_table.query(
-        IndexName="ScheduledDeliveryIndex",
+        IndexName="scheduled_delivery_time_index",
         KeyConditionExpression="scheduled_delivery_time BETWEEN :start AND :end",
         ExpressionAttributeValues={
             ":start": start_of_day,

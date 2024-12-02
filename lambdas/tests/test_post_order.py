@@ -31,7 +31,7 @@ def test_handler_valid_event_existing_order_type(
         "query",
         {"Items": [{"order_id": {"S": "ORDER-1"}}]},
         expected_params={
-            "IndexName": "ScheduledDeliveryIndex",
+            "IndexName": "scheduled_delivery_time_index",
             "KeyConditionExpression": "scheduled_delivery_time BETWEEN :start AND :end",
             "ExpressionAttributeValues": {":start": 1708041600, ":end": 1708127999},
             "TableName": "orders",
@@ -135,7 +135,7 @@ def test_handler_valid_event_new_order_type(
         "query",
         {"Items": []},
         expected_params={
-            "IndexName": "ScheduledDeliveryIndex",
+            "IndexName": "scheduled_delivery_time_index",
             "KeyConditionExpression": "scheduled_delivery_time BETWEEN :start AND :end",
             "ExpressionAttributeValues": {":start": 1707955200, ":end": 1708041599},
             "TableName": "orders",
@@ -236,7 +236,7 @@ def test_handler_accepts_customer_order(
         "query",
         {"Items": []},
         expected_params={
-            "IndexName": "ScheduledDeliveryIndex",
+            "IndexName": "scheduled_delivery_time_index",
             "KeyConditionExpression": "scheduled_delivery_time BETWEEN :start AND :end",
             "ExpressionAttributeValues": {":start": 1707955200, ":end": 1708041599},
             "TableName": "orders",
@@ -326,7 +326,7 @@ def test_handler_rejects_order_when_max_orders_exceeded(
         "query",
         {"Items": [{"order_id": {"S": "ORDER-1"}}, {"order_id": {"S": "ORDER-2"}}]},
         expected_params={
-            "IndexName": "ScheduledDeliveryIndex",
+            "IndexName": "scheduled_delivery_time_index",
             "KeyConditionExpression": "scheduled_delivery_time BETWEEN :start AND :end",
             "ExpressionAttributeValues": {":start": 1707955200, ":end": 1708041599},
             "TableName": "orders",
@@ -381,7 +381,7 @@ def test_handler_rejects_order_when_max_orders_exceeded(orders_dynamodb_stub):
         "query",
         {"Items": [{"order_id": {"S": "ORDER-1"}}, {"order_id": {"S": "ORDER-2"}}]},
         expected_params={
-            "IndexName": "ScheduledDeliveryIndex",
+            "IndexName": "scheduled_delivery_time_index",
             "KeyConditionExpression": "scheduled_delivery_time BETWEEN :start AND :end",
             "ExpressionAttributeValues": {":start": 1707955200, ":end": 1708041599},
             "TableName": "orders",
