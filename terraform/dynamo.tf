@@ -22,7 +22,7 @@ resource "aws_dynamodb_table" "orders" {
 
   attribute {
     name = "scheduled_delivery_time"
-    type = "S"
+    type = "N"
   }
 
   global_secondary_index {
