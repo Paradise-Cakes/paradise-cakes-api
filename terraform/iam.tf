@@ -52,7 +52,7 @@ resource "aws_iam_policy" "paradise_cakes_api_policy" {
           "dynamodb:PutItem",
           "dynamodb:DeleteItem",
           "dynamodb:UpdateItem",
-          "dynamodb:Scan"
+          "dynamodb:Scan",
           "dynamodb:Query"
         ]
         Effect   = "Allow",
