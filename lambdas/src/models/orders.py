@@ -15,7 +15,8 @@ class Order(Base):
     delivery_zip_code: str = None
     delivery_address_line_1: str = None
     delivery_address_line_2: str = None
-    scheduled_delivery_time: int = None
+    delivery_date: str = None
+    delivery_time: int = None
     order_total: Optional[Decimal] = None
     order_status: str = None
     order_date: int = None
@@ -45,4 +46,5 @@ class PostOrderRequest(Base):
     delivery_address_line_2: str
 
     # delivery info
-    scheduled_delivery_time: int
+    delivery_date: str
+    delivery_time: int

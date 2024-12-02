@@ -31,9 +31,9 @@ def test_handler_valid_event_existing_order_type(
         "query",
         {"Items": [{"order_id": {"S": "ORDER-1"}}]},
         expected_params={
-            "IndexName": "scheduled_delivery_time_index",
-            "KeyConditionExpression": "scheduled_delivery_time BETWEEN :start AND :end",
-            "ExpressionAttributeValues": {":start": 1708041600, ":end": 1708127999},
+            "IndexName": "delivery_date_index",
+            "KeyConditionExpression": "delivery_date = :date",
+            "ExpressionAttributeValues": {":date": "12-12-2024"},
             "TableName": "orders",
         },
     )
@@ -77,7 +77,8 @@ def test_handler_valid_event_existing_order_type(
                 "delivery_zip_code": "78643",
                 "delivery_address_line_1": "my house",
                 "delivery_address_line_2": "APT 1",
-                "scheduled_delivery_time": 1708084801,
+                "delivery_date": "12-12-2024",
+                "delivery_time": 1708084801,
                 "order_total": Decimal(3.50),
                 "custom_order": False,
             },
@@ -98,7 +99,8 @@ def test_handler_valid_event_existing_order_type(
             "delivery_zip_code": "78643",
             "delivery_address_line_1": "my house",
             "delivery_address_line_2": "APT 1",
-            "scheduled_delivery_time": 1708084801,
+            "delivery_date": "12-12-2024",
+            "delivery_time": 1708084801,
             "order_total": 3.50,
         },
     )
@@ -118,7 +120,8 @@ def test_handler_valid_event_existing_order_type(
             "delivery_zip_code": "78643",
             "delivery_address_line_1": "my house",
             "delivery_address_line_2": "APT 1",
-            "scheduled_delivery_time": 1708084801,
+            "delivery_date": "12-12-2024",
+            "delivery_time": 1708084801,
             "order_total": 3.5,
             "order_status": "NEW",
             "order_date": 1711108800,
@@ -135,9 +138,9 @@ def test_handler_valid_event_new_order_type(
         "query",
         {"Items": []},
         expected_params={
-            "IndexName": "scheduled_delivery_time_index",
-            "KeyConditionExpression": "scheduled_delivery_time BETWEEN :start AND :end",
-            "ExpressionAttributeValues": {":start": 1707955200, ":end": 1708041599},
+            "IndexName": "delivery_date_index",
+            "KeyConditionExpression": "delivery_date = :date",
+            "ExpressionAttributeValues": {":date": "12-12-2024"},
             "TableName": "orders",
         },
     )
@@ -178,7 +181,8 @@ def test_handler_valid_event_new_order_type(
                 "delivery_zip_code": "78643",
                 "delivery_address_line_1": "my house",
                 "delivery_address_line_2": "APT 1",
-                "scheduled_delivery_time": 1707998401,
+                "delivery_date": "12-12-2024",
+                "delivery_time": 1707998401,
                 "order_total": Decimal(3.50),
                 "custom_order": False,
             },
@@ -199,7 +203,8 @@ def test_handler_valid_event_new_order_type(
             "delivery_zip_code": "78643",
             "delivery_address_line_1": "my house",
             "delivery_address_line_2": "APT 1",
-            "scheduled_delivery_time": 1707998401,
+            "delivery_date": "12-12-2024",
+            "delivery_time": 1707998401,
             "order_total": 3.50,
         },
     )
@@ -219,7 +224,8 @@ def test_handler_valid_event_new_order_type(
             "delivery_zip_code": "78643",
             "delivery_address_line_1": "my house",
             "delivery_address_line_2": "APT 1",
-            "scheduled_delivery_time": 1707998401,
+            "delivery_date": "12-12-2024",
+            "delivery_time": 1707998401,
             "order_total": 3.5,
             "order_status": "NEW",
             "order_date": 1711108800,
@@ -236,9 +242,9 @@ def test_handler_accepts_customer_order(
         "query",
         {"Items": []},
         expected_params={
-            "IndexName": "scheduled_delivery_time_index",
-            "KeyConditionExpression": "scheduled_delivery_time BETWEEN :start AND :end",
-            "ExpressionAttributeValues": {":start": 1707955200, ":end": 1708041599},
+            "IndexName": "delivery_date_index",
+            "KeyConditionExpression": "delivery_date = :date",
+            "ExpressionAttributeValues": {":date": "12-12-2024"},
             "TableName": "orders",
         },
     )
@@ -276,7 +282,8 @@ def test_handler_accepts_customer_order(
                 "delivery_zip_code": "78643",
                 "delivery_address_line_1": "my house",
                 "delivery_address_line_2": "APT 1",
-                "scheduled_delivery_time": 1707998401,
+                "delivery_date": "12-12-2024",
+                "delivery_time": 1707998401,
                 "custom_order": True,
             },
             "TableName": "orders",
@@ -293,7 +300,8 @@ def test_handler_accepts_customer_order(
             "delivery_zip_code": "78643",
             "delivery_address_line_1": "my house",
             "delivery_address_line_2": "APT 1",
-            "scheduled_delivery_time": 1707998401,
+            "delivery_date": "12-12-2024",
+            "delivery_time": 1707998401,
             "custom_order": True,
         },
     )
@@ -310,7 +318,8 @@ def test_handler_accepts_customer_order(
             "delivery_zip_code": "78643",
             "delivery_address_line_1": "my house",
             "delivery_address_line_2": "APT 1",
-            "scheduled_delivery_time": 1707998401,
+            "delivery_date": "12-12-2024",
+            "delivery_time": 1707998401,
             "order_status": "NEW",
             "order_date": 1711108800,
             "custom_order": True,
@@ -326,9 +335,9 @@ def test_handler_rejects_order_when_max_orders_exceeded(
         "query",
         {"Items": [{"order_id": {"S": "ORDER-1"}}, {"order_id": {"S": "ORDER-2"}}]},
         expected_params={
-            "IndexName": "scheduled_delivery_time_index",
-            "KeyConditionExpression": "scheduled_delivery_time BETWEEN :start AND :end",
-            "ExpressionAttributeValues": {":start": 1707955200, ":end": 1708041599},
+            "IndexName": "delivery_date_index",
+            "KeyConditionExpression": "delivery_date = :date",
+            "ExpressionAttributeValues": {":date": "12-12-2024"},
             "TableName": "orders",
         },
     )
@@ -364,14 +373,15 @@ def test_handler_rejects_order_when_max_orders_exceeded(
             "delivery_zip_code": "78643",
             "delivery_address_line_1": "my house",
             "delivery_address_line_2": "APT 1",
-            "scheduled_delivery_time": 1707998401,
+            "delivery_date": "12-12-2024",
+            "delivery_time": 1707998401,
         },
     )
 
     pytest.helpers.assert_responses_equal(
         response,
         400,
-        {"error": "Order limit of 2 exceeded for date: 2024-02-15"},
+        {"error": "Order limit of 2 exceeded for date: 12-12-2024"},
     )
 
 
@@ -381,9 +391,9 @@ def test_handler_rejects_order_when_max_orders_exceeded(orders_dynamodb_stub):
         "query",
         {"Items": [{"order_id": {"S": "ORDER-1"}}, {"order_id": {"S": "ORDER-2"}}]},
         expected_params={
-            "IndexName": "scheduled_delivery_time_index",
-            "KeyConditionExpression": "scheduled_delivery_time BETWEEN :start AND :end",
-            "ExpressionAttributeValues": {":start": 1707955200, ":end": 1708041599},
+            "IndexName": "delivery_date_index",
+            "KeyConditionExpression": "delivery_date = :date",
+            "ExpressionAttributeValues": {":date": "12-12-2024"},
             "TableName": "orders",
         },
     )
@@ -398,12 +408,13 @@ def test_handler_rejects_order_when_max_orders_exceeded(orders_dynamodb_stub):
             "delivery_zip_code": "78643",
             "delivery_address_line_1": "my house",
             "delivery_address_line_2": "APT 1",
-            "scheduled_delivery_time": 1707998401,
+            "delivery_date": "12-12-2024",
+            "delivery_time": 1707998401,
         },
     )
 
     pytest.helpers.assert_responses_equal(
         response,
         400,
-        {"error": "Order limit exceeded for 2024-02-15. Max orders: 2"},
+        {"error": "Order limit exceeded for 12-12-2024. Max orders: 2"},
     )
