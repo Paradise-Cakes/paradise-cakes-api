@@ -26,22 +26,32 @@ def test_handler_valid_event_get_orders(orders_dynamodb_stub):
             "Items": [
                 {
                     "order_id": {"S": "ORDER-1"},
-                    "dessert_id": {"S": "DESSERT-1"},
-                    "dessert_name": {"S": "Chocolate Cake"},
-                    "quantity": {"N": "1"},
-                    "customer_first_name": {"S": "jane"},
-                    "customer_last_name": {"S": "doe"},
-                    "customer_email": {"S": "jane.doe@gmail.com"},
+                    "customer_first_name": {"S": "anthony"},
+                    "customer_last_name": {"S": "soprano"},
+                    "customer_email": {"S": "anthony.soprano@gmail.com"},
                     "customer_phone_number": {"S": "555-555-5555"},
-                    "delivery_zip_code": {"S": "90210"},
+                    "delivery_zip_code": {"S": "07001"},
                     "delivery_address_line_1": {"S": "123 Main St"},
-                    "delivery_address_line_2": {"S": "APT 2"},
+                    "delivery_address_line_2": {"S": "APT 1"},
                     "delivery_date": {"S": "12-12-2024"},
                     "delivery_time": {"N": "1711108800"},
-                    "order_total": {"N": "10.00"},
                     "order_status": {"S": "NEW"},
                     "order_date": {"N": "1711108800"},
+                    "approved": {"BOOL": False},
                     "custom_order": {"BOOL": False},
+                    "order_total": {"N": "10.00"},
+                    "desserts": {
+                        "L": [
+                            {
+                                "M": {
+                                    "dessert_id": {"S": "DESSERT-1"},
+                                    "dessert_name": {"S": "Chocolate Cake"},
+                                    "size": {"S": "6 inch"},
+                                    "quantity": {"N": "1"},
+                                }
+                            }
+                        ]
+                    },
                 },
             ],
         },
@@ -55,22 +65,28 @@ def test_handler_valid_event_get_orders(orders_dynamodb_stub):
         [
             {
                 "order_id": "ORDER-1",
-                "dessert_id": "DESSERT-1",
-                "dessert_name": "Chocolate Cake",
-                "quantity": 1,
-                "customer_first_name": "jane",
-                "customer_last_name": "doe",
-                "customer_email": "jane.doe@gmail.com",
+                "customer_first_name": "anthony",
+                "customer_last_name": "soprano",
+                "customer_email": "anthony.soprano@gmail.com",
                 "customer_phone_number": "555-555-5555",
-                "delivery_zip_code": "90210",
+                "delivery_zip_code": "07001",
                 "delivery_address_line_1": "123 Main St",
-                "delivery_address_line_2": "APT 2",
+                "delivery_address_line_2": "APT 1",
                 "delivery_date": "12-12-2024",
                 "delivery_time": 1711108800,
-                "order_total": 10.00,
                 "order_status": "NEW",
                 "order_date": 1711108800,
+                "approved": False,
                 "custom_order": False,
+                "order_total": 10.00,
+                "desserts": [
+                    {
+                        "dessert_id": "DESSERT-1",
+                        "dessert_name": "Chocolate Cake",
+                        "size": "6 inch",
+                        "quantity": 1,
+                    }
+                ],
             }
         ],
     )

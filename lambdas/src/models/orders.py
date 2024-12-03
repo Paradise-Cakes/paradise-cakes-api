@@ -3,40 +3,16 @@ from .base import Base
 from decimal import Decimal
 
 
+class Dessert(Base):
+    dessert_id: str
+    dessert_name: str
+    size: str
+    quantity: int
+
+
 class Order(Base):
-    order_id: str = None
-    dessert_id: Optional[str] = None
-    dessert_name: Optional[str] = None
-    quantity: Optional[int] = None
-    customer_first_name: str = None
-    customer_last_name: str = None
-    customer_email: str = None
-    customer_phone_number: str = None
-    delivery_zip_code: str = None
-    delivery_address_line_1: str = None
-    delivery_address_line_2: str = None
-    delivery_date: str = None
-    delivery_time: int = None
-    order_total: Optional[Decimal] = None
-    order_status: str = None
-    order_date: int = None
-
-    description: Optional[str] = None
-    custom_order: Optional[bool] = False
-
-
-class PostOrderRequest(Base):
-    # regular orders will have this
-    dessert_id: Optional[str] = None
-    dessert_name: Optional[str] = None
-    quantity: Optional[int] = None
-    order_total: Optional[float] = None
-
-    # for custom orders
-    description: Optional[str] = None
-    custom_order: Optional[bool] = None
-
-    # customer info
+    # every order has these attributes
+    order_id: str
     customer_first_name: str
     customer_last_name: str
     customer_email: str
@@ -44,7 +20,35 @@ class PostOrderRequest(Base):
     delivery_zip_code: str
     delivery_address_line_1: str
     delivery_address_line_2: str
+    delivery_date: str
+    delivery_time: int
+    order_status: str = "NEW"
+    order_date: int
+    approved: bool = False
+    custom_order: bool = False
+
+    # optional fields if it's a custom order request
+    order_total: Optional[Decimal] = None  # calculated in the backend
+    description: Optional[str] = None
+    desserts: Optional[List[Dessert]] = []
+
+
+class PostOrderRequest(Base):
+    desserts: Optional[List[Dessert]] = []
+
+    # for custom orders
+    description: Optional[str] = None
+    custom_order: Optional[bool] = False
+
+    # customer info
+    customer_first_name: str
+    customer_last_name: str
+    customer_email: str
+    customer_phone_number: str
 
     # delivery info
+    delivery_zip_code: str
+    delivery_address_line_1: str
+    delivery_address_line_2: str
     delivery_date: str
     delivery_time: int

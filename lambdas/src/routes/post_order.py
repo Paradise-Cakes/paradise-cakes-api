@@ -65,8 +65,10 @@ def post_order(request: Request, body: PostOrderRequest):
         new_order = Order(
             **body.clean(),
             order_id="",
-            order_status="NEW",
             order_date=int(arrow.utcnow().timestamp()),
+            # TODO: calculate order_total by summing the total cost of each dessert
+            # TODO: look up the cost of each dessert using dessert_id and size
+            order_total=0.00,
         )
 
         new_order_delivery_date = new_order.delivery_date
