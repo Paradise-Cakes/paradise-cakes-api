@@ -40,21 +40,11 @@ class OrderLimitExceededException(Exception):
     pass
 
 
-def count_orders_for_date(date):
-    start_of_day = int(
-        datetime.combine(date, datetime.min.time()).timestamp()
-    )  # 00:00:00
-    end_of_day = int(
-        datetime.combine(date, datetime.max.time()).timestamp()
-    )  # 23:59:59
-
+def count_orders_for_date(delivery_date):
     response = orders_table.query(
-        IndexName="ScheduledDeliveryIndex",
-        KeyConditionExpression="scheduled_delivery_time BETWEEN :start AND :end",
-        ExpressionAttributeValues={
-            ":start": start_of_day,
-            ":end": end_of_day,
-        },
+        IndexName="delivery_date_index",
+        KeyConditionExpression="delivery_date = :date",
+        ExpressionAttributeValues={":date": delivery_date},
     )
 
     return len(response["Items"])
@@ -75,18 +65,18 @@ def post_order(request: Request, body: PostOrderRequest):
         new_order = Order(
             **body.clean(),
             order_id="",
-            order_status="NEW",
             order_date=int(arrow.utcnow().timestamp()),
+            # TODO: calculate order_total by summing the total cost of each dessert
+            # TODO: look up the cost of each dessert using dessert_id and size
+            order_total=0.00,
         )
 
-        new_order_date = datetime.fromtimestamp(
-            new_order.scheduled_delivery_time, timezone.utc
-        ).date()
+        new_order_delivery_date = new_order.delivery_date
 
-        orders_for_date = count_orders_for_date(new_order_date)
+        orders_for_date = count_orders_for_date(new_order_delivery_date)
         if orders_for_date >= MAX_ORDERS_FOR_DAY:
             raise OrderLimitExceededException(
-                f"Order limit exceeded for {new_order_date}. Max orders: {MAX_ORDERS_FOR_DAY}"
+                f"Order limit exceeded for date: {new_order_delivery_date}. Max orders: {MAX_ORDERS_FOR_DAY}"
             )
 
         logger.info("Incrementing order type counter")

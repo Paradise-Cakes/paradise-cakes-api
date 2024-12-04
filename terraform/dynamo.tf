@@ -21,16 +21,20 @@ resource "aws_dynamodb_table" "orders" {
   }
 
   attribute {
-    name = "scheduled_delivery_time"
+    name = "delivery_date"
     type = "S"
   }
 
+  attribute {
+    name = "delivery_time"
+    type = "N"
+  }
+
   global_secondary_index {
-    name               = "scheduled_delivery_time_index"
-    hash_key           = "scheduled_delivery_time"
+    name               = "delivery_date_index"
+    hash_key           = "delivery_date"
+    range_key          = "delivery_time"
     projection_type    = "ALL"
-    read_capacity      = 5
-    write_capacity     = 5
   }
 }
 
