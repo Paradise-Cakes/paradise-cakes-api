@@ -18,7 +18,7 @@ def order_record(
                 "dessert_id": f"INTEGRATION_TEST-{uuid.uuid4()}",
                 "dessert_name": "Lemon Blueberry Cake",
                 "size": "6 inch",
-                "quantity": 2,
+                "quantity": 1,
             }
         ],
         "customer_first_name": "Anthony",

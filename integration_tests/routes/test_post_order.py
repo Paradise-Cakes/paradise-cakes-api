@@ -54,5 +54,5 @@ def test_post_v1_orders_exceeds_order_limit_returns_400(request_helper, cleanup_
     assert response_3.status_code == 400
     assert (
         response_3.json().get("error")
-        == f"Order limit exceeded for {delivery_date}. Max orders: 2"
+        == f"Order limit exceeded for date: {delivery_date}. Max orders: 2"
     )
