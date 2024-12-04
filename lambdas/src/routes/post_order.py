@@ -76,7 +76,7 @@ def post_order(request: Request, body: PostOrderRequest):
         orders_for_date = count_orders_for_date(new_order_delivery_date)
         if orders_for_date >= MAX_ORDERS_FOR_DAY:
             raise OrderLimitExceededException(
-                f"Order limit exceeded for {new_order_delivery_date}. Max orders: {MAX_ORDERS_FOR_DAY}"
+                f"Order limit exceeded for date: {new_order_delivery_date}. Max orders: {MAX_ORDERS_FOR_DAY}"
             )
 
         logger.info("Incrementing order type counter")
