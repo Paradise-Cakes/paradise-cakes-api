@@ -58,6 +58,12 @@ jobs:
         with:
           python-version: 3.8.x
 
+      - name: Configure AWS credentials for us-east-1 - DEV
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::010526276358:role/paradise-cakes-api-development-terraform-deployer
+          aws-region: us-east-1
+
       - name: Install Poetry
         uses: snok/install-poetry@v1
         with:
