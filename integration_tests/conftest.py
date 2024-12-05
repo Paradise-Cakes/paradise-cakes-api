@@ -1,3 +1,4 @@
+import os
 import pytest
 import boto3
 import uuid
@@ -8,6 +9,11 @@ from request_helper import RequestHelper
 
 @pytest.fixture(scope="session")
 def api_url():
+    local_port = os.getenv("LOCAL_PORT")
+
+    if local_port:
+        return f"http://localhost:{local_port}"
+
     return "https://dev-api.megsparadisecakes.com"
 
 

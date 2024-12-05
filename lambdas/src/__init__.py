@@ -1,1 +1,1 @@
-from .api import app, lambda_handler
+from .api import app
