@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from mangum import Mangum
 
-from src.routes import (
+from routes import (
     delete_dessert,
     get_dessert,
     get_desserts,
