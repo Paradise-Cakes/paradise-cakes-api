@@ -58,6 +58,11 @@ jobs:
         with:
           python-version: 3.8.x
 
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.4.2
+
       - name: Install Dependencies
         run: bash ${GITHUB_WORKSPACE}/ci/install.sh
 
