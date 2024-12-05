@@ -1,6 +1,7 @@
 from mangum import Mangum
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from src.routes import (
     get_desserts,
     get_dessert,
@@ -20,6 +21,12 @@ from src.routes import (
 )
 
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
+
+
+@app.get("/")
+def redirect_to_docs():
+    return RedirectResponse(url="/docs")
+
 
 origins = [
     "http://localhost:5173",

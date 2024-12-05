@@ -4,6 +4,10 @@ version = "0.1.0"
 description = ""
 authors = ["Anthony Viera <anthonyviera4@gmail.com>"]
 
+packages = [
+    { include = "src" }
+]
+
 [tool.poetry.dependencies]
 python = "^3.8"
 fastapi = "0.115.3"
@@ -27,6 +31,7 @@ pytest-mock = "^3.14.0"
 aws-lambda-context = "^1.1.0"
 requests = "^2.32.0"
 idna = "^3.7"
+uvicorn = "^0.32.1"
 
 [tool.poetry.dev-dependencies]
 

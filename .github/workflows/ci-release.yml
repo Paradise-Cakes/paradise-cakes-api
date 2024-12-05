@@ -45,9 +45,28 @@ jobs:
       - name: Test
         run: bash ${GITHUB_WORKSPACE}/ci/test.sh
 
-  ecr-build-push-dev-us-east-1:
+  integration-tests:
     runs-on: ubuntu-latest
     needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python 3.8.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8.x
+
+      - name: Install Dependencies
+        run: bash ${GITHUB_WORKSPACE}/ci/install.sh
+
+      - name: Run Integration Tests
+        run: bash ${GITHUB_WORKSPACE}/ci/int_test.sh
+
+  ecr-build-push-dev-us-east-1:
+    runs-on: ubuntu-latest
+    needs: integration-tests
 
     steps:
       - name: Checkout code
@@ -83,7 +102,7 @@ jobs:
   ecr-build-push-prod-us-east-1:
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: integration-tests
 
     steps:
       - name: Checkout code
