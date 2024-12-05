@@ -1,7 +1,8 @@
-import pytest
-from fastapi.testclient import TestClient
-from botocore.stub import Stubber
 import boto3
+import pytest
+from botocore.stub import Stubber
+from fastapi.testclient import TestClient
+
 from src.api import app
 from src.routes.get_display_images import s3_client
 

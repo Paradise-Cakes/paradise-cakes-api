@@ -1,10 +1,12 @@
-import pytest
 import uuid
-from freezegun import freeze_time
 from decimal import Decimal
 from unittest.mock import patch
+
+import pytest
 from botocore.stub import Stubber
 from fastapi.testclient import TestClient
+from freezegun import freeze_time
+
 from src.api import app
 from src.routes.post_dessert import desserts_table
 

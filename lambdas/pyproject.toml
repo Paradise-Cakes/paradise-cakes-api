@@ -32,6 +32,8 @@ aws-lambda-context = "^1.1.0"
 requests = "^2.32.0"
 idna = "^3.7"
 uvicorn = "^0.32.1"
+pyyaml = "^6.0.2"
+isort = "^5.13.2"
 
 [tool.poetry.dev-dependencies]
 
@@ -52,7 +54,9 @@ omit = [
 [tool.coverage.paths]
 source = ["src"]
 
-
 [tool.coverage.report]
 show_missing = true
 fail_under = 100
+
+[tool.poetry.scripts]
+generate_swagger = "generate_swagger:main"

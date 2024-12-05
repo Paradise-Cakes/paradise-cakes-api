@@ -1,10 +1,12 @@
 import os
+
+from aws_lambda_powertools import Logger
 from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
-from aws_lambda_powertools import Logger
-from src.models import Dessert
+
 from src.lib.dynamodb import DynamoConnection
 from src.lib.response import fastapi_gateway_response
+from src.models import Dessert
 
 logger = Logger()
 router = APIRouter()

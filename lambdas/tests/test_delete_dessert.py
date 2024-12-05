@@ -1,7 +1,9 @@
+from decimal import Decimal
+
 import pytest
 from botocore.stub import Stubber
-from decimal import Decimal
 from fastapi.testclient import TestClient
+
 from src.api import app
 from src.routes.delete_dessert import desserts_table, s3_client
 

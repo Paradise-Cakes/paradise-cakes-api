@@ -1,6 +1,7 @@
-from typing import List, Optional
-from .base import Base
 from decimal import Decimal
+from typing import List, Optional
+
+from .base import Base
 
 
 class Dessert(Base):

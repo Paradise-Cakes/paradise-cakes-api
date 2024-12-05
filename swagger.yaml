@@ -1,0 +1,902 @@
+openapi: 3.1.0
+info:
+  title: Paradise Cakes API
+  version: 1.0.0
+paths:
+  /:
+    get:
+      summary: Redirect To Docs
+      operationId: redirect_to_docs__get
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /desserts:
+    get:
+      summary: Get Dessertssss
+      operationId: get_desserts_desserts_get
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    post:
+      summary: Post Dessert
+      operationId: post_dessert_desserts_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostDessertRequest"
+        required: true
+      responses:
+        "201":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostDessertResponse"
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+  /desserts/{dessert_id}:
+    get:
+      summary: Get Dessert
+      operationId: get_dessert_desserts__dessert_id__get
+      parameters:
+        - name: dessert_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Dessert Id
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDessertResponse"
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+    patch:
+      summary: Patch Dessert
+      operationId: patch_dessert_desserts__dessert_id__patch
+      parameters:
+        - name: dessert_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Dessert Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchDessertRequest"
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatchDessertResponse"
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+    delete:
+      summary: Delete Dessert
+      operationId: delete_dessert_desserts__dessert_id__delete
+      parameters:
+        - name: dessert_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Dessert Id
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteDessertResponse"
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+  /orders:
+    get:
+      summary: Get Orders
+      operationId: get_orders_orders_get
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    post:
+      summary: Post Order
+      operationId: post_order_orders_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostOrderRequest"
+        required: true
+      responses:
+        "201":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostOrderResponse"
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+  /signup:
+    post:
+      summary: Post Signup
+      operationId: post_signup_signup_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Body_post_signup_signup_post"
+        required: true
+      responses:
+        "201":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+  /signin:
+    post:
+      summary: Post Signin
+      operationId: post_signin_signin_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Body_post_signin_signin_post"
+        required: true
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+  /confirm_signup:
+    post:
+      summary: Post Confirm Signup
+      operationId: post_confirm_signup_confirm_signup_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Body_post_confirm_signup_confirm_signup_post"
+        required: true
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+  /resend_confirmation_code:
+    post:
+      summary: Post Resend Confirmation Code
+      operationId: post_resend_confirmation_code_resend_confirmation_code_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Body_post_resend_confirmation_code_resend_confirmation_code_post"
+        required: true
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+  /forgot_password:
+    post:
+      summary: Post Forgot Password
+      operationId: post_forgot_password_forgot_password_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Body_post_forgot_password_forgot_password_post"
+        required: true
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+  /logout:
+    post:
+      summary: Post Logout
+      operationId: post_logout_logout_post
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /desserts/{dessert_id}/images:
+    post:
+      summary: Post Dessert Image
+      operationId: post_dessert_image_desserts__dessert_id__images_post
+      parameters:
+        - name: dessert_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Dessert Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostDessertImageRequest"
+      responses:
+        "201":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostDessertImageResponse"
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+  /display-images:
+    get:
+      summary: Get Display Images
+      operationId: get_display_images_display_images_get
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    Body_post_confirm_signup_confirm_signup_post:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+        confirmation_code:
+          type: string
+          title: Confirmation Code
+      type: object
+      required:
+        - email
+        - password
+        - confirmation_code
+      title: Body_post_confirm_signup_confirm_signup_post
+    Body_post_forgot_password_forgot_password_post:
+      properties:
+        email:
+          type: string
+          title: Email
+      type: object
+      required:
+        - email
+      title: Body_post_forgot_password_forgot_password_post
+    Body_post_resend_confirmation_code_resend_confirmation_code_post:
+      properties:
+        email:
+          type: string
+          title: Email
+      type: object
+      required:
+        - email
+      title: Body_post_resend_confirmation_code_resend_confirmation_code_post
+    Body_post_signin_signin_post:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+        - email
+        - password
+      title: Body_post_signin_signin_post
+    Body_post_signup_signup_post:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+        first_name:
+          type: string
+          title: First Name
+        last_name:
+          type: string
+          title: Last Name
+      type: object
+      required:
+        - email
+        - password
+        - first_name
+        - last_name
+      title: Body_post_signup_signup_post
+    DeleteDessertResponse:
+      properties:
+        dessert_id:
+          type: string
+          title: Dessert Id
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+        prices:
+          items:
+            $ref: "#/components/schemas/Price"
+          type: array
+          title: Prices
+        dessert_type:
+          type: string
+          title: Dessert Type
+        ingredients:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: "null"
+          title: Ingredients
+        created_at:
+          type: integer
+          title: Created At
+        last_updated_at:
+          type: integer
+          title: Last Updated At
+        images:
+          anyOf:
+            - items:
+                $ref: "#/components/schemas/Image"
+              type: array
+            - type: "null"
+          title: Images
+        visible:
+          type: boolean
+          title: Visible
+          default: false
+      type: object
+      title: DeleteDessertResponse
+    Dessert:
+      properties:
+        dessert_id:
+          type: string
+          title: Dessert Id
+        dessert_name:
+          type: string
+          title: Dessert Name
+        size:
+          type: string
+          title: Size
+        quantity:
+          type: integer
+          title: Quantity
+      type: object
+      required:
+        - dessert_id
+        - dessert_name
+        - size
+        - quantity
+      title: Dessert
+    GetDessertResponse:
+      properties:
+        dessert_id:
+          type: string
+          title: Dessert Id
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+        prices:
+          items:
+            $ref: "#/components/schemas/Price"
+          type: array
+          title: Prices
+        dessert_type:
+          type: string
+          title: Dessert Type
+        ingredients:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: "null"
+          title: Ingredients
+        created_at:
+          type: integer
+          title: Created At
+        last_updated_at:
+          type: integer
+          title: Last Updated At
+        images:
+          anyOf:
+            - items:
+                $ref: "#/components/schemas/Image"
+              type: array
+            - type: "null"
+          title: Images
+        visible:
+          type: boolean
+          title: Visible
+          default: false
+      type: object
+      title: GetDessertResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: "#/components/schemas/ValidationError"
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Image:
+      properties:
+        image_id:
+          type: string
+          title: Image Id
+        url:
+          type: string
+          title: Url
+        position:
+          type: integer
+          title: Position
+        file_type:
+          type: string
+          title: File Type
+      type: object
+      required:
+        - image_id
+        - url
+        - position
+        - file_type
+      title: Image
+    PatchDessertRequest:
+      properties:
+        name:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Name
+        description:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Description
+        prices:
+          anyOf:
+            - items:
+                $ref: "#/components/schemas/Price"
+              type: array
+            - type: "null"
+          title: Prices
+        dessert_type:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Dessert Type
+        ingredients:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: "null"
+          title: Ingredients
+        images:
+          anyOf:
+            - items:
+                $ref: "#/components/schemas/Image"
+              type: array
+            - type: "null"
+          title: Images
+        visible:
+          anyOf:
+            - type: boolean
+            - type: "null"
+          title: Visible
+      type: object
+      title: PatchDessertRequest
+    PatchDessertResponse:
+      properties:
+        dessert_id:
+          type: string
+          title: Dessert Id
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+        prices:
+          items:
+            $ref: "#/components/schemas/Price"
+          type: array
+          title: Prices
+        dessert_type:
+          type: string
+          title: Dessert Type
+        ingredients:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: "null"
+          title: Ingredients
+        created_at:
+          type: integer
+          title: Created At
+        last_updated_at:
+          type: integer
+          title: Last Updated At
+        images:
+          anyOf:
+            - items:
+                $ref: "#/components/schemas/Image"
+              type: array
+            - type: "null"
+          title: Images
+        visible:
+          type: boolean
+          title: Visible
+          default: false
+      type: object
+      title: PatchDessertResponse
+    PostDessertImageRequest:
+      properties:
+        position:
+          type: integer
+          title: Position
+        file_type:
+          type: string
+          title: File Type
+      type: object
+      required:
+        - position
+        - file_type
+      title: PostDessertImageRequest
+    PostDessertImageResponse:
+      properties:
+        image_id:
+          type: string
+          title: Image Id
+        url:
+          type: string
+          title: Url
+        position:
+          type: integer
+          title: Position
+        file_type:
+          type: string
+          title: File Type
+        upload_url:
+          type: string
+          title: Upload Url
+      type: object
+      required:
+        - image_id
+        - url
+        - position
+        - file_type
+        - upload_url
+      title: PostDessertImageResponse
+    PostDessertRequest:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+        prices:
+          items:
+            $ref: "#/components/schemas/Price"
+          type: array
+          title: Prices
+        dessert_type:
+          type: string
+          title: Dessert Type
+        ingredients:
+          items:
+            type: string
+          type: array
+          title: Ingredients
+      type: object
+      required:
+        - name
+        - description
+        - prices
+        - dessert_type
+        - ingredients
+      title: PostDessertRequest
+    PostDessertResponse:
+      properties:
+        dessert_id:
+          type: string
+          title: Dessert Id
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+        prices:
+          items:
+            $ref: "#/components/schemas/Price"
+          type: array
+          title: Prices
+        dessert_type:
+          type: string
+          title: Dessert Type
+        ingredients:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: "null"
+          title: Ingredients
+        created_at:
+          type: integer
+          title: Created At
+        last_updated_at:
+          type: integer
+          title: Last Updated At
+        images:
+          anyOf:
+            - items:
+                $ref: "#/components/schemas/Image"
+              type: array
+            - type: "null"
+          title: Images
+        visible:
+          type: boolean
+          title: Visible
+          default: false
+      type: object
+      title: PostDessertResponse
+    PostOrderRequest:
+      properties:
+        desserts:
+          anyOf:
+            - items:
+                $ref: "#/components/schemas/Dessert"
+              type: array
+            - type: "null"
+          title: Desserts
+          default: []
+        description:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Description
+        custom_order:
+          anyOf:
+            - type: boolean
+            - type: "null"
+          title: Custom Order
+          default: false
+        customer_first_name:
+          type: string
+          title: Customer First Name
+        customer_last_name:
+          type: string
+          title: Customer Last Name
+        customer_email:
+          type: string
+          title: Customer Email
+        customer_phone_number:
+          type: string
+          title: Customer Phone Number
+        delivery_zip_code:
+          type: string
+          title: Delivery Zip Code
+        delivery_address_line_1:
+          type: string
+          title: Delivery Address Line 1
+        delivery_address_line_2:
+          type: string
+          title: Delivery Address Line 2
+        delivery_date:
+          type: string
+          title: Delivery Date
+        delivery_time:
+          type: integer
+          title: Delivery Time
+      type: object
+      required:
+        - customer_first_name
+        - customer_last_name
+        - customer_email
+        - customer_phone_number
+        - delivery_zip_code
+        - delivery_address_line_1
+        - delivery_address_line_2
+        - delivery_date
+        - delivery_time
+      title: PostOrderRequest
+    PostOrderResponse:
+      properties:
+        order_id:
+          type: string
+          title: Order Id
+        customer_first_name:
+          type: string
+          title: Customer First Name
+        customer_last_name:
+          type: string
+          title: Customer Last Name
+        customer_email:
+          type: string
+          title: Customer Email
+        customer_phone_number:
+          type: string
+          title: Customer Phone Number
+        delivery_zip_code:
+          type: string
+          title: Delivery Zip Code
+        delivery_address_line_1:
+          type: string
+          title: Delivery Address Line 1
+        delivery_address_line_2:
+          type: string
+          title: Delivery Address Line 2
+        delivery_date:
+          type: string
+          title: Delivery Date
+        delivery_time:
+          type: integer
+          title: Delivery Time
+        order_status:
+          type: string
+          title: Order Status
+          default: NEW
+        order_date:
+          type: integer
+          title: Order Date
+        approved:
+          type: boolean
+          title: Approved
+          default: false
+        custom_order:
+          type: boolean
+          title: Custom Order
+          default: false
+        order_total:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Order Total
+        description:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Description
+        desserts:
+          anyOf:
+            - items:
+                $ref: "#/components/schemas/Dessert"
+              type: array
+            - type: "null"
+          title: Desserts
+          default: []
+      type: object
+      required:
+        - order_id
+        - customer_first_name
+        - customer_last_name
+        - customer_email
+        - customer_phone_number
+        - delivery_zip_code
+        - delivery_address_line_1
+        - delivery_address_line_2
+        - delivery_date
+        - delivery_time
+        - order_date
+      title: PostOrderResponse
+    Price:
+      properties:
+        size:
+          type: string
+          title: Size
+        base:
+          type: number
+          title: Base
+      type: object
+      required:
+        - size
+        - base
+      title: Price
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      title: ValidationError

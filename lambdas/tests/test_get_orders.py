@@ -1,9 +1,11 @@
-import pytest
 import logging
 from unittest.mock import patch
-from freezegun import freeze_time
+
+import pytest
 from botocore.stub import Stubber
 from fastapi.testclient import TestClient
+from freezegun import freeze_time
+
 from src.api import app
 from src.routes.get_orders import orders_table
 

@@ -1,8 +1,9 @@
 import pytest
+from botocore.stub import Stubber
 from fastapi.testclient import TestClient
+
 from src.api import app
 from src.routes.post_logout import cognito_client
-from botocore.stub import Stubber
 
 test_client = TestClient(app)
 

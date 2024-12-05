@@ -1,7 +1,8 @@
+from typing import Dict, List, Optional
+from uuid import UUID
+
 import pytest
 
-from uuid import UUID
-from typing import Optional, Dict, List
 from src.models.base import Base
 
 

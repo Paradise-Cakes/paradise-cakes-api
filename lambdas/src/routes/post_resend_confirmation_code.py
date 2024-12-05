@@ -1,8 +1,10 @@
-import boto3
 import os
-from fastapi import APIRouter, Form, HTTPException
-from botocore.exceptions import ClientError
+
+import boto3
 from aws_lambda_powertools import Logger
+from botocore.exceptions import ClientError
+from fastapi import APIRouter, Form, HTTPException
+
 from src.lib.response import fastapi_gateway_response
 
 logger = Logger()
