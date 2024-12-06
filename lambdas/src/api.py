@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from mangum import Mangum
 
-from routes import (
+from src.routes import (
     delete_dessert,
     get_dessert,
     get_desserts,
@@ -24,7 +24,7 @@ from routes import (
 
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
 
-with open("../swagger.yaml", "r") as file:
+with open("../../swagger.yaml", "r") as file:
     openapi_schema = yaml.safe_load(file)
 
 
