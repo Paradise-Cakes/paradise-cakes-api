@@ -73,10 +73,6 @@ app.include_router(get_display_images.router)
 
 app.openapi = lambda: openapi_schema
 
-import sys
-
-print("Loaded modules at the start of src.api:", sys.modules.keys())
-
 
 def lambda_handler(event, context):
     handler = Mangum(app, lifespan="on", api_gateway_base_path="/v1")
