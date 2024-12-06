@@ -212,7 +212,7 @@ jobs:
     environment: prod
     concurrency: tf-prod
     timeout-minutes: 30
-    needs: [ecr-build-push-prod-us-east-1, tf-dev]
+    needs: [ecr-build-push-prod-us-east-1, tf-dev, integration-tests]
 
     steps:
       - name: Checkout code
