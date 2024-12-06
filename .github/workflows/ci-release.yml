@@ -53,10 +53,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Python 3.8.x
+      - name: Setup Python 3.11.x
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8.x
+          python-version: 3.11.x
 
       - name: Configure AWS credentials for us-east-1 - DEV
         uses: aws-actions/configure-aws-credentials@v3
