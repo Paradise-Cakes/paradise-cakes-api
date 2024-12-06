@@ -24,14 +24,6 @@ from src.routes import (
 
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
 
-with open("../swagger.yaml", "r") as file:
-    openapi_schema = yaml.safe_load(file)
-
-
-@app.get("/openapi.json", include_in_schema=False)
-def custom_openapi():
-    return openapi_schema
-
 
 @app.get("/")
 def redirect_to_docs():
@@ -70,8 +62,6 @@ app.include_router(post_dessert_image.router)
 app.include_router(patch_dessert.router)
 app.include_router(delete_dessert.router)
 app.include_router(get_display_images.router)
-
-app.openapi = lambda: openapi_schema
 
 
 def lambda_handler(event, context):
