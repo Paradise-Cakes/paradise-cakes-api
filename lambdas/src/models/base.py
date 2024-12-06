@@ -1,6 +1,7 @@
-from aws_lambda_powertools.utilities.parser import BaseModel
 from typing import List, Optional
 from uuid import UUID
+
+from aws_lambda_powertools.utilities.parser import BaseModel
 
 
 def _clean(d):

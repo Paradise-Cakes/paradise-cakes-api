@@ -1,16 +1,15 @@
 import os
-import arrow
-from fastapi import APIRouter, Request
-from aws_lambda_powertools import Logger
-from decimal import Decimal, ROUND_HALF_UP
-from src.lib.response import fastapi_gateway_response
-from datetime import datetime
-from src.models import (
-    Dessert,
-    PostDessertRequest,
-)
-from src.lib.dynamodb import DynamoConnection
 import uuid
+from datetime import datetime
+from decimal import ROUND_HALF_UP, Decimal
+
+import arrow
+from aws_lambda_powertools import Logger
+from fastapi import APIRouter, Request
+
+from src.lib.dynamodb import DynamoConnection
+from src.lib.response import fastapi_gateway_response
+from src.models import Dessert, PostDessertRequest
 
 logger = Logger()
 router = APIRouter()

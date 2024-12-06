@@ -1,13 +1,14 @@
 import os
-import boto3
 import uuid
-from fastapi import APIRouter, Request
-from aws_lambda_powertools import Logger
-from src.lib.response import fastapi_gateway_response
-from src.models.desserts import Image as DessertImage
-from src.models.base import Base
-from src.lib.dynamodb import DynamoConnection
 
+import boto3
+from aws_lambda_powertools import Logger
+from fastapi import APIRouter, Request
+
+from src.lib.dynamodb import DynamoConnection
+from src.lib.response import fastapi_gateway_response
+from src.models.base import Base
+from src.models.desserts import Image as DessertImage
 
 logger = Logger()
 router = APIRouter()

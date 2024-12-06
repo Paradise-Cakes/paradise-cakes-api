@@ -1,5 +1,3 @@
-import uuid
-
 from lib import order
 
 

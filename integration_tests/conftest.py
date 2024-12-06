@@ -1,3 +1,4 @@
+import os
 import pytest
 import boto3
 import uuid
@@ -8,6 +9,11 @@ from request_helper import RequestHelper
 
 @pytest.fixture(scope="session")
 def api_url():
+    local_port = os.getenv("LOCAL_PORT")
+
+    if local_port:
+        return f"http://localhost:{local_port}"
+
     return "https://dev-api.megsparadisecakes.com"
 
 
@@ -70,11 +76,11 @@ def cleanup_orders(dynamodb_client):
         try:
             dynamodb_client.delete_item(
                 Key={
-                    "order_id": {"S": order["order_id"]},
+                    "order_id": {"S": order.get("order_id")},
                 },
                 TableName="orders",
             )
-            print(f"Deleted test order: {order["order_id"]}")
+            print(f"Deleted test order: {order.get('order_id')}")
         except Exception as e:
-            print(f"Failed to delete order {order["order_id"]}: {e}")
+            print(f"Failed to delete order {order.get('order_id')}: {e}")
             raise e

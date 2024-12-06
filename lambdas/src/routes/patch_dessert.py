@@ -1,17 +1,16 @@
 import os
+from datetime import datetime
+from decimal import ROUND_HALF_UP, Decimal
+
 import arrow
+from aws_lambda_powertools import Logger
 from boto3.dynamodb.conditions import Attr
 from fastapi import APIRouter, Request
 from fastapi.exceptions import HTTPException
-from aws_lambda_powertools import Logger
-from decimal import Decimal, ROUND_HALF_UP
-from datetime import datetime
-from src.lib.response import fastapi_gateway_response
-from src.models import (
-    Dessert,
-    PatchDessertRequest,
-)
+
 from src.lib.dynamodb import DynamoConnection, update_attributes_expression
+from src.lib.response import fastapi_gateway_response
+from src.models import Dessert, PatchDessertRequest
 
 logger = Logger()
 router = APIRouter()

@@ -1,10 +1,12 @@
-import pytest
-from freezegun import freeze_time
-from botocore.stub import Stubber
 from decimal import Decimal
+
+import pytest
+from botocore.stub import Stubber
 from fastapi.testclient import TestClient
+from freezegun import freeze_time
+
 from src.api import app
-from src.routes.post_order import orders_table, order_type_count_table
+from src.routes.post_order import order_type_count_table, orders_table
 
 test_client = TestClient(app)
 

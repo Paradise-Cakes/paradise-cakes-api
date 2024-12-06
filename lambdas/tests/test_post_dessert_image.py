@@ -1,8 +1,10 @@
-import pytest
-from freezegun import freeze_time
-from botocore.stub import Stubber, ANY
 from unittest.mock import patch
+
+import pytest
+from botocore.stub import ANY, Stubber
 from fastapi.testclient import TestClient
+from freezegun import freeze_time
+
 from src.api import app
 from src.routes.post_dessert_image import desserts_table
 

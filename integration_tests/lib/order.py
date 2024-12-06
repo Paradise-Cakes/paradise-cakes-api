@@ -10,7 +10,7 @@ def order_record(
     random_days = random.randint(1, 30)
     random_delivery_date = (
         datetime.now(tz=timezone.utc) + timedelta(days=random_days)
-    ).strftime("%Y-%m-%d")
+    ).strftime("%m-%d-%Y")
 
     return {
         "desserts": [

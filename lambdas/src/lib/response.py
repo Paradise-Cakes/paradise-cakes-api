@@ -1,5 +1,6 @@
-from fastapi.responses import JSONResponse
 from decimal import Decimal
+
+from fastapi.responses import JSONResponse
 
 
 def fastapi_gateway_response(
