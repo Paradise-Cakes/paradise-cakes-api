@@ -24,7 +24,7 @@ from src.routes import (
 
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
 
-with open("../../swagger.yaml", "r") as file:
+with open("../swagger.yaml", "r") as file:
     openapi_schema = yaml.safe_load(file)
 
 
@@ -72,6 +72,10 @@ app.include_router(delete_dessert.router)
 app.include_router(get_display_images.router)
 
 app.openapi = lambda: openapi_schema
+
+import sys
+
+print("Loaded modules at the start of src.api:", sys.modules.keys())
 
 
 def lambda_handler(event, context):
