@@ -11,7 +11,7 @@ class Image(Base):
 
 
 class Price(Base):
-    dessert_id: str
+    dessert_id: Optional[str] = None
     size: str
     base_price: float
     discount: Optional[float] = None

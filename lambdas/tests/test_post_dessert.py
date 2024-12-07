@@ -1,6 +1,7 @@
 import uuid
 from decimal import Decimal
-from unittest.mock import patch
+import unittest
+from unittest.mock import patch, MagicMock, call
 
 import pytest
 from botocore.stub import Stubber
@@ -21,25 +22,53 @@ def desserts_dynamodb_stub():
 
 
 @freeze_time("2024-03-22 12:00:00")
+@patch("src.routes.post_dessert.prices_table")
 @patch("uuid.uuid4", return_value=uuid.UUID("00000000-0000-0000-0000-000000000001"))
-def test_handler_add_dessert(mock_uuid, desserts_dynamodb_stub):
+def test_handler_add_dessert(mock_uuid, mock_prices_table, desserts_dynamodb_stub):
+    mock_batch_writer = MagicMock()
+    mock_prices_table.batch_writer.__enter__.return_value = mock_batch_writer
+
     desserts_dynamodb_stub.add_response(
         "put_item",
         {},
         expected_params={
             "Item": {
                 "dessert_id": "00000000-0000-0000-0000-000000000001",
-                "name": "chocolate cake",
-                "description": "a delicious chocolate cake",
-                "prices": [
-                    {"size": "small", "base": Decimal("10.00")},
-                    {"size": "large", "base": Decimal("20.00")},
-                ],
+                "name": "Chocolate Cake",
+                "description": "A delicious chocolate cake",
                 "dessert_type": "cake",
-                "ingredients": ["chocolate", "flour", "sugar"],
                 "created_at": 1711108800,
                 "last_updated_at": 1711108800,
                 "visible": False,
+                "prices": [
+                    {
+                        "dessert_id": "00000000-0000-0000-0000-000000000001",
+                        "size": "slice",
+                        "base_price": Decimal(5.00),
+                        "discount": Decimal(0.00),
+                    },
+                    {
+                        "dessert_id": "00000000-0000-0000-0000-000000000001",
+                        "size": "whole",
+                        "base_price": Decimal(40.00),
+                        "discount": Decimal(0.00),
+                    },
+                ],
+                "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
+                "images": [
+                    {
+                        "image_id": "IMAGE-1",
+                        "url": "https://example.com/image1.jpg",
+                        "position": 1,
+                        "file_type": "jpg",
+                    },
+                    {
+                        "image_id": "IMAGE-2",
+                        "url": "https://example.com/image2.jpg",
+                        "position": 2,
+                        "file_type": "jpg",
+                    },
+                ],
             },
             "TableName": "desserts",
         },
@@ -48,14 +77,28 @@ def test_handler_add_dessert(mock_uuid, desserts_dynamodb_stub):
     response = test_client.post(
         "/desserts",
         json={
-            "name": "chocolate cake",
-            "description": "a delicious chocolate cake",
-            "prices": [
-                {"size": "small", "base": 10.00},
-                {"size": "large", "base": 20.00},
-            ],
+            "name": "Chocolate Cake",
+            "description": "A delicious chocolate cake",
             "dessert_type": "cake",
-            "ingredients": ["chocolate", "flour", "sugar"],
+            "prices": [
+                {"size": "slice", "base_price": 5.00, "discount": 0.00},
+                {"size": "whole", "base_price": 40.00, "discount": 0.00},
+            ],
+            "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
+            "images": [
+                {
+                    "image_id": "IMAGE-1",
+                    "url": "https://example.com/image1.jpg",
+                    "position": 1,
+                    "file_type": "jpg",
+                },
+                {
+                    "image_id": "IMAGE-2",
+                    "url": "https://example.com/image2.jpg",
+                    "position": 2,
+                    "file_type": "jpg",
+                },
+            ],
         },
     )
 
@@ -64,16 +107,40 @@ def test_handler_add_dessert(mock_uuid, desserts_dynamodb_stub):
         201,
         {
             "dessert_id": "00000000-0000-0000-0000-000000000001",
-            "name": "chocolate cake",
-            "description": "a delicious chocolate cake",
-            "prices": [
-                {"size": "small", "base": 10.00},
-                {"size": "large", "base": 20.00},
-            ],
+            "name": "Chocolate Cake",
+            "description": "A delicious chocolate cake",
             "dessert_type": "cake",
-            "ingredients": ["chocolate", "flour", "sugar"],
             "created_at": 1711108800,
             "last_updated_at": 1711108800,
             "visible": False,
+            "prices": [
+                {
+                    "dessert_id": "00000000-0000-0000-0000-000000000001",
+                    "size": "slice",
+                    "base_price": 5.00,
+                    "discount": 0.00,
+                },
+                {
+                    "dessert_id": "00000000-0000-0000-0000-000000000001",
+                    "size": "whole",
+                    "base_price": 40.00,
+                    "discount": 0.00,
+                },
+            ],
+            "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
+            "images": [
+                {
+                    "image_id": "IMAGE-1",
+                    "url": "https://example.com/image1.jpg",
+                    "position": 1,
+                    "file_type": "jpg",
+                },
+                {
+                    "image_id": "IMAGE-2",
+                    "url": "https://example.com/image2.jpg",
+                    "position": 2,
+                    "file_type": "jpg",
+                },
+            ],
         },
     )

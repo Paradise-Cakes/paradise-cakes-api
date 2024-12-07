@@ -21,6 +21,13 @@ desserts_table = DynamoConnection(
 ).table
 
 
+prices_table = DynamoConnection(
+    os.environ.get("DYNAMODB_REGION", "us-east-1"),
+    os.environ.get("DYNAMODB_ENDPOINT_URL", None),
+    os.environ.get("DYNAMODB_PRICES_TABLE_NAME", "prices"),
+).table
+
+
 class PostDessertResponse(Dessert):
     pass
 
@@ -42,17 +49,26 @@ def post_dessert(request: Request, body: PostDessertRequest):
     )
 
     # TODO: FIGURE OUT HOW TO DO THIS IN A CLEANER WAY
-    new_prices = [
+    formatted_prices = [
         {
-            **price.clean(),
-            "base": Decimal(price.base).quantize(
+            "dessert_id": new_dessert.dessert_id,
+            "size": price.size,
+            "base_price": Decimal(price.base_price).quantize(
+                Decimal("0.01"), rounding=ROUND_HALF_UP
+            ),
+            "discount": Decimal(price.discount).quantize(
                 Decimal("0.01"), rounding=ROUND_HALF_UP
             ),
         }
         for price in new_dessert.prices
     ]
+    new_dessert.prices = formatted_prices
+    with prices_table.batch_writer() as batch:
+        for price in formatted_prices:
+            batch.put_item(Item=price)
 
-    desserts_table.put_item(Item={**new_dessert.clean(), "prices": new_prices})
+    desserts_table.put_item(Item={**new_dessert.clean()})
     response = PostDessertResponse(**new_dessert.model_dump())
+
     logger.info(f"Created new dessert: {new_dessert}")
     return fastapi_gateway_response(201, {}, response.clean())

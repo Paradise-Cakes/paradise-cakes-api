@@ -239,7 +239,7 @@ def test_handler_valid_event_get_desserts_of_dessert_type(
 def test_handler_valid_event_no_desserts_of_dessert_type(desserts_dynamodb_stub):
     desserts_dynamodb_stub.add_response(
         "query",
-        {},
+        {"Items": []},
         expected_params={
             "TableName": "desserts",
             "IndexName": "dessert_type_index",
