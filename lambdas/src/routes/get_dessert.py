@@ -50,8 +50,8 @@ def get_dessert(dessert_id: str):
         KeyConditionExpression=Key("dessert_id").eq(dessert_id),
     )
 
-    dessert = Dessert(
-        **desserts_response.get("Item"), prices=prices_response.get("Items")
-    )
+    desserts_response["Item"]["prices"] = prices_response.get("Items")
+
+    dessert = Dessert(**desserts_response.get("Item"))
     response = GetDessertResponse(**dessert.clean())
     return fastapi_gateway_response(200, {}, response.clean())
