@@ -13,15 +13,13 @@ def dessert_record():
         "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
         "images": [
             {
-                "image_id": f"INTEGRATION_TEST-{uuid.uuid4()}",
-                "url": "https://placehold.co/200x200",
                 "position": 1,
+                "file_name": "image1.jpg",
                 "file_type": "jpg",
             },
             {
-                "image_id": f"INTEGRATION_TEST-{uuid.uuid4()}",
-                "url": "https://placehold.co/200x200",
                 "position": 2,
+                "file_name": "image2.jpg",
                 "file_type": "jpg",
             },
         ],

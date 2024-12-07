@@ -53,6 +53,7 @@ def test_handler_valid_event_get_dessert(desserts_dynamodb_stub, prices_dynamodb
                                 "image_id": {"S": "IMAGE-1"},
                                 "url": {"S": "https://example.com/image1.jpg"},
                                 "position": {"N": "1"},
+                                "file_name": {"S": "image1.jpg"},
                                 "file_type": {"S": "jpg"},
                             }
                         },
@@ -61,6 +62,7 @@ def test_handler_valid_event_get_dessert(desserts_dynamodb_stub, prices_dynamodb
                                 "image_id": {"S": "IMAGE-2"},
                                 "url": {"S": "https://example.com/image2.jpg"},
                                 "position": {"N": "2"},
+                                "file_name": {"S": "image2.jpg"},
                                 "file_type": {"S": "jpg"},
                             }
                         },
@@ -143,12 +145,14 @@ def test_handler_valid_event_get_dessert(desserts_dynamodb_stub, prices_dynamodb
                     "image_id": "IMAGE-1",
                     "url": "https://example.com/image1.jpg",
                     "position": 1,
+                    "file_name": "image1.jpg",
                     "file_type": "jpg",
                 },
                 {
                     "image_id": "IMAGE-2",
                     "url": "https://example.com/image2.jpg",
                     "position": 2,
+                    "file_name": "image2.jpg",
                     "file_type": "jpg",
                 },
             ],

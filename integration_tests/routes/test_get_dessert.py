@@ -36,13 +36,17 @@ def test_get_v1_desserts_get_dessert_returns_200(
             {
                 "image_id": "IMAGE-1",
                 "url": "https://example.com/image1.jpg",
+                "upload_url": "https://example.com/upload-url",
                 "position": 1,
+                "file_name": "image1.jpg",
                 "file_type": "jpg",
             },
             {
                 "image_id": "IMAGE-2",
                 "url": "https://example.com/image2.jpg",
+                "upload_url": "https://example.com/upload-url",
                 "position": 2,
+                "file_name": "image2.jpg",
                 "file_type": "jpg",
             },
         ],

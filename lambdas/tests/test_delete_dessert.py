@@ -106,6 +106,7 @@ def test_handler_delete_dessert(desserts_dynamodb_stub, prices_dynamodb_stub, s3
                                 "url": {
                                     "S": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000001/00000000-0000-0000-0000-000000000002"
                                 },
+                                "file_name": {"S": "image1.jpg"},
                                 "file_type": {"S": "image/jpeg"},
                             }
                         }
@@ -192,6 +193,7 @@ def test_handler_delete_dessert(desserts_dynamodb_stub, prices_dynamodb_stub, s3
                     "image_id": "00000000-0000-0000-0000-000000000002",
                     "position": 1,
                     "url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000001/00000000-0000-0000-0000-000000000002",
+                    "file_name": "image1.jpg",
                     "file_type": "image/jpeg",
                 },
             ],

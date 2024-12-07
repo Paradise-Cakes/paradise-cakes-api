@@ -56,6 +56,7 @@ def test_handler_valid_event_get_desserts_of_dessert_type(
                                     "image_id": {"S": "IMAGE-1"},
                                     "url": {"S": "https://example.com/image1.jpg"},
                                     "position": {"N": "1"},
+                                    "file_name": {"S": "image1.jpg"},
                                     "file_type": {"S": "jpg"},
                                 }
                             },
@@ -64,6 +65,7 @@ def test_handler_valid_event_get_desserts_of_dessert_type(
                                     "image_id": {"S": "IMAGE-2"},
                                     "url": {"S": "https://example.com/image2.jpg"},
                                     "position": {"N": "2"},
+                                    "file_name": {"S": "image2.jpg"},
                                     "file_type": {"S": "jpg"},
                                 }
                             },
@@ -93,6 +95,7 @@ def test_handler_valid_event_get_desserts_of_dessert_type(
                                     "image_id": {"S": "IMAGE-3"},
                                     "url": {"S": "https://example.com/image3.jpg"},
                                     "position": {"N": "1"},
+                                    "file_name": {"S": "image3.jpg"},
                                     "file_type": {"S": "jpg"},
                                 }
                             },
@@ -101,6 +104,7 @@ def test_handler_valid_event_get_desserts_of_dessert_type(
                                     "image_id": {"S": "IMAGE-4"},
                                     "url": {"S": "https://example.com/image4.jpg"},
                                     "position": {"N": "2"},
+                                    "file_name": {"S": "image4.jpg"},
                                     "file_type": {"S": "jpg"},
                                 }
                             },
@@ -188,12 +192,14 @@ def test_handler_valid_event_get_desserts_of_dessert_type(
                         "image_id": "IMAGE-1",
                         "url": "https://example.com/image1.jpg",
                         "position": 1,
+                        "file_name": "image1.jpg",
                         "file_type": "jpg",
                     },
                     {
                         "image_id": "IMAGE-2",
                         "url": "https://example.com/image2.jpg",
                         "position": 2,
+                        "file_name": "image2.jpg",
                         "file_type": "jpg",
                     },
                 ],
@@ -220,12 +226,14 @@ def test_handler_valid_event_get_desserts_of_dessert_type(
                         "image_id": "IMAGE-3",
                         "url": "https://example.com/image3.jpg",
                         "position": 1,
+                        "file_name": "image3.jpg",
                         "file_type": "jpg",
                     },
                     {
                         "image_id": "IMAGE-4",
                         "url": "https://example.com/image4.jpg",
                         "position": 2,
+                        "file_name": "image4.jpg",
                         "file_type": "jpg",
                     },
                 ],

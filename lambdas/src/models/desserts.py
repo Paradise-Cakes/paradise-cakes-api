@@ -4,10 +4,12 @@ from .base import Base
 
 
 class Image(Base):
-    image_id: str
-    url: str
-    position: int
+    image_id: Optional[str] = None
+    url: Optional[str] = None
+    upload_url: Optional[str] = None
+    file_name: str
     file_type: str
+    position: int
 
 
 class Price(Base):

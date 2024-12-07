@@ -68,6 +68,7 @@ def test_handler_patch_dessert(mock_prices_table, desserts_dynamodb_stub):
                                 "image_id": {"S": "IMAGE-1"},
                                 "url": {"S": "https://example.com/image1.jpg"},
                                 "position": {"N": "1"},
+                                "file_name": {"S": "image1.jpg"},
                                 "file_type": {"S": "jpg"},
                             }
                         }
@@ -128,6 +129,7 @@ def test_handler_patch_dessert(mock_prices_table, desserts_dynamodb_stub):
                                 "image_id": {"S": "IMAGE-1"},
                                 "url": {"S": "https://example.com/image1.jpg"},
                                 "position": {"N": "1"},
+                                "file_name": {"S": "image1.jpg"},
                                 "file_type": {"S": "jpg"},
                             }
                         }
@@ -187,6 +189,7 @@ def test_handler_patch_dessert(mock_prices_table, desserts_dynamodb_stub):
                     "image_id": "IMAGE-1",
                     "url": "https://example.com/image1.jpg",
                     "position": 1,
+                    "file_name": "image1.jpg",
                     "file_type": "jpg",
                 }
             ],
@@ -243,6 +246,7 @@ def test_handler_patch_dessert_prices(mock_prices_table, desserts_dynamodb_stub)
                                 "image_id": {"S": "IMAGE-1"},
                                 "url": {"S": "https://example.com/image1.jpg"},
                                 "position": {"N": "1"},
+                                "file_name": {"S": "image1.jpg"},
                                 "file_type": {"S": "jpg"},
                             }
                         }
@@ -313,6 +317,7 @@ def test_handler_patch_dessert_prices(mock_prices_table, desserts_dynamodb_stub)
                                 "image_id": {"S": "IMAGE-1"},
                                 "url": {"S": "https://example.com/image1.jpg"},
                                 "position": {"N": "1"},
+                                "file_name": {"S": "image1.jpg"},
                                 "file_type": {"S": "jpg"},
                             }
                         }
@@ -406,6 +411,7 @@ def test_handler_patch_dessert_prices(mock_prices_table, desserts_dynamodb_stub)
                     "image_id": "IMAGE-1",
                     "url": "https://example.com/image1.jpg",
                     "position": 1,
+                    "file_name": "image1.jpg",
                     "file_type": "jpg",
                 }
             ],

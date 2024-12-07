@@ -12,7 +12,6 @@ from src.routes import (
     patch_dessert,
     post_confirm_signup,
     post_dessert,
-    post_dessert_image,
     post_forgot_password,
     post_logout,
     post_order,
@@ -57,7 +56,6 @@ app.include_router(post_resend_confirmation_code.router)
 app.include_router(post_forgot_password.router)
 app.include_router(post_logout.router)
 app.include_router(post_dessert.router)
-app.include_router(post_dessert_image.router)
 app.include_router(patch_dessert.router)
 app.include_router(delete_dessert.router)
 app.include_router(get_display_images.router)

@@ -136,7 +136,9 @@ def function_dessert(dynamodb_client):
                         "M": {
                             "image_id": {"S": "IMAGE-1"},
                             "url": {"S": "https://example.com/image1.jpg"},
+                            "upload_url": {"S": "https://example.com/upload-url"},
                             "position": {"N": "1"},
+                            "file_name": {"S": "image1.jpg"},
                             "file_type": {"S": "jpg"},
                         }
                     },
@@ -144,7 +146,9 @@ def function_dessert(dynamodb_client):
                         "M": {
                             "image_id": {"S": "IMAGE-2"},
                             "url": {"S": "https://example.com/image2.jpg"},
+                            "upload_url": {"S": "https://example.com/upload-url"},
                             "position": {"N": "2"},
+                            "file_name": {"S": "image2.jpg"},
                             "file_type": {"S": "jpg"},
                         }
                     },
