@@ -1,12 +1,11 @@
 import pytest
+from boto3.dynamodb.conditions import Key
 from botocore.stub import Stubber
 from fastapi.testclient import TestClient
 from freezegun import freeze_time
 
 from src.api import app
 from src.routes.get_desserts import desserts_table, dynamodb_client
-from boto3.dynamodb.conditions import Key
-
 
 test_client = TestClient(app)
 

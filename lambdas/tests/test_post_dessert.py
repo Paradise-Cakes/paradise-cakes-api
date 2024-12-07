@@ -1,7 +1,7 @@
+import unittest
 import uuid
 from decimal import Decimal
-import unittest
-from unittest.mock import patch, MagicMock, call
+from unittest.mock import MagicMock, call, patch
 
 import pytest
 from botocore.stub import Stubber

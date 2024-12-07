@@ -1,8 +1,8 @@
 import pytest
+from boto3.dynamodb.conditions import Key
 from botocore.stub import Stubber
 from fastapi.testclient import TestClient
 from freezegun import freeze_time
-from boto3.dynamodb.conditions import Key
 
 from src.api import app
 from src.routes.get_dessert import desserts_table, prices_table
