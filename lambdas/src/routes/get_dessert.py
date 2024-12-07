@@ -50,6 +50,8 @@ def get_dessert(dessert_id: str):
         KeyConditionExpression=Key("dessert_id").eq(dessert_id),
     )
 
+    logger.info(prices_response)
+
     desserts_response["Item"]["prices"] = prices_response.get("Items")
 
     dessert = Dessert(**desserts_response.get("Item"))
