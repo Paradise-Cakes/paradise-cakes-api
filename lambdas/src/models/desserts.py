@@ -11,36 +11,39 @@ class Image(Base):
 
 
 class Price(Base):
+    dessert_id: str
     size: str
-    base: float
+    base_price: float
+    discount: Optional[float] = None
 
 
 class Dessert(Base):
-    dessert_id: str = None
-    name: str = None
-    description: str = None
-    prices: List[Price] = None
-    dessert_type: str = None
-    ingredients: Optional[List[str]] = None
-    created_at: int = None
-    last_updated_at: int = None
-    images: Optional[List[Image]] = None
+    dessert_id: str
+    name: str
+    description: str
+    dessert_type: str
+    created_at: int
+    last_updated_at: int
     visible: bool = False
+    prices: Optional[List[Price]] = []
+    ingredients: Optional[List[str]] = []
+    images: Optional[List[Image]] = []
 
 
 class PostDessertRequest(Base):
     name: str
     description: str
-    prices: List[Price]
     dessert_type: str
-    ingredients: List[str]
+    prices: Optional[List[Price]] = []
+    ingredients: Optional[List[str]] = []
+    images: Optional[List[Image]] = []
 
 
 class PatchDessertRequest(Base):
     name: Optional[str] = None
     description: Optional[str] = None
-    prices: Optional[List[Price]] = None
+    prices: Optional[List[Price]] = []
     dessert_type: Optional[str] = None
-    ingredients: Optional[List[str]] = None
-    images: Optional[List[Image]] = None
+    ingredients: Optional[List[str]] = []
+    images: Optional[List[Image]] = []
     visible: Optional[bool] = None

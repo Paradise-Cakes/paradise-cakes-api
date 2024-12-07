@@ -7,8 +7,41 @@ resource "aws_dynamodb_table" "desserts" {
     name = "dessert_id"
     type = "S"
   }
+
+  attribute {
+    name = "dessert_type"
+    type = "S"
+  }
+
+  attribute {
+    name = "last_updated",
+    type = "N"
+  }
+
+  global_secondary_index {
+    name               = "dessert_type_index"
+    hash_key           = "dessert_type"
+    range_key          = "last_updated"
+    projection_type    = "ALL"  
+  }
 }
 
+resource "aws_dynamodb_table" "prices" {
+  name         = "prices"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "dessert_id"
+  range_key    = "size"
+
+  attribute {
+    name = "dessert_id"
+    type = "S"
+  }
+
+  attribute {
+    name = "size"
+    type = "S"
+  }
+}
 
 resource "aws_dynamodb_table" "orders" {
   name         = "orders"

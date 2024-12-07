@@ -4,7 +4,9 @@ from fastapi.testclient import TestClient
 from freezegun import freeze_time
 
 from src.api import app
-from src.routes.get_desserts import desserts_table
+from src.routes.get_desserts import desserts_table, dynamodb_client
+from boto3.dynamodb.conditions import Key
+
 
 test_client = TestClient(app)
 
@@ -16,24 +18,29 @@ def desserts_dynamodb_stub():
         ddb_stubber.assert_no_pending_responses()
 
 
+@pytest.fixture(autouse=True, scope="function")
+def dynamo_stub():
+    with Stubber(dynamodb_client) as dynamo_stubber:
+        yield dynamo_stubber
+        dynamo_stubber.assert_no_pending_responses()
+
+
 @freeze_time("2024-03-22 12:00:00")
-def test_handler_valid_event_get_desserts(desserts_dynamodb_stub):
+def test_handler_valid_event_get_desserts_of_dessert_type(
+    desserts_dynamodb_stub, dynamo_stub
+):
     desserts_dynamodb_stub.add_response(
-        "scan",
+        "query",
         {
             "Items": [
                 {
                     "dessert_id": {"S": "DESSERT-1"},
                     "name": {"S": "Chocolate Cake"},
                     "description": {"S": "A delicious chocolate cake"},
-                    "prices": {
-                        "L": [
-                            {"M": {"size": {"S": "6in"}, "base": {"N": "10.00"}}},
-                            {"M": {"size": {"S": "8in"}, "base": {"N": "15.00"}}},
-                            {"M": {"size": {"S": "10in"}, "base": {"N": "20.00"}}},
-                        ]
-                    },
                     "dessert_type": {"S": "cake"},
+                    "created_at": {"N": "1711108800"},
+                    "last_updated_at": {"N": "1711108800"},
+                    "visible": {"BOOL": False},
                     "ingredients": {
                         "L": [
                             {"S": "flour"},
@@ -43,32 +50,109 @@ def test_handler_valid_event_get_desserts(desserts_dynamodb_stub):
                             {"S": "eggs"},
                         ]
                     },
+                    "images": {
+                        "L": [
+                            {
+                                "M": {
+                                    "image_id": {"S": "IMAGE-1"},
+                                    "url": {"S": "https://example.com/image1.jpg"},
+                                    "position": {"N": "1"},
+                                    "file_type": {"S": "jpg"},
+                                }
+                            },
+                            {
+                                "M": {
+                                    "image_id": {"S": "IMAGE-2"},
+                                    "url": {"S": "https://example.com/image2.jpg"},
+                                    "position": {"N": "2"},
+                                    "file_type": {"S": "jpg"},
+                                }
+                            },
+                        ]
+                    },
                 },
                 {
                     "dessert_id": {"S": "DESSERT-2"},
-                    "name": {"S": "Cheesecake"},
-                    "description": {"S": "A delicious cheesecake"},
-                    "prices": {
-                        "L": [
-                            {"M": {"size": {"S": "6in"}, "base": {"N": "12.00"}}},
-                            {"M": {"size": {"S": "8in"}, "base": {"N": "18.00"}}},
-                            {"M": {"size": {"S": "10in"}, "base": {"N": "24.00"}}},
-                        ]
-                    },
+                    "name": {"S": "Vanilla Cake"},
+                    "description": {"S": "A delicious vanilla cake"},
                     "dessert_type": {"S": "cake"},
+                    "created_at": {"N": "1711108800"},
+                    "last_updated_at": {"N": "1711108800"},
+                    "visible": {"BOOL": False},
                     "ingredients": {
                         "L": [
-                            {"S": "cream cheese"},
+                            {"S": "flour"},
                             {"S": "sugar"},
+                            {"S": "butter"},
                             {"S": "eggs"},
-                            {"S": "vanilla"},
                         ]
                     },
-                    "visible": {"BOOL": False},
+                    "images": {
+                        "L": [
+                            {
+                                "M": {
+                                    "image_id": {"S": "IMAGE-3"},
+                                    "url": {"S": "https://example.com/image3.jpg"},
+                                    "position": {"N": "1"},
+                                    "file_type": {"S": "jpg"},
+                                }
+                            },
+                            {
+                                "M": {
+                                    "image_id": {"S": "IMAGE-4"},
+                                    "url": {"S": "https://example.com/image4.jpg"},
+                                    "position": {"N": "2"},
+                                    "file_type": {"S": "jpg"},
+                                }
+                            },
+                        ]
+                    },
                 },
             ]
         },
-        expected_params={"TableName": "desserts"},
+        expected_params={
+            "TableName": "desserts",
+            "IndexName": "dessert_type_index",
+            "KeyConditionExpression": Key("dessert_type").eq("cake"),
+        },
+    )
+
+    dynamo_stub.add_response(
+        "batch_get_item",
+        {
+            "Responses": {
+                "prices": [
+                    {
+                        "dessert_id": {"S": "DESSERT-1"},
+                        "size": {"S": "6in"},
+                        "base_price": {"N": "10.00"},
+                        "discount": {"N": "0.00"},
+                    },
+                    {
+                        "dessert_id": {"S": "DESSERT-2"},
+                        "size": {"S": "6in"},
+                        "base_price": {"N": "10.00"},
+                        "discount": {"N": "0.00"},
+                    },
+                    {
+                        "dessert_id": {"S": "DESSERT-1"},
+                        "size": {"S": "8in"},
+                        "base_price": {"N": "15.00"},
+                        "discount": {"N": "0.00"},
+                    },
+                ]
+            }
+        },
+        expected_params={
+            "RequestItems": {
+                "prices": {
+                    "Keys": [
+                        {"dessert_id": {"S": "DESSERT-1"}},
+                        {"dessert_id": {"S": "DESSERT-2"}},
+                    ]
+                }
+            }
+        },
     )
 
     response = test_client.get("/desserts?dessert_type=cake")
@@ -81,42 +165,90 @@ def test_handler_valid_event_get_desserts(desserts_dynamodb_stub):
                 "dessert_id": "DESSERT-1",
                 "name": "Chocolate Cake",
                 "description": "A delicious chocolate cake",
-                "prices": [
-                    {"size": "6in", "base": 10.00},
-                    {"size": "8in", "base": 15.00},
-                    {"size": "10in", "base": 20.00},
-                ],
                 "dessert_type": "cake",
-                "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
+                "created_at": 1711108800,
+                "last_updated_at": 1711108800,
                 "visible": False,
+                "prices": [
+                    {
+                        "dessert_id": "DESSERT-1",
+                        "size": "6in",
+                        "base_price": 10.00,
+                        "discount": 0.00,
+                    },
+                    {
+                        "dessert_id": "DESSERT-1",
+                        "size": "8in",
+                        "base_price": 15.00,
+                        "discount": 0.00,
+                    },
+                ],
+                "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
+                "images": [
+                    {
+                        "image_id": "IMAGE-1",
+                        "url": "https://example.com/image1.jpg",
+                        "position": 1,
+                        "file_type": "jpg",
+                    },
+                    {
+                        "image_id": "IMAGE-2",
+                        "url": "https://example.com/image2.jpg",
+                        "position": 2,
+                        "file_type": "jpg",
+                    },
+                ],
             },
             {
                 "dessert_id": "DESSERT-2",
-                "name": "Cheesecake",
-                "description": "A delicious cheesecake",
-                "prices": [
-                    {"size": "6in", "base": 12.00},
-                    {"size": "8in", "base": 18.00},
-                    {"size": "10in", "base": 24.00},
-                ],
+                "name": "Vanilla Cake",
+                "description": "A delicious vanilla cake",
                 "dessert_type": "cake",
-                "ingredients": ["cream cheese", "sugar", "eggs", "vanilla"],
+                "created_at": 1711108800,
+                "last_updated_at": 1711108800,
                 "visible": False,
+                "prices": [
+                    {
+                        "dessert_id": "DESSERT-2",
+                        "size": "6in",
+                        "base_price": 10.00,
+                        "discount": 0.00,
+                    }
+                ],
+                "ingredients": ["flour", "sugar", "butter", "eggs"],
+                "images": [
+                    {
+                        "image_id": "IMAGE-3",
+                        "url": "https://example.com/image3.jpg",
+                        "position": 1,
+                        "file_type": "jpg",
+                    },
+                    {
+                        "image_id": "IMAGE-4",
+                        "url": "https://example.com/image4.jpg",
+                        "position": 2,
+                        "file_type": "jpg",
+                    },
+                ],
             },
         ],
     )
 
 
 @freeze_time("2024-03-22 12:00:00")
-def test_handler_valid_event_get_desserts_no_items(desserts_dynamodb_stub):
+def test_handler_valid_event_no_desserts_of_dessert_type(desserts_dynamodb_stub):
     desserts_dynamodb_stub.add_response(
-        "scan",
+        "query",
         {},
-        expected_params={"TableName": "desserts"},
+        expected_params={
+            "TableName": "desserts",
+            "IndexName": "dessert_type_index",
+            "KeyConditionExpression": Key("dessert_type").eq("cake"),
+        },
     )
 
     response = test_client.get("/desserts?dessert_type=cake")
 
     pytest.helpers.assert_responses_equal(
-        response, 404, {"detail": "No desserts found"}
+        response, 404, {"detail": "No desserts found of type cake"}
     )

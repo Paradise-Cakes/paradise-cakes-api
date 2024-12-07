@@ -53,3 +53,26 @@ class PostOrderRequest(Base):
     delivery_address_line_2: str
     delivery_date: str
     delivery_time: int
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "desserts": [
+                    {
+                        "dessert_id": "SCHEMA-TEST-DESSERT-ID",
+                        "dessert_name": "Lemon Blueberry Cake",
+                        "size": "6 inch",
+                        "quantity": 2,
+                    }
+                ],
+                "customer_first_name": "Anthony",
+                "customer_last_name": "Soprano",
+                "customer_email": "anthony.soprano@gmail.com",
+                "customer_phone_number": "555-555-5555",
+                "delivery_zip_code": "07001",
+                "delivery_address_line_1": "123 Main St",
+                "delivery_address_line_2": "Apt 1",
+                "delivery_date": "12-12-2024",
+                "delivery_time": 1711108800,
+            }
+        }

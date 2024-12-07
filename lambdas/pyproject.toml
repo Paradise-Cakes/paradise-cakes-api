@@ -58,6 +58,3 @@ source = ["src"]
 [tool.coverage.report]
 show_missing = true
 fail_under = 100
-
-[tool.poetry.scripts]
-generate_swagger = "generate_swagger:main"

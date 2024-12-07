@@ -54,6 +54,50 @@ def count_orders_for_date(delivery_date):
     "/orders",
     status_code=201,
     response_model=PostOrderResponse,
+    responses={
+        201: {
+            "description": "Successfully created order",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "order_id": "ORDER-2",
+                        "customer_first_name": "Anthony",
+                        "customer_last_name": "Soprano",
+                        "customer_email": "anthony.soprano@gmail.com",
+                        "customer_phone_number": "555-555-5555",
+                        "delivery_zip_code": "07001",
+                        "delivery_address_line_1": "123 Main St",
+                        "delivery_address_line_2": "Apt 1",
+                        "delivery_date": "12-12-2024",
+                        "delivery_time": 1711108800,
+                        "order_status": "NEW",
+                        "order_date": 1711108800,
+                        "approved": False,
+                        "custom_order": False,
+                        "order_total": 0.00,
+                        "desserts": [
+                            {
+                                "dessert_id": "SCHEMA-TEST-DESSERT-ID",
+                                "dessert_name": "Lemon Blueberry Cake",
+                                "size": "6 inch",
+                                "quantity": 2,
+                            }
+                        ],
+                    }
+                }
+            },
+        },
+        400: {
+            "description": "Order Limit Exceeded Error",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error": "Order limit exceeded for date: 01-01-2022. Max orders: 2"
+                    }
+                }
+            },
+        },
+    },
 )
 def post_order(request: Request, body: PostOrderRequest):
     logger.info("checking if order limit has been exceeded")

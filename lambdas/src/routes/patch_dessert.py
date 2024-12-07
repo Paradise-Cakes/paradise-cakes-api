@@ -48,7 +48,7 @@ def patch_dessert(request: Request, body: PatchDessertRequest, dessert_id: str):
         updated_dessert["prices"] = [
             {
                 **price,
-                "base": Decimal(price["base"]).quantize(
+                "base": Decimal(price["base_price"]).quantize(
                     Decimal("0.01"), rounding=ROUND_HALF_UP
                 ),
             }
