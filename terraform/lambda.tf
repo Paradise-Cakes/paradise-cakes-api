@@ -20,8 +20,8 @@ resource "aws_lambda_function" "app" {
       DYNAMODB_PRICES_TABLE_NAME   = aws_dynamodb_table.prices.name
       COGNITO_APP_CLIENT_ID        = aws_cognito_user_pool_client.paradise_cakes_client.id
       COGNITO_USER_POOL_ID         = aws_cognito_user_pool.paradise_cakes_user_pool.id
-      REGION                     = "us-east-1"
-      DESSERT_IMAGES_BUCKET_NAME = aws_s3_bucket.pc_dessert_images_bucket.bucket
+      REGION                       = "us-east-1"
+      DESSERT_IMAGES_BUCKET_NAME   = aws_s3_bucket.pc_dessert_images_bucket.bucket
     }
   }
 }

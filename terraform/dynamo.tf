@@ -14,15 +14,15 @@ resource "aws_dynamodb_table" "desserts" {
   }
 
   attribute {
-    name = "last_updated",
+    name = "last_updated"
     type = "N"
   }
 
   global_secondary_index {
-    name               = "dessert_type_index"
-    hash_key           = "dessert_type"
-    range_key          = "last_updated"
-    projection_type    = "ALL"  
+    name            = "dessert_type_index"
+    hash_key        = "dessert_type"
+    range_key       = "last_updated"
+    projection_type = "ALL"
   }
 }
 
@@ -64,10 +64,10 @@ resource "aws_dynamodb_table" "orders" {
   }
 
   global_secondary_index {
-    name               = "delivery_date_index"
-    hash_key           = "delivery_date"
-    range_key          = "delivery_time"
-    projection_type    = "ALL"
+    name            = "delivery_date_index"
+    hash_key        = "delivery_date"
+    range_key       = "delivery_time"
+    projection_type = "ALL"
   }
 }
 
