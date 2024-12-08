@@ -24,7 +24,7 @@ def dynamo_stub():
         dynamo_stubber.assert_no_pending_responses()
 
 
-@freeze_time("2024-03-22 12:00:00")
+@freeze_time("2024-12-12 12:00:00")
 def test_handler_valid_event_get_desserts_of_dessert_type(
     desserts_dynamodb_stub, dynamo_stub
 ):
@@ -37,8 +37,8 @@ def test_handler_valid_event_get_desserts_of_dessert_type(
                     "name": {"S": "Chocolate Cake"},
                     "description": {"S": "A delicious chocolate cake"},
                     "dessert_type": {"S": "cake"},
-                    "created_at": {"N": "1711108800"},
-                    "last_updated_at": {"N": "1711108800"},
+                    "created_at": {"N": "1734004800"},
+                    "last_updated_at": {"N": "1734004800"},
                     "visible": {"BOOL": False},
                     "ingredients": {
                         "L": [
@@ -77,8 +77,8 @@ def test_handler_valid_event_get_desserts_of_dessert_type(
                     "name": {"S": "Vanilla Cake"},
                     "description": {"S": "A delicious vanilla cake"},
                     "dessert_type": {"S": "cake"},
-                    "created_at": {"N": "1711108800"},
-                    "last_updated_at": {"N": "1711108800"},
+                    "created_at": {"N": "1734004800"},
+                    "last_updated_at": {"N": "1734004800"},
                     "visible": {"BOOL": False},
                     "ingredients": {
                         "L": [
@@ -158,7 +158,7 @@ def test_handler_valid_event_get_desserts_of_dessert_type(
         },
     )
 
-    response = test_client.get("/desserts?dessert_type=cake")
+    response = test_client.get("v1/desserts?dessert_type=cake")
 
     pytest.helpers.assert_responses_equal(
         response,
@@ -169,8 +169,8 @@ def test_handler_valid_event_get_desserts_of_dessert_type(
                 "name": "Chocolate Cake",
                 "description": "A delicious chocolate cake",
                 "dessert_type": "cake",
-                "created_at": 1711108800,
-                "last_updated_at": 1711108800,
+                "created_at": 1734004800,
+                "last_updated_at": 1734004800,
                 "visible": False,
                 "prices": [
                     {
@@ -209,8 +209,8 @@ def test_handler_valid_event_get_desserts_of_dessert_type(
                 "name": "Vanilla Cake",
                 "description": "A delicious vanilla cake",
                 "dessert_type": "cake",
-                "created_at": 1711108800,
-                "last_updated_at": 1711108800,
+                "created_at": 1734004800,
+                "last_updated_at": 1734004800,
                 "visible": False,
                 "prices": [
                     {
@@ -242,7 +242,7 @@ def test_handler_valid_event_get_desserts_of_dessert_type(
     )
 
 
-@freeze_time("2024-03-22 12:00:00")
+@freeze_time("2024-12-12 12:00:00")
 def test_handler_valid_event_no_desserts_of_dessert_type(desserts_dynamodb_stub):
     desserts_dynamodb_stub.add_response(
         "query",
@@ -254,7 +254,7 @@ def test_handler_valid_event_no_desserts_of_dessert_type(desserts_dynamodb_stub)
         },
     )
 
-    response = test_client.get("/desserts?dessert_type=cake")
+    response = test_client.get("/v1/desserts?dessert_type=cake")
 
     pytest.helpers.assert_responses_equal(
         response, 404, {"detail": "No desserts found of type cake"}

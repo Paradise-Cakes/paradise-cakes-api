@@ -29,11 +29,11 @@ def dynamodb_client():
 
 @pytest.fixture(scope="function")
 def function_order(dynamodb_client, quantity=1, custom_order=False):
-    order_id = str(uuid.uuid4())
+    order_id = f"ORDER-{str(uuid.uuid4())}"
 
     records = [
         {
-            "order_id": {"S": f"ORDER:{order_id}"},
+            "order_id": {"S": order_id},
             "dessert_id": {"S": "INT_TEST_DESSERT_ID"},
             "dessert_name": {"S": "INT_TEST_DESSERT_NAME"},
             "quantity": {"N": f"{quantity}"},
@@ -45,10 +45,11 @@ def function_order(dynamodb_client, quantity=1, custom_order=False):
             "delivery_address_line_1": {"S": "INT_TEST_ADDRESS_LINE_1"},
             "delivery_address_line_2": {"S": "INT_TEST_ADDRESS_LINE_2"},
             "delivery_date": {"S": "12-12-2024"},
-            "delivery_time": {"N": "1711108800"},
+            "delivery_time": {"N": "1734004800"},
             "order_total": {"N": "0.00"},
             "order_status": {"S": "pending"},
-            "order_date": {"N": f"{int(datetime.now(tz=timezone.utc).timestamp())}"},
+            "order_date": {"S": "12-12-2024"},
+            "order_time": {"N": "1734004800"},
             "description": {"S": "INT_TEST_DESCRIPTION"},
             "custom_order": {"BOOL": custom_order},
         }
@@ -88,7 +89,7 @@ def cleanup_orders(dynamodb_client):
 
 @pytest.fixture(scope="function")
 def function_dessert(dynamodb_client):
-    dessert_id = str(uuid.uuid4())
+    dessert_id = f"DESSERT-{str(uuid.uuid4())}"
 
     records = [
         {

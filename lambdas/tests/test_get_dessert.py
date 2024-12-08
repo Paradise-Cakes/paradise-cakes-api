@@ -24,7 +24,7 @@ def prices_dynamodb_stub():
         ddb_stubber.assert_no_pending_responses()
 
 
-@freeze_time("2024-03-22 12:00:00")
+@freeze_time("2024-12-12 12:00:00")
 def test_handler_valid_event_get_dessert(desserts_dynamodb_stub, prices_dynamodb_stub):
     desserts_dynamodb_stub.add_response(
         "get_item",
@@ -34,8 +34,8 @@ def test_handler_valid_event_get_dessert(desserts_dynamodb_stub, prices_dynamodb
                 "name": {"S": "Chocolate Cake"},
                 "description": {"S": "A delicious chocolate cake"},
                 "dessert_type": {"S": "cake"},
-                "created_at": {"N": "1711108800"},
-                "last_updated_at": {"N": "1711108800"},
+                "created_at": {"N": "1734004800"},
+                "last_updated_at": {"N": "1734004800"},
                 "visible": {"BOOL": False},
                 "ingredients": {
                     "L": [
@@ -116,8 +116,8 @@ def test_handler_valid_event_get_dessert(desserts_dynamodb_stub, prices_dynamodb
             "name": "Chocolate Cake",
             "description": "A delicious chocolate cake",
             "dessert_type": "cake",
-            "created_at": 1711108800,
-            "last_updated_at": 1711108800,
+            "created_at": 1734004800,
+            "last_updated_at": 1734004800,
             "visible": False,
             "prices": [
                 {
@@ -160,7 +160,7 @@ def test_handler_valid_event_get_dessert(desserts_dynamodb_stub, prices_dynamodb
     )
 
 
-@freeze_time("2024-03-22 12:00:00")
+@freeze_time("2024-12-12 12:00:00")
 def test_handler_valid_event_get_dessert_not_found(desserts_dynamodb_stub):
     desserts_dynamodb_stub.add_response(
         "get_item",

@@ -23,6 +23,13 @@ desserts_table = DynamoConnection(
 ).table
 
 
+dessert_type_count_table = DynamoConnection(
+    os.environ.get("DYNAMODB_REGION", "us-east-1"),
+    os.environ.get("DYNAMODB_ENDPOINT_URL", None),
+    os.environ.get("DYNAMODB_DESSERT_TYPE_COUNT_TABLE_NAME", "dessert_type_count"),
+).table
+
+
 prices_table = DynamoConnection(
     os.environ.get("DYNAMODB_REGION", "us-east-1"),
     os.environ.get("DYNAMODB_ENDPOINT_URL", None),
@@ -56,10 +63,37 @@ def generate_upload_url(dessert_id, dessert_image):
 )
 def post_dessert(request: Request, body: PostDessertRequest):
     logger.info("Creating new dessert")
+    dessert_type = "DESSERT"
+
+    logger.info("Incrementing dessert type counter")
+    dessert_type_count = dessert_type_count_table.get_item(
+        Key={"dessert_type": dessert_type}
+    )
+
+    if "Item" not in dessert_type_count:
+        dessert_count = 1
+        dessert_type_count_table.put_item(
+            Item={
+                "dessert_type": dessert_type,
+                "dessert_count": dessert_count,
+            }
+        )
+    else:
+        counter_response = dessert_type_count_table.update_item(
+            Key={"dessert_type": "DESSERT"},
+            UpdateExpression="set dessert_count = dessert_count + :incr",
+            ExpressionAttributeValues={":incr": 1},
+            ReturnValues="ALL_NEW",
+        )
+        logger.info(counter_response)
+        dessert_count = counter_response["Attributes"]["dessert_count"]
+
+    dessert_id = f"{dessert_type}-{dessert_count}"
+    logger.info(f"Generated dessert ID: {dessert_id}")
 
     new_dessert = Dessert(
         **body.clean(),
-        dessert_id=str(uuid.uuid4()),
+        dessert_id=dessert_id,
         created_at=int(arrow.utcnow().timestamp()),
         last_updated_at=int(arrow.utcnow().timestamp()),
     )

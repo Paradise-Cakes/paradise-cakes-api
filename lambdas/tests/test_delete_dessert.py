@@ -49,8 +49,8 @@ def test_handler_delete_dessert(desserts_dynamodb_stub, prices_dynamodb_stub, s3
                 "name": {"S": "Chocolate Cake"},
                 "description": {"S": "A delicious chocolate cake"},
                 "dessert_type": {"S": "cake"},
-                "created_at": {"N": "1711108800"},
-                "last_updated_at": {"N": "1711108800"},
+                "created_at": {"N": "1734004800"},
+                "last_updated_at": {"N": "1734004800"},
                 "visible": {"BOOL": False},
                 "prices": {
                     "L": [
@@ -164,8 +164,8 @@ def test_handler_delete_dessert(desserts_dynamodb_stub, prices_dynamodb_stub, s3
             "name": "Chocolate Cake",
             "description": "A delicious chocolate cake",
             "dessert_type": "cake",
-            "created_at": 1711108800,
-            "last_updated_at": 1711108800,
+            "created_at": 1734004800,
+            "last_updated_at": 1734004800,
             "visible": False,
             "prices": [
                 {

@@ -25,7 +25,7 @@ def orders_type_count_dynamodb_stub():
         ddb_stubber.assert_no_pending_responses()
 
 
-@freeze_time("2024-03-22 12:00:00")
+@freeze_time("2024-12-12 12:00:00")
 def test_handler_valid_event_existing_order_type(
     orders_dynamodb_stub, orders_type_count_dynamodb_stub
 ):
@@ -69,15 +69,17 @@ def test_handler_valid_event_existing_order_type(
                 "order_id": "ORDER-2",
                 "customer_first_name": "Anthony",
                 "customer_last_name": "Soprano",
+                "customer_full_name": "Anthony Soprano",
                 "customer_email": "anthony.soprano@gmail.com",
                 "customer_phone_number": "555-555-5555",
                 "delivery_zip_code": "07001",
                 "delivery_address_line_1": "123 Main St",
                 "delivery_address_line_2": "Apt 1",
                 "delivery_date": "12-12-2024",
-                "delivery_time": 1711108800,
+                "delivery_time": 1734004800,
                 "order_status": "NEW",
-                "order_date": 1711108800,
+                "order_date": "12-12-2024",
+                "order_time": 1734004800,
                 "approved": False,
                 "custom_order": False,
                 "order_total": Decimal(0.0),
@@ -113,7 +115,7 @@ def test_handler_valid_event_existing_order_type(
             "delivery_address_line_1": "123 Main St",
             "delivery_address_line_2": "Apt 1",
             "delivery_date": "12-12-2024",
-            "delivery_time": 1711108800,
+            "delivery_time": 1734004800,
         },
     )
 
@@ -124,15 +126,17 @@ def test_handler_valid_event_existing_order_type(
             "order_id": "ORDER-2",
             "customer_first_name": "Anthony",
             "customer_last_name": "Soprano",
+            "customer_full_name": "Anthony Soprano",
             "customer_email": "anthony.soprano@gmail.com",
             "customer_phone_number": "555-555-5555",
             "delivery_zip_code": "07001",
             "delivery_address_line_1": "123 Main St",
             "delivery_address_line_2": "Apt 1",
             "delivery_date": "12-12-2024",
-            "delivery_time": 1711108800,
+            "delivery_time": 1734004800,
             "order_status": "NEW",
-            "order_date": 1711108800,
+            "order_date": "12-12-2024",
+            "order_time": 1734004800,
             "approved": False,
             "custom_order": False,
             "order_total": 0.00,
@@ -148,7 +152,7 @@ def test_handler_valid_event_existing_order_type(
     )
 
 
-@freeze_time("2024-03-22 12:00:00")
+@freeze_time("2024-12-12 12:00:00")
 def test_handler_valid_event_new_order_type(
     orders_dynamodb_stub, orders_type_count_dynamodb_stub
 ):
@@ -189,15 +193,17 @@ def test_handler_valid_event_new_order_type(
                 "order_id": "ORDER-1",
                 "customer_first_name": "Anthony",
                 "customer_last_name": "Viera",
+                "customer_full_name": "Anthony Viera",
                 "customer_email": "anthony.soprano@gmail.com",
                 "customer_phone_number": "555-555-5555",
                 "delivery_zip_code": "07001",
                 "delivery_address_line_1": "123 Main St",
                 "delivery_address_line_2": "Apt 1",
                 "delivery_date": "12-12-2024",
-                "delivery_time": 1711108800,
+                "delivery_time": 1734004800,
                 "order_status": "NEW",
-                "order_date": 1711108800,
+                "order_date": "12-12-2024",
+                "order_time": 1734004800,
                 "approved": False,
                 "custom_order": False,
                 "order_total": Decimal(0.0),
@@ -233,7 +239,7 @@ def test_handler_valid_event_new_order_type(
             "delivery_address_line_1": "123 Main St",
             "delivery_address_line_2": "Apt 1",
             "delivery_date": "12-12-2024",
-            "delivery_time": 1711108800,
+            "delivery_time": 1734004800,
         },
     )
 
@@ -244,15 +250,17 @@ def test_handler_valid_event_new_order_type(
             "order_id": "ORDER-1",
             "customer_first_name": "Anthony",
             "customer_last_name": "Viera",
+            "customer_full_name": "Anthony Viera",
             "customer_email": "anthony.soprano@gmail.com",
             "customer_phone_number": "555-555-5555",
             "delivery_zip_code": "07001",
             "delivery_address_line_1": "123 Main St",
             "delivery_address_line_2": "Apt 1",
             "delivery_date": "12-12-2024",
-            "delivery_time": 1711108800,
+            "delivery_time": 1734004800,
             "order_status": "NEW",
-            "order_date": 1711108800,
+            "order_date": "12-12-2024",
+            "order_time": 1734004800,
             "approved": False,
             "custom_order": False,
             "order_total": 0.00,
@@ -268,7 +276,7 @@ def test_handler_valid_event_new_order_type(
     )
 
 
-@freeze_time("2024-03-22 12:00:00")
+@freeze_time("2024-12-12 12:00:00")
 def test_handler_accepts_customer_order(
     orders_dynamodb_stub, orders_type_count_dynamodb_stub
 ):
@@ -310,15 +318,17 @@ def test_handler_accepts_customer_order(
                 "description": "Custom order",
                 "customer_first_name": "Anthony",
                 "customer_last_name": "Viera",
+                "customer_full_name": "Anthony Viera",
                 "customer_email": "anthony.soprano@gmail.com",
                 "customer_phone_number": "555-555-5555",
                 "delivery_zip_code": "07001",
                 "delivery_address_line_1": "123 Main St",
                 "delivery_address_line_2": "Apt 1",
                 "delivery_date": "12-12-2024",
-                "delivery_time": 1711108800,
+                "delivery_time": 1734004800,
                 "order_status": "NEW",
-                "order_date": 1711108800,
+                "order_date": "12-12-2024",
+                "order_time": 1734004800,
                 "approved": False,
                 "custom_order": True,
                 "order_total": Decimal(0.0),
@@ -356,7 +366,7 @@ def test_handler_accepts_customer_order(
             "delivery_address_line_1": "123 Main St",
             "delivery_address_line_2": "Apt 1",
             "delivery_date": "12-12-2024",
-            "delivery_time": 1711108800,
+            "delivery_time": 1734004800,
         },
     )
 
@@ -367,15 +377,17 @@ def test_handler_accepts_customer_order(
             "order_id": "ORDER-1",
             "customer_first_name": "Anthony",
             "customer_last_name": "Viera",
+            "customer_full_name": "Anthony Viera",
             "customer_email": "anthony.soprano@gmail.com",
             "customer_phone_number": "555-555-5555",
             "delivery_zip_code": "07001",
             "delivery_address_line_1": "123 Main St",
             "delivery_address_line_2": "Apt 1",
             "delivery_date": "12-12-2024",
-            "delivery_time": 1711108800,
+            "delivery_time": 1734004800,
             "order_status": "NEW",
-            "order_date": 1711108800,
+            "order_date": "12-12-2024",
+            "order_time": 1734004800,
             "approved": False,
             "custom_order": True,
             "order_total": 0.00,
@@ -392,7 +404,7 @@ def test_handler_accepts_customer_order(
     )
 
 
-@freeze_time("2024-03-22 12:00:00")
+@freeze_time("2024-12-12 12:00:00")
 def test_handler_rejects_order_when_max_orders_exceeded(orders_dynamodb_stub):
     orders_dynamodb_stub.add_response(
         "query",
@@ -424,7 +436,7 @@ def test_handler_rejects_order_when_max_orders_exceeded(orders_dynamodb_stub):
             "delivery_address_line_1": "123 Main St",
             "delivery_address_line_2": "Apt 1",
             "delivery_date": "12-12-2024",
-            "delivery_time": 1711108800,
+            "delivery_time": 1734004800,
         },
     )
 

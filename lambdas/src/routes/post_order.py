@@ -63,15 +63,17 @@ def count_orders_for_date(delivery_date):
                         "order_id": "ORDER-2",
                         "customer_first_name": "Anthony",
                         "customer_last_name": "Soprano",
+                        "customer_full_name": "Anthony Soprano",
                         "customer_email": "anthony.soprano@gmail.com",
                         "customer_phone_number": "555-555-5555",
                         "delivery_zip_code": "07001",
                         "delivery_address_line_1": "123 Main St",
                         "delivery_address_line_2": "Apt 1",
                         "delivery_date": "12-12-2024",
-                        "delivery_time": 1711108800,
+                        "delivery_time": 1734004800,
                         "order_status": "NEW",
-                        "order_date": 1711108800,
+                        "order_date": "12-12-2024",
+                        "order_time": 1734004800,
                         "approved": False,
                         "custom_order": False,
                         "order_total": 0.00,
@@ -108,10 +110,12 @@ def post_order(request: Request, body: PostOrderRequest):
         new_order = Order(
             **body.clean(),
             order_id="",
-            order_date=int(arrow.utcnow().timestamp()),
+            order_date=datetime.now().strftime("%m-%d-%Y"),
+            order_time=int(datetime.now().timestamp()),
             # TODO: calculate order_total by summing the total cost of each dessert
             # TODO: look up the cost of each dessert using dessert_id and size
             order_total=0.00,
+            customer_full_name=f"{body.customer_first_name} {body.customer_last_name}",
         )
 
         new_order_delivery_date = new_order.delivery_date
@@ -123,9 +127,11 @@ def post_order(request: Request, body: PostOrderRequest):
             )
 
         logger.info("Incrementing order type counter")
-        get_response = order_type_count_table.get_item(Key={"order_type": order_type})
+        order_type_count_response = order_type_count_table.get_item(
+            Key={"order_type": order_type}
+        )
 
-        if "Item" not in get_response:
+        if "Item" not in order_type_count_response:
             order_count = 1
             order_type_count_table.put_item(
                 Item={"order_type": order_type, "order_count": order_count}
