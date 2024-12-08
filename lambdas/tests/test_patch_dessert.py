@@ -19,7 +19,7 @@ def desserts_dynamodb_stub():
         ddb_stubber.assert_no_pending_responses()
 
 
-@freeze_time("2024-03-22 12:00:00")
+@freeze_time("2024-12-12 12:00:00")
 @patch("src.routes.patch_dessert.prices_table")
 def test_handler_patch_dessert(mock_prices_table, desserts_dynamodb_stub):
     mock_batch_writer = MagicMock()
@@ -33,8 +33,8 @@ def test_handler_patch_dessert(mock_prices_table, desserts_dynamodb_stub):
                 "name": {"S": "Chocolate Cake"},
                 "description": {"S": "A delicious chocolate cake"},
                 "dessert_type": {"S": "cake"},
-                "created_at": {"N": "1711108800"},
-                "last_updated_at": {"N": "1711108800"},
+                "created_at": {"N": "1734004800"},
+                "last_updated_at": {"N": "1734004800"},
                 "visible": {"BOOL": False},
                 "prices": {
                     "L": [
@@ -86,8 +86,8 @@ def test_handler_patch_dessert(mock_prices_table, desserts_dynamodb_stub):
                 "name": {"S": "Chocolate Cake"},
                 "description": {"S": "A delicious chocolate cake"},
                 "dessert_type": {"S": "cake"},
-                "created_at": {"N": "1711108800"},
-                "last_updated_at": {"N": "1711108800"},
+                "created_at": {"N": "1734004800"},
+                "last_updated_at": {"N": "1734004800"},
                 "visible": {"BOOL": True},
                 "prices": {
                     "L": [
@@ -147,7 +147,7 @@ def test_handler_patch_dessert(mock_prices_table, desserts_dynamodb_stub):
             },
             "ExpressionAttributeValues": {
                 ":visible": True,
-                ":last_updated_at": 1711108800,
+                ":last_updated_at": 1734004800,
             },
             "ReturnValues": "ALL_NEW",
         },
@@ -166,8 +166,8 @@ def test_handler_patch_dessert(mock_prices_table, desserts_dynamodb_stub):
             "name": "Chocolate Cake",
             "description": "A delicious chocolate cake",
             "dessert_type": "cake",
-            "created_at": 1711108800,
-            "last_updated_at": 1711108800,
+            "created_at": 1734004800,
+            "last_updated_at": 1734004800,
             "visible": True,
             "prices": [
                 {
@@ -197,7 +197,7 @@ def test_handler_patch_dessert(mock_prices_table, desserts_dynamodb_stub):
     )
 
 
-@freeze_time("2024-03-22 12:00:00")
+@freeze_time("2024-12-12 12:00:00")
 @patch("src.routes.patch_dessert.prices_table")
 def test_handler_patch_dessert_prices(mock_prices_table, desserts_dynamodb_stub):
     mock_batch_writer = MagicMock()
@@ -211,8 +211,8 @@ def test_handler_patch_dessert_prices(mock_prices_table, desserts_dynamodb_stub)
                 "name": {"S": "Chocolate Cake"},
                 "description": {"S": "A delicious chocolate cake"},
                 "dessert_type": {"S": "cake"},
-                "created_at": {"N": "1711108800"},
-                "last_updated_at": {"N": "1711108800"},
+                "created_at": {"N": "1734004800"},
+                "last_updated_at": {"N": "1734004800"},
                 "visible": {"BOOL": False},
                 "prices": {
                     "L": [
@@ -264,8 +264,8 @@ def test_handler_patch_dessert_prices(mock_prices_table, desserts_dynamodb_stub)
                 "name": {"S": "Chocolate Cake"},
                 "description": {"S": "A delicious chocolate cake  "},
                 "dessert_type": {"S": "cake"},
-                "created_at": {"N": "1711108800"},
-                "last_updated_at": {"N": "1711108800"},
+                "created_at": {"N": "1734004800"},
+                "last_updated_at": {"N": "1734004800"},
                 "visible": {"BOOL": True},
                 "prices": {
                     "L": [
@@ -336,7 +336,7 @@ def test_handler_patch_dessert_prices(mock_prices_table, desserts_dynamodb_stub)
             },
             "ExpressionAttributeValues": {
                 ":visible": True,
-                ":last_updated_at": 1711108800,
+                ":last_updated_at": 1734004800,
                 ":prices": [
                     {
                         "dessert_id": "00000000-0000-0000-0000-000000000001",
@@ -382,8 +382,8 @@ def test_handler_patch_dessert_prices(mock_prices_table, desserts_dynamodb_stub)
             "name": "Chocolate Cake",
             "description": "A delicious chocolate cake  ",
             "dessert_type": "cake",
-            "created_at": 1711108800,
-            "last_updated_at": 1711108800,
+            "created_at": 1734004800,
+            "last_updated_at": 1734004800,
             "visible": True,
             "prices": [
                 {
@@ -419,7 +419,7 @@ def test_handler_patch_dessert_prices(mock_prices_table, desserts_dynamodb_stub)
     )
 
 
-@freeze_time("2024-03-22 12:00:00")
+@freeze_time("2024-12-12 12:00:00")
 def test_handler_patch_dessert_not_found(desserts_dynamodb_stub):
     desserts_dynamodb_stub.add_response(
         "get_item",

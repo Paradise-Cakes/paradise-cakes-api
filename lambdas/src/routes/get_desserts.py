@@ -28,7 +28,7 @@ desserts_table = DynamoConnection(
     "/desserts",
     status_code=200,
 )
-def get_desserts(dessert_type: str = None):
+def get_desserts(dessert_type: str):
     logger.info(f"Getting desserts of type {dessert_type}")
 
     desserts_response = desserts_table.query(

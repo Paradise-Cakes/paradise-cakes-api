@@ -2,6 +2,7 @@ import os
 
 import boto3
 from aws_lambda_powertools import Logger
+from boto3.dynamodb.conditions import Key
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
 
@@ -24,10 +25,29 @@ orders_table = DynamoConnection(
     "/orders",
     status_code=200,
 )
-def get_orders():
-    logger.info(f"Getting orders")
-
-    dynamo_response = orders_table.scan()
+def get_orders(
+    order_date: str = None, customer_full_name: str = None, delivery_date: str = None
+):
+    if delivery_date:
+        logger.info(f"Getting orders for delivery date {delivery_date}")
+        dynamo_response = orders_table.query(
+            IndexName="delivery_date_index",
+            KeyConditionExpression=Key("delivery_date").eq(delivery_date),
+        )
+    elif customer_full_name:
+        logger.info(f"Getting orders for customer {customer_full_name}")
+        dynamo_response = orders_table.query(
+            IndexName="customer_full_name_index",
+            KeyConditionExpression=Key("customer_full_name").eq(customer_full_name),
+        )
+    elif order_date:
+        logger.info(f"Getting orders for order date {order_date}")
+        dynamo_response = orders_table.query(
+            IndexName="order_date_index",
+            KeyConditionExpression=Key("order_date").eq(order_date),
+        )
+    else:
+        raise HTTPException(status_code=400, detail="Missing query parameter")
 
     if "Items" not in dynamo_response:
         raise HTTPException(status_code=404, detail="No orders found")

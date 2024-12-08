@@ -16,6 +16,7 @@ class Order(Base):
     order_id: str
     customer_first_name: str
     customer_last_name: str
+    customer_full_name: str
     customer_email: str
     customer_phone_number: str
     delivery_zip_code: str
@@ -24,7 +25,8 @@ class Order(Base):
     delivery_date: str
     delivery_time: int
     order_status: str = "NEW"
-    order_date: int
+    order_date: str
+    order_time: int
     approved: bool = False
     custom_order: bool = False
 
@@ -73,6 +75,6 @@ class PostOrderRequest(Base):
                 "delivery_address_line_1": "123 Main St",
                 "delivery_address_line_2": "Apt 1",
                 "delivery_date": "12-12-2024",
-                "delivery_time": 1711108800,
+                "delivery_time": 1734004800,
             }
         }

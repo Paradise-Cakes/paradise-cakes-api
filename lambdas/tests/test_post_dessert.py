@@ -30,7 +30,7 @@ def desserts_dynamodb_stub():
         ddb_stubber.assert_no_pending_responses()
 
 
-@freeze_time("2024-03-22 12:00:00")
+@freeze_time("2024-12-12 12:00:00")
 @patch(
     "src.routes.post_dessert.s3_client.generate_presigned_url",
     return_value="https://example.com/upload-url",
@@ -59,8 +59,8 @@ def test_handler_add_dessert(
                 "name": "Chocolate Cake",
                 "description": "A delicious chocolate cake",
                 "dessert_type": "cake",
-                "created_at": 1711108800,
-                "last_updated_at": 1711108800,
+                "created_at": 1734004800,
+                "last_updated_at": 1734004800,
                 "visible": False,
                 "prices": [
                     {
@@ -134,8 +134,8 @@ def test_handler_add_dessert(
             "name": "Chocolate Cake",
             "description": "A delicious chocolate cake",
             "dessert_type": "cake",
-            "created_at": 1711108800,
-            "last_updated_at": 1711108800,
+            "created_at": 1734004800,
+            "last_updated_at": 1734004800,
             "visible": False,
             "prices": [
                 {
