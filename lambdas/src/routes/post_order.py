@@ -127,9 +127,11 @@ def post_order(request: Request, body: PostOrderRequest):
             )
 
         logger.info("Incrementing order type counter")
-        get_response = order_type_count_table.get_item(Key={"order_type": order_type})
+        order_type_count_response = order_type_count_table.get_item(
+            Key={"order_type": order_type}
+        )
 
-        if "Item" not in get_response:
+        if "Item" not in order_type_count_response:
             order_count = 1
             order_type_count_table.put_item(
                 Item={"order_type": order_type, "order_count": order_count}
