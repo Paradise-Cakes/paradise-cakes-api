@@ -6,7 +6,7 @@ class RequestHelper:
         self.url = url
         self.headers = headers
 
-    def get(self, path: str, query: dict, headers: dict = None):
+    def get(self, path: str, query: dict = None, headers: dict = None):
         response = requests.get(
             f"{self.url}{path}",
             headers=headers if headers else self.headers,

@@ -1,5 +1,5 @@
 from decimal import Decimal
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from botocore.stub import Stubber
@@ -20,7 +20,11 @@ def desserts_dynamodb_stub():
 
 
 @freeze_time("2024-03-22 12:00:00")
-def test_handler_patch_dessert(desserts_dynamodb_stub):
+@patch("src.routes.patch_dessert.prices_table")
+def test_handler_patch_dessert(mock_prices_table, desserts_dynamodb_stub):
+    mock_batch_writer = MagicMock()
+    mock_prices_table.batch_writer.__enter__.return_value = mock_batch_writer
+
     desserts_dynamodb_stub.add_response(
         "get_item",
         {
@@ -28,31 +32,52 @@ def test_handler_patch_dessert(desserts_dynamodb_stub):
                 "dessert_id": {"S": "00000000-0000-0000-0000-000000000001"},
                 "name": {"S": "Chocolate Cake"},
                 "description": {"S": "A delicious chocolate cake"},
+                "dessert_type": {"S": "cake"},
+                "created_at": {"N": "1711108800"},
+                "last_updated_at": {"N": "1711108800"},
+                "visible": {"BOOL": False},
                 "prices": {
                     "L": [
-                        {"M": {"size": {"S": "6in"}, "base": {"N": "10.00"}}},
-                        {"M": {"size": {"S": "8in"}, "base": {"N": "15.00"}}},
-                        {"M": {"size": {"S": "10in"}, "base": {"N": "20.00"}}},
+                        {
+                            "M": {
+                                "dessert_id": {
+                                    "S": "00000000-0000-0000-0000-000000000001"
+                                },
+                                "size": {"S": "slice"},
+                                "base_price": {"N": "5.00"},
+                                "discount": {"N": "0.00"},
+                            }
+                        },
+                        {
+                            "M": {
+                                "dessert_id": {
+                                    "S": "00000000-0000-0000-0000-000000000001"
+                                },
+                                "size": {"S": "whole"},
+                                "base_price": {"N": "40.00"},
+                                "discount": {"N": "0.00"},
+                            }
+                        },
                     ]
                 },
-                "dessert_type": {"S": "cake"},
-                "ingredients": {
+                "ingredients": {"SS": ["flour", "sugar", "cocoa", "butter", "eggs"]},
+                "images": {
                     "L": [
-                        {"S": "flour"},
-                        {"S": "sugar"},
-                        {"S": "cocoa"},
-                        {"S": "butter"},
-                        {"S": "eggs"},
+                        {
+                            "M": {
+                                "image_id": {"S": "IMAGE-1"},
+                                "url": {"S": "https://example.com/image1.jpg"},
+                                "position": {"N": "1"},
+                                "file_name": {"S": "image1.jpg"},
+                                "file_type": {"S": "jpg"},
+                            }
+                        }
                     ]
                 },
-                "visible": {"BOOL": False},
             }
         },
-        expected_params={
-            "TableName": "desserts",
-            "Key": {"dessert_id": "00000000-0000-0000-0000-000000000001"},
-        },
     )
+
     desserts_dynamodb_stub.add_response(
         "update_item",
         {
@@ -60,16 +85,34 @@ def test_handler_patch_dessert(desserts_dynamodb_stub):
                 "dessert_id": {"S": "00000000-0000-0000-0000-000000000001"},
                 "name": {"S": "Chocolate Cake"},
                 "description": {"S": "A delicious chocolate cake"},
-                "prices": {
-                    "L": [
-                        {"M": {"size": {"S": "6in"}, "base": {"N": "100.00"}}},
-                        {"M": {"size": {"S": "8in"}, "base": {"N": "15.00"}}},
-                        {"M": {"size": {"S": "10in"}, "base": {"N": "20.00"}}},
-                    ]
-                },
+                "dessert_type": {"S": "cake"},
                 "created_at": {"N": "1711108800"},
                 "last_updated_at": {"N": "1711108800"},
-                "dessert_type": {"S": "cake"},
+                "visible": {"BOOL": True},
+                "prices": {
+                    "L": [
+                        {
+                            "M": {
+                                "dessert_id": {
+                                    "S": "00000000-0000-0000-0000-000000000001"
+                                },
+                                "size": {"S": "slice"},
+                                "base_price": {"N": "5.00"},
+                                "discount": {"N": "0.00"},
+                            }
+                        },
+                        {
+                            "M": {
+                                "dessert_id": {
+                                    "S": "00000000-0000-0000-0000-000000000001"
+                                },
+                                "size": {"S": "whole"},
+                                "base_price": {"N": "40.00"},
+                                "discount": {"N": "0.00"},
+                            }
+                        },
+                    ]
+                },
                 "ingredients": {
                     "L": [
                         {"S": "flour"},
@@ -79,32 +122,40 @@ def test_handler_patch_dessert(desserts_dynamodb_stub):
                         {"S": "eggs"},
                     ]
                 },
-                "visible": {"BOOL": True},
+                "images": {
+                    "L": [
+                        {
+                            "M": {
+                                "image_id": {"S": "IMAGE-1"},
+                                "url": {"S": "https://example.com/image1.jpg"},
+                                "position": {"N": "1"},
+                                "file_name": {"S": "image1.jpg"},
+                                "file_type": {"S": "jpg"},
+                            }
+                        }
+                    ]
+                },
             }
         },
         expected_params={
+            "TableName": "desserts",
             "Key": {"dessert_id": "00000000-0000-0000-0000-000000000001"},
-            "ReturnValues": "ALL_NEW",
-            "UpdateExpression": "SET #prices = :prices, #visible = :visible, #last_updated_at = :last_updated_at",
+            "UpdateExpression": "SET #visible = :visible, #last_updated_at = :last_updated_at",
             "ExpressionAttributeNames": {
-                "#last_updated_at": "last_updated_at",
                 "#visible": "visible",
-                "#prices": "prices",
+                "#last_updated_at": "last_updated_at",
             },
             "ExpressionAttributeValues": {
-                ":last_updated_at": 1711108800,
                 ":visible": True,
-                ":prices": [
-                    {"size": "6in", "base": Decimal(100.00).quantize(Decimal("0.01"))},
-                ],
+                ":last_updated_at": 1711108800,
             },
-            "TableName": "desserts",
+            "ReturnValues": "ALL_NEW",
         },
     )
 
     response = test_client.patch(
         "/desserts/00000000-0000-0000-0000-000000000001",
-        json={"visible": True, "prices": [{"size": "6in", "base": 100.00}]},
+        json={"visible": True},
     )
 
     pytest.helpers.assert_responses_equal(
@@ -114,16 +165,256 @@ def test_handler_patch_dessert(desserts_dynamodb_stub):
             "dessert_id": "00000000-0000-0000-0000-000000000001",
             "name": "Chocolate Cake",
             "description": "A delicious chocolate cake",
-            "prices": [
-                {"size": "6in", "base": 100.00},
-                {"size": "8in", "base": 15.00},
-                {"size": "10in", "base": 20.00},
-            ],
             "dessert_type": "cake",
-            "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
             "created_at": 1711108800,
             "last_updated_at": 1711108800,
             "visible": True,
+            "prices": [
+                {
+                    "dessert_id": "00000000-0000-0000-0000-000000000001",
+                    "size": "slice",
+                    "base_price": 5.00,
+                    "discount": 0.00,
+                },
+                {
+                    "dessert_id": "00000000-0000-0000-0000-000000000001",
+                    "size": "whole",
+                    "base_price": 40.00,
+                    "discount": 0.00,
+                },
+            ],
+            "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
+            "images": [
+                {
+                    "image_id": "IMAGE-1",
+                    "url": "https://example.com/image1.jpg",
+                    "position": 1,
+                    "file_name": "image1.jpg",
+                    "file_type": "jpg",
+                }
+            ],
+        },
+    )
+
+
+@freeze_time("2024-03-22 12:00:00")
+@patch("src.routes.patch_dessert.prices_table")
+def test_handler_patch_dessert_prices(mock_prices_table, desserts_dynamodb_stub):
+    mock_batch_writer = MagicMock()
+    mock_prices_table.batch_writer.__enter__.return_value = mock_batch_writer
+
+    desserts_dynamodb_stub.add_response(
+        "get_item",
+        {
+            "Item": {
+                "dessert_id": {"S": "00000000-0000-0000-0000-000000000001"},
+                "name": {"S": "Chocolate Cake"},
+                "description": {"S": "A delicious chocolate cake"},
+                "dessert_type": {"S": "cake"},
+                "created_at": {"N": "1711108800"},
+                "last_updated_at": {"N": "1711108800"},
+                "visible": {"BOOL": False},
+                "prices": {
+                    "L": [
+                        {
+                            "M": {
+                                "dessert_id": {
+                                    "S": "00000000-0000-0000-0000-000000000001"
+                                },
+                                "size": {"S": "slice"},
+                                "base_price": {"N": "5.00"},
+                                "discount": {"N": "0.00"},
+                            }
+                        },
+                        {
+                            "M": {
+                                "dessert_id": {
+                                    "S": "00000000-0000-0000-0000-000000000001"
+                                },
+                                "size": {"S": "whole"},
+                                "base_price": {"N": "40.00"},
+                                "discount": {"N": "0.00"},
+                            }
+                        },
+                    ]
+                },
+                "ingredients": {"SS": ["flour", "sugar", "cocoa", "butter", "eggs"]},
+                "images": {
+                    "L": [
+                        {
+                            "M": {
+                                "image_id": {"S": "IMAGE-1"},
+                                "url": {"S": "https://example.com/image1.jpg"},
+                                "position": {"N": "1"},
+                                "file_name": {"S": "image1.jpg"},
+                                "file_type": {"S": "jpg"},
+                            }
+                        }
+                    ]
+                },
+            }
+        },
+    )
+
+    desserts_dynamodb_stub.add_response(
+        "update_item",
+        {
+            "Attributes": {
+                "dessert_id": {"S": "00000000-0000-0000-0000-000000000001"},
+                "name": {"S": "Chocolate Cake"},
+                "description": {"S": "A delicious chocolate cake  "},
+                "dessert_type": {"S": "cake"},
+                "created_at": {"N": "1711108800"},
+                "last_updated_at": {"N": "1711108800"},
+                "visible": {"BOOL": True},
+                "prices": {
+                    "L": [
+                        {
+                            "M": {
+                                "dessert_id": {
+                                    "S": "00000000-0000-0000-0000-000000000001"
+                                },
+                                "size": {"S": "slice"},
+                                "base_price": {"N": "15.00"},
+                                "discount": {"N": "0.00"},
+                            }
+                        },
+                        {
+                            "M": {
+                                "dessert_id": {
+                                    "S": "00000000-0000-0000-0000-000000000001"
+                                },
+                                "size": {"S": "whole"},
+                                "base_price": {"N": "140.00"},
+                                "discount": {"N": "0.00"},
+                            }
+                        },
+                        {
+                            "M": {
+                                "dessert_id": {
+                                    "S": "00000000-0000-0000-0000-000000000001"
+                                },
+                                "size": {"S": "half"},
+                                "base_price": {"N": "120.00"},
+                                "discount": {"N": "0.00"},
+                            },
+                        },
+                    ]
+                },
+                "ingredients": {
+                    "L": [
+                        {"S": "flour"},
+                        {"S": "sugar"},
+                        {"S": "cocoa"},
+                        {"S": "butter"},
+                        {"S": "eggs"},
+                    ]
+                },
+                "images": {
+                    "L": [
+                        {
+                            "M": {
+                                "image_id": {"S": "IMAGE-1"},
+                                "url": {"S": "https://example.com/image1.jpg"},
+                                "position": {"N": "1"},
+                                "file_name": {"S": "image1.jpg"},
+                                "file_type": {"S": "jpg"},
+                            }
+                        }
+                    ]
+                },
+            }
+        },
+        expected_params={
+            "TableName": "desserts",
+            "Key": {"dessert_id": "00000000-0000-0000-0000-000000000001"},
+            "UpdateExpression": "SET #prices = :prices, #visible = :visible, #last_updated_at = :last_updated_at",
+            "ExpressionAttributeNames": {
+                "#visible": "visible",
+                "#last_updated_at": "last_updated_at",
+                "#prices": "prices",
+            },
+            "ExpressionAttributeValues": {
+                ":visible": True,
+                ":last_updated_at": 1711108800,
+                ":prices": [
+                    {
+                        "dessert_id": "00000000-0000-0000-0000-000000000001",
+                        "size": "slice",
+                        "base_price": Decimal(15.00),
+                        "discount": Decimal(0.00),
+                    },
+                    {
+                        "dessert_id": "00000000-0000-0000-0000-000000000001",
+                        "size": "whole",
+                        "base_price": Decimal(140.00),
+                        "discount": Decimal(0.00),
+                    },
+                    {
+                        "dessert_id": "00000000-0000-0000-0000-000000000001",
+                        "size": "half",
+                        "base_price": Decimal(120.00),
+                        "discount": Decimal(0.00),
+                    },
+                ],
+            },
+            "ReturnValues": "ALL_NEW",
+        },
+    )
+
+    response = test_client.patch(
+        "/desserts/00000000-0000-0000-0000-000000000001",
+        json={
+            "visible": True,
+            "prices": [
+                {"size": "slice", "base_price": 15.00, "discount": 0.00},
+                {"size": "whole", "base_price": 140.00, "discount": 0.00},
+                {"size": "half", "base_price": 120.00, "discount": 0.00},
+            ],
+        },
+    )
+
+    pytest.helpers.assert_responses_equal(
+        response,
+        200,
+        {
+            "dessert_id": "00000000-0000-0000-0000-000000000001",
+            "name": "Chocolate Cake",
+            "description": "A delicious chocolate cake  ",
+            "dessert_type": "cake",
+            "created_at": 1711108800,
+            "last_updated_at": 1711108800,
+            "visible": True,
+            "prices": [
+                {
+                    "dessert_id": "00000000-0000-0000-0000-000000000001",
+                    "size": "slice",
+                    "base_price": 15.00,
+                    "discount": 0.00,
+                },
+                {
+                    "dessert_id": "00000000-0000-0000-0000-000000000001",
+                    "size": "whole",
+                    "base_price": 140.00,
+                    "discount": 0.00,
+                },
+                {
+                    "dessert_id": "00000000-0000-0000-0000-000000000001",
+                    "size": "half",
+                    "base_price": 120.00,
+                    "discount": 0.00,
+                },
+            ],
+            "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
+            "images": [
+                {
+                    "image_id": "IMAGE-1",
+                    "url": "https://example.com/image1.jpg",
+                    "position": 1,
+                    "file_name": "image1.jpg",
+                    "file_type": "jpg",
+                }
+            ],
         },
     )
 
@@ -147,176 +438,3 @@ def test_handler_patch_dessert_not_found(desserts_dynamodb_stub):
     pytest.helpers.assert_responses_equal(
         response, 404, {"detail": "Dessert not found"}
     )
-
-
-# @freeze_time("2024-03-22 12:00:00")
-# def test_handler_updates_image_position(desserts_dynamodb_stub):
-#     desserts_dynamodb_stub.add_response(
-#         "get_item",
-#         {
-#             "Item": {
-#                 "dessert_id": {"S": "00000000-0000-0000-0000-000000000001"},
-#                 "name": {"S": "Chocolate Cake"},
-#                 "description": {"S": "A delicious chocolate cake"},
-#                 "prices": {
-#                     "L": [
-#                         {"M": {"size": {"S": "6in"}, "base": {"N": "10.00"}}},
-#                         {"M": {"size": {"S": "8in"}, "base": {"N": "15.00"}}},
-#                         {"M": {"size": {"S": "10in"}, "base": {"N": "20.00"}}},
-#                     ]
-#                 },
-#                 "dessert_type": {"S": "cake"},
-#                 "ingredients": {
-#                     "L": [
-#                         {"S": "flour"},
-#                         {"S": "sugar"},
-#                         {"S": "cocoa"},
-#                         {"S": "butter"},
-#                         {"S": "eggs"},
-#                     ]
-#                 },
-#                 "visible": {"BOOL": False},
-#                 "images": {
-#                     "L": [
-#                         {
-#                             "M": {
-#                                 "image_id": {
-#                                     "S": "00000000-0000-0000-0000-000000000002"
-#                                 },
-#                                 "url": {"S": "https://example.com/image.jpg"},
-#                                 "position": {"N": "1"},
-#                                 "file_type": {"S": "image/jpeg"},
-#                             }
-#                         },
-#                         {
-#                             "M": {
-#                                 "image_id": {
-#                                     "S": "00000000-0000-0000-0000-000000000003"
-#                                 },
-#                                 "url": {"S": "https://example.com/image.jpg"},
-#                                 "position": {"N": "2"},
-#                                 "file_type": {"S": "image/jpeg"},
-#                             }
-#                         },
-#                     ]
-#                 },
-#             }
-#         },
-#         expected_params={
-#             "TableName": "desserts",
-#             "Key": {"dessert_id": "00000000-0000-0000-0000-000000000001"},
-#         },
-#     )
-#     desserts_dynamodb_stub.add_response(
-#         "update_item",
-#         {
-#             "Attributes": {
-#                 "dessert_id": {"S": "00000000-0000-0000-0000-000000000001"},
-#                 "name": {"S": "Chocolate Cake"},
-#                 "description": {"S": "A delicious chocolate cake"},
-#                 "prices": {
-#                     "L": [
-#                         {"M": {"size": {"S": "6in"}, "base": {"N": "10.00"}}},
-#                         {"M": {"size": {"S": "8in"}, "base": {"N": "15.00"}}},
-#                         {"M": {"size": {"S": "10in"}, "base": {"N": "20.00"}}},
-#                     ]
-#                 },
-#                 "created_at": {"N": "1711108800"},
-#                 "last_updated_at": {"N": "1711108800"},
-#                 "dessert_type": {"S": "cake"},
-#                 "ingredients": {
-#                     "L": [
-#                         {"S": "flour"},
-#                         {"S": "sugar"},
-#                         {"S": "cocoa"},
-#                         {"S": "butter"},
-#                         {"S": "eggs"},
-#                     ]
-#                 },
-#                 "visible": {"BOOL": False},
-#                 "images": {
-#                     "L": [
-#                         {
-#                             "M": {
-#                                 "image_id": {
-#                                     "S": "00000000-0000-0000-0000-000000000003"
-#                                 },
-#                                 "url": {"S": "https://example.com/image.jpg"},
-#                                 "position": {"N": "1"},
-#                                 "file_type": {"S": "image/jpeg"},
-#                             }
-#                         },
-#                     ]
-#                 },
-#             }
-#         },
-#         expected_params={
-#             "Key": {"dessert_id": "00000000-0000-0000-0000-000000000001"},
-#             "ReturnValues": "ALL_NEW",
-#             "UpdateExpression": "SET #images = :images, #last_updated_at = :last_updated_at",
-#             "ExpressionAttributeNames": {
-#                 "#last_updated_at": "last_updated_at",
-#                 "#images": "images",
-#             },
-#             "ExpressionAttributeValues": {
-#                 ":last_updated_at": 1711108800,
-#                 ":images": [
-#                     {
-#                         "file_type": "image/jpeg",
-#                         "image_id": "00000000-0000-0000-0000-000000000003",
-#                         "position": 1,
-#                         "url": "https://example.com/image.jpg",
-#                     }
-#                 ],
-#             },
-#             "TableName": "desserts",
-#         },
-#     )
-
-#     response = test_client.patch(
-#         "/desserts/00000000-0000-0000-0000-000000000001",
-#         json={
-#             "images": [
-#                 {
-#                     "image_id": "00000000-0000-0000-0000-000000000003",
-#                     "position": 1,
-#                     "file_type": "image/jpeg",
-#                     "url": "https://example.com/image.jpg",
-#                 },
-#             ]
-#         },
-#     )
-
-#     pytest.helpers.assert_responses_equal(
-#         response,
-#         200,
-#         {
-#             "dessert_id": "00000000-0000-0000-0000-000000000001",
-#             "name": "Chocolate Cake",
-#             "description": "A delicious chocolate cake",
-#             "prices": [
-#                 {"size": "6in", "base": 10.00},
-#                 {"size": "8in", "base": 15.00},
-#                 {"size": "10in", "base": 20.00},
-#             ],
-#             "dessert_type": "cake",
-#             "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
-#             "created_at": 1711108800,
-#             "last_updated_at": 1711108800,
-#             "visible": False,
-#             "images": [
-#                 {
-#                     "image_id": "00000000-0000-0000-0000-000000000002",
-#                     "url": "https://example.com/image.jpg",
-#                     "position": 2,
-#                     "file_type": "image/jpeg",
-#                 },
-#                 {
-#                     "image_id": "00000000-0000-0000-0000-000000000003",
-#                     "url": "https://example.com/image.jpg",
-#                     "position": 1,
-#                     "file_type": "image/jpeg",
-#                 },
-#             ],
-#         },
-#     )

@@ -84,3 +84,145 @@ def cleanup_orders(dynamodb_client):
         except Exception as e:
             print(f"Failed to delete order {order.get('order_id')}: {e}")
             raise e
+
+
+@pytest.fixture(scope="function")
+def function_dessert(dynamodb_client):
+    dessert_id = str(uuid.uuid4())
+
+    records = [
+        {
+            "dessert_id": {"S": dessert_id},
+            "name": {"S": "INT_TEST_DESSERT_NAME"},
+            "description": {"S": "INT_TEST_DESCRIPTION"},
+            "dessert_type": {"S": "cake"},
+            "created_at": {"N": f"{int(datetime.now(tz=timezone.utc).timestamp())}"},
+            "last_updated_at": {
+                "N": f"{int(datetime.now(tz=timezone.utc).timestamp())}"
+            },
+            "visible": {"BOOL": False},
+            "prices": {
+                "L": [
+                    {
+                        "M": {
+                            "dessert_id": {"S": dessert_id},
+                            "size": {"S": "slice"},
+                            "base_price": {"N": "5.00"},
+                            "discount": {"N": "0.00"},
+                        }
+                    },
+                    {
+                        "M": {
+                            "dessert_id": {"S": dessert_id},
+                            "size": {"S": "whole"},
+                            "base_price": {"N": "40.00"},
+                            "discount": {"N": "0.00"},
+                        }
+                    },
+                ]
+            },
+            "ingredients": {
+                "L": [
+                    {"S": "flour"},
+                    {"S": "sugar"},
+                    {"S": "cocoa"},
+                    {"S": "butter"},
+                    {"S": "eggs"},
+                ]
+            },
+            "images": {
+                "L": [
+                    {
+                        "M": {
+                            "image_id": {"S": "IMAGE-1"},
+                            "url": {"S": "https://example.com/image1.jpg"},
+                            "upload_url": {"S": "https://example.com/upload-url"},
+                            "position": {"N": "1"},
+                            "file_name": {"S": "image1.jpg"},
+                            "file_type": {"S": "jpg"},
+                        }
+                    },
+                    {
+                        "M": {
+                            "image_id": {"S": "IMAGE-2"},
+                            "url": {"S": "https://example.com/image2.jpg"},
+                            "upload_url": {"S": "https://example.com/upload-url"},
+                            "position": {"N": "2"},
+                            "file_name": {"S": "image2.jpg"},
+                            "file_type": {"S": "jpg"},
+                        }
+                    },
+                ]
+            },
+        }
+    ]
+
+    for record in records:
+        dynamodb_client.put_item(
+            TableName="desserts",
+            Item=record,
+        )
+        dynamodb_client.batch_write_item(
+            RequestItems={
+                "prices": [
+                    {
+                        "PutRequest": {
+                            "Item": {
+                                "dessert_id": {"S": dessert_id},
+                                "size": {"S": "slice"},
+                                "base_price": {"N": "5.00"},
+                                "discount": {"N": "0.00"},
+                            }
+                        }
+                    },
+                    {
+                        "PutRequest": {
+                            "Item": {
+                                "dessert_id": {"S": dessert_id},
+                                "size": {"S": "whole"},
+                                "base_price": {"N": "40.00"},
+                                "discount": {"N": "0.00"},
+                            }
+                        }
+                    },
+                ]
+            }
+        )
+
+    return {"dessert_id": dessert_id, "records": records}
+
+
+@pytest.fixture(scope="function")
+def cleanup_desserts(dynamodb_client):
+    desserts_to_cleanup = []
+    yield desserts_to_cleanup
+
+    # Cleanup logic
+    for dessert in desserts_to_cleanup:
+        try:
+            dessert_prices = dynamodb_client.query(
+                TableName="prices",
+                KeyConditionExpression="dessert_id = :dessert_id",
+                ExpressionAttributeValues={
+                    ":dessert_id": {"S": dessert.get("dessert_id")}
+                },
+            )
+            for price in dessert_prices.get("Items"):
+                dynamodb_client.delete_item(
+                    Key={
+                        "dessert_id": {"S": dessert.get("dessert_id")},
+                        "size": price.get("size"),
+                    },
+                    TableName="prices",
+                )
+            print(f"Deleted test dessert prices: {dessert.get('dessert_id')}")
+            dynamodb_client.delete_item(
+                Key={
+                    "dessert_id": {"S": dessert.get("dessert_id")},
+                },
+                TableName="desserts",
+            )
+            print(f"Deleted test dessert: {dessert.get('dessert_id')}")
+        except Exception as e:
+            print(f"Failed to delete dessert {dessert.get('dessert_id')}: {e}")
+            raise e

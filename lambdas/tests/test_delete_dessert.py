@@ -5,7 +5,7 @@ from botocore.stub import Stubber
 from fastapi.testclient import TestClient
 
 from src.api import app
-from src.routes.delete_dessert import desserts_table, s3_client
+from src.routes.delete_dessert import desserts_table, prices_table, s3_client
 
 test_client = TestClient(app)
 
@@ -27,13 +27,20 @@ def desserts_dynamodb_stub():
 
 
 @pytest.fixture(autouse=True, scope="function")
+def prices_dynamodb_stub():
+    with Stubber(prices_table.meta.client) as ddb_stubber:
+        yield ddb_stubber
+        ddb_stubber.assert_no_pending_responses()
+
+
+@pytest.fixture(autouse=True, scope="function")
 def s3_stub():
     with Stubber(s3_client) as s3_stubber:
         yield s3_stubber
         s3_stubber.assert_no_pending_responses()
 
 
-def test_handler_delete_dessert(desserts_dynamodb_stub, s3_stub):
+def test_handler_delete_dessert(desserts_dynamodb_stub, prices_dynamodb_stub, s3_stub):
     desserts_dynamodb_stub.add_response(
         "get_item",
         {
@@ -41,14 +48,44 @@ def test_handler_delete_dessert(desserts_dynamodb_stub, s3_stub):
                 "dessert_id": {"S": "00000000-0000-0000-0000-000000000001"},
                 "name": {"S": "Chocolate Cake"},
                 "description": {"S": "A delicious chocolate cake"},
+                "dessert_type": {"S": "cake"},
+                "created_at": {"N": "1711108800"},
+                "last_updated_at": {"N": "1711108800"},
+                "visible": {"BOOL": False},
                 "prices": {
                     "L": [
-                        {"M": {"size": {"S": "6in"}, "base": {"N": "10.00"}}},
-                        {"M": {"size": {"S": "8in"}, "base": {"N": "15.00"}}},
-                        {"M": {"size": {"S": "10in"}, "base": {"N": "20.00"}}},
+                        {
+                            "M": {
+                                "dessert_id": {
+                                    "S": "00000000-0000-0000-0000-000000000001"
+                                },
+                                "size": {"S": "6in"},
+                                "base_price": {"N": "10.00"},
+                                "discount": {"N": "0.00"},
+                            }
+                        },
+                        {
+                            "M": {
+                                "dessert_id": {
+                                    "S": "00000000-0000-0000-0000-000000000001"
+                                },
+                                "size": {"S": "8in"},
+                                "base_price": {"N": "15.00"},
+                                "discount": {"N": "0.00"},
+                            }
+                        },
+                        {
+                            "M": {
+                                "dessert_id": {
+                                    "S": "00000000-0000-0000-0000-000000000001"
+                                },
+                                "size": {"S": "10in"},
+                                "base_price": {"N": "20.00"},
+                                "discount": {"N": "0.00"},
+                            }
+                        },
                     ]
                 },
-                "dessert_type": {"S": "cake"},
                 "ingredients": {
                     "L": [
                         {"S": "flour"},
@@ -58,9 +95,6 @@ def test_handler_delete_dessert(desserts_dynamodb_stub, s3_stub):
                         {"S": "eggs"},
                     ]
                 },
-                "visible": {"BOOL": False},
-                "created_at": {"N": "1711108800"},
-                "last_updated_at": {"N": "1711108800"},
                 "images": {
                     "L": [
                         {
@@ -72,21 +106,10 @@ def test_handler_delete_dessert(desserts_dynamodb_stub, s3_stub):
                                 "url": {
                                     "S": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000001/00000000-0000-0000-0000-000000000002"
                                 },
+                                "file_name": {"S": "image1.jpg"},
                                 "file_type": {"S": "image/jpeg"},
                             }
-                        },
-                        {
-                            "M": {
-                                "image_id": {
-                                    "S": "00000000-0000-0000-0000-000000000003"
-                                },
-                                "position": {"N": "2"},
-                                "url": {
-                                    "S": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000001/00000000-0000-0000-0000-000000000003"
-                                },
-                                "file_type": {"S": "image/jpeg"},
-                            }
-                        },
+                        }
                     ]
                 },
             }
@@ -97,23 +120,30 @@ def test_handler_delete_dessert(desserts_dynamodb_stub, s3_stub):
         },
     )
 
-    s3_stub.add_response(
-        "delete_object",
-        {},
-        expected_params={
-            "Bucket": "dessert-images",
-            "Key": "00000000-0000-0000-0000-000000000001/00000000-0000-0000-0000-000000000002",
-        },
-    )
+    for size in ["6in", "8in", "10in"]:
+        prices_dynamodb_stub.add_response(
+            "delete_item",
+            {},
+            expected_params={
+                "Key": {
+                    "dessert_id": "00000000-0000-0000-0000-000000000001",
+                    "size": size,
+                },
+                "TableName": "prices",
+            },
+        )
 
-    s3_stub.add_response(
-        "delete_object",
-        {},
-        expected_params={
-            "Bucket": "dessert-images",
-            "Key": "00000000-0000-0000-0000-000000000001/00000000-0000-0000-0000-000000000003",
-        },
-    )
+    for image in [
+        "00000000-0000-0000-0000-000000000002",
+    ]:
+        s3_stub.add_response(
+            "delete_object",
+            {},
+            expected_params={
+                "Bucket": "dessert-images",
+                "Key": f"00000000-0000-0000-0000-000000000001/{image}",
+            },
+        )
 
     desserts_dynamodb_stub.add_response(
         "delete_item",
@@ -133,27 +163,37 @@ def test_handler_delete_dessert(desserts_dynamodb_stub, s3_stub):
             "dessert_id": "00000000-0000-0000-0000-000000000001",
             "name": "Chocolate Cake",
             "description": "A delicious chocolate cake",
-            "prices": [
-                {"size": "6in", "base": 10.00},
-                {"size": "8in", "base": 15.00},
-                {"size": "10in", "base": 20.00},
-            ],
             "dessert_type": "cake",
-            "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
-            "visible": False,
             "created_at": 1711108800,
             "last_updated_at": 1711108800,
+            "visible": False,
+            "prices": [
+                {
+                    "dessert_id": "00000000-0000-0000-0000-000000000001",
+                    "size": "6in",
+                    "base_price": 10.00,
+                    "discount": 0.00,
+                },
+                {
+                    "dessert_id": "00000000-0000-0000-0000-000000000001",
+                    "size": "8in",
+                    "base_price": 15.00,
+                    "discount": 0.00,
+                },
+                {
+                    "dessert_id": "00000000-0000-0000-0000-000000000001",
+                    "size": "10in",
+                    "base_price": 20.00,
+                    "discount": 0.00,
+                },
+            ],
+            "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
             "images": [
                 {
                     "image_id": "00000000-0000-0000-0000-000000000002",
                     "position": 1,
                     "url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000001/00000000-0000-0000-0000-000000000002",
-                    "file_type": "image/jpeg",
-                },
-                {
-                    "image_id": "00000000-0000-0000-0000-000000000003",
-                    "position": 2,
-                    "url": "https://dessert-images.s3.amazonaws.com/00000000-0000-0000-0000-000000000001/00000000-0000-0000-0000-000000000003",
+                    "file_name": "image1.jpg",
                     "file_type": "image/jpeg",
                 },
             ],

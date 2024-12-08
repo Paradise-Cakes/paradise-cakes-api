@@ -18,6 +18,11 @@ desserts_table = DynamoConnection(
     os.environ.get("DYNAMODB_DESSERTS_TABLE_NAME", "desserts"),
 ).table
 
+prices_table = DynamoConnection(
+    os.environ.get("DYNAMODB_REGION", "us-east-1"),
+    os.environ.get("DYNAMODB_ENDPOINT_URL", None),
+    os.environ.get("DYNAMODB_PRICES_TABLE_NAME", "prices"),
+).table
 
 s3_client = boto3.client("s3")
 
@@ -39,6 +44,14 @@ def delete_dessert(request: Request, dessert_id: str):
     if "Item" not in get_dessert_response:
         raise HTTPException(status_code=404, detail="Dessert not found")
 
+    # delete prices this dessert has
+    if "prices" in get_dessert_response["Item"]:
+        for price in get_dessert_response["Item"]["prices"]:
+            prices_table.delete_item(
+                Key={"dessert_id": price["dessert_id"], "size": price["size"]}
+            )
+    logger.info(f"Deleted prices for dessert: {dessert_id}")
+
     # check if the dessert has any images and delete them
     if "images" in get_dessert_response["Item"]:
         for image in get_dessert_response["Item"]["images"]:
@@ -46,8 +59,8 @@ def delete_dessert(request: Request, dessert_id: str):
             s3_client.delete_object(
                 Bucket=bucket_name, Key=f"{dessert_id}/{image['image_id']}"
             )
+    logger.info(f"Deleted images for dessert: {dessert_id}")
 
     desserts_table.delete_item(Key={"dessert_id": dessert_id})
     response = DeleteDessertResponse(**get_dessert_response["Item"])
-    logger.info(f"Deleted dessert: {response}")
     return fastapi_gateway_response(200, {}, response.clean())

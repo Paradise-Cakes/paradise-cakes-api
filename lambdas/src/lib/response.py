@@ -19,14 +19,14 @@ def fastapi_gateway_response(
 
             if "prices" in item:
                 for price in item["prices"]:
-                    price["base"] = float(price["base"])
+                    price["base_price"] = float(price["base_price"])
 
     if "order_total" in body:
         body["order_total"] = float(body["order_total"])
 
     if "prices" in body:
         for price in body["prices"]:
-            price["base"] = float(price["base"])
+            price["base_price"] = float(price["base_price"])
 
     return JSONResponse(
         status_code=httpStatusCode,

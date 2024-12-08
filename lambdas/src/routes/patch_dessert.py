@@ -22,6 +22,13 @@ desserts_table = DynamoConnection(
 ).table
 
 
+prices_table = DynamoConnection(
+    os.environ.get("DYNAMODB_REGION", "us-east-1"),
+    os.environ.get("DYNAMODB_ENDPOINT_URL", None),
+    os.environ.get("DYNAMODB_PRICES_TABLE_NAME", "prices"),
+).table
+
+
 class PatchDessertResponse(Dessert):
     pass
 
@@ -44,17 +51,25 @@ def patch_dessert(request: Request, body: PatchDessertRequest, dessert_id: str):
         "last_updated_at": int(arrow.utcnow().timestamp()),
     }
 
+    # TODO: FIGURE OUT HOW TO DO THIS IN A CLEANER WAY
     if "prices" in updated_dessert:
-        updated_dessert["prices"] = [
+        formatted_prices = [
             {
-                **price,
-                "base": Decimal(price["base"]).quantize(
+                "dessert_id": dessert_id,
+                "size": price.get("size"),
+                "base_price": Decimal(price.get("base_price")).quantize(
+                    Decimal("0.01"), rounding=ROUND_HALF_UP
+                ),
+                "discount": Decimal(price.get("discount")).quantize(
                     Decimal("0.01"), rounding=ROUND_HALF_UP
                 ),
             }
-            for price in updated_dessert["prices"]
+            for price in updated_dessert.get("prices", [])
         ]
-        # TODO: FIGURE OUT HOW TO DO THIS IN A CLEANER WAY
+        updated_dessert["prices"] = formatted_prices
+        with prices_table.batch_writer() as batch:
+            for price in formatted_prices:
+                batch.put_item(Item=price)
 
     update_response = desserts_table.update_item(
         Key={"dessert_id": dessert_id},
