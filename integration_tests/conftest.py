@@ -29,11 +29,11 @@ def dynamodb_client():
 
 @pytest.fixture(scope="function")
 def function_order(dynamodb_client, quantity=1, custom_order=False):
-    order_id = str(uuid.uuid4())
+    order_id = f"ORDER-{str(uuid.uuid4())}"
 
     records = [
         {
-            "order_id": {"S": f"ORDER:{order_id}"},
+            "order_id": {"S": order_id},
             "dessert_id": {"S": "INT_TEST_DESSERT_ID"},
             "dessert_name": {"S": "INT_TEST_DESSERT_NAME"},
             "quantity": {"N": f"{quantity}"},
@@ -89,7 +89,7 @@ def cleanup_orders(dynamodb_client):
 
 @pytest.fixture(scope="function")
 def function_dessert(dynamodb_client):
-    dessert_id = str(uuid.uuid4())
+    dessert_id = f"DESSERT-{str(uuid.uuid4())}"
 
     records = [
         {

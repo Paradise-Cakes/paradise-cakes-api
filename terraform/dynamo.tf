@@ -104,17 +104,17 @@ resource "aws_dynamodb_table" "orders" {
 
   # get me all the orders for a specific customer and sort them by when they were placed
   global_secondary_index {
-    name = "customer_full_name_index"
-    hash_key = "customer_full_name"
-    range_key = "order_time"
+    name            = "customer_full_name_index"
+    hash_key        = "customer_full_name"
+    range_key       = "order_time"
     projection_type = "ALL"
   }
 
   # get me all the orders for a specific order date and sort them by when they were placed
   global_secondary_index {
-    name = "order_date_index"
-    hash_key = "order_date"
-    range_key = "order_time"
+    name            = "order_date_index"
+    hash_key        = "order_date"
+    range_key       = "order_time"
     projection_type = "ALL"
   }
 }
