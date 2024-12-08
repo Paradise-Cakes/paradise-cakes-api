@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 from freezegun import freeze_time
 
 from src.api import app
-from src.routes.post_dessert import desserts_table, dessert_type_count_table
+from src.routes.post_dessert import dessert_type_count_table, desserts_table
 
 test_client = TestClient(app)
 
