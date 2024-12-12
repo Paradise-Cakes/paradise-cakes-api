@@ -95,9 +95,7 @@ def function_orders(dynamodb_client):
                     }
                 ]
             },
-            "last_updated_at": {
-                "N": f"{int(datetime.now(tz=timezone.utc).timestamp())}"
-            },
+            "last_updated_at": {"N": "1734036429"},
         },
         {
             "order_id": {"S": order_ids[1]},
@@ -129,9 +127,7 @@ def function_orders(dynamodb_client):
                     }
                 ]
             },
-            "last_updated_at": {
-                "N": f"{int(datetime.now(tz=timezone.utc).timestamp())}"
-            },
+            "last_updated_at": {"N": "1734036429"},
         },
         {
             "order_id": {"S": order_ids[2]},
@@ -163,9 +159,7 @@ def function_orders(dynamodb_client):
                     }
                 ]
             },
-            "last_updated_at": {
-                "N": f"{int(datetime.now(tz=timezone.utc).timestamp())}"
-            },
+            "last_updated_at": {"N": "1734036429"},
         },
     ]
 
@@ -213,9 +207,7 @@ def function_order(dynamodb_client):
                     }
                 ]
             },
-            "last_updated_at": {
-                "N": f"{int(datetime.now(tz=timezone.utc).timestamp())}"
-            },
+            "last_updated_at": {"N": "1734036429"},
         }
     ]
 

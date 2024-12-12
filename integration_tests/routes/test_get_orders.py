@@ -45,7 +45,6 @@ def test_get_v1_orders_get_orders_by_customer_full_name_returns_200(
     request_helper, function_orders, cleanup_orders
 ):
     order_ids = [order_id for order_id in function_orders["order_ids"]]
-    print(order_ids)
 
     response = request_helper.get("/v1/orders?customer_full_name=John Cena")
     response.raise_for_status()
@@ -89,7 +88,6 @@ def test_get_v1_orders_get_orders_by_order_date_returns_200(
     request_helper, function_orders, cleanup_orders
 ):
     order_ids = [order_id for order_id in function_orders["order_ids"]]
-    print(order_ids)
 
     response = request_helper.get("/v1/orders?order_date=12-31-2021")
     response.raise_for_status()
