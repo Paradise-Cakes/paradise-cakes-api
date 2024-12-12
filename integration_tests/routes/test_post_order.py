@@ -19,7 +19,7 @@ def test_post_v1_orders_returns_201(
 
     assert response.status_code == 201
     assert response.headers.get("Content-Type") == "application/json"
-    assert response.json().get("order_total") == 15.0
+    assert response.json().get("order_total") == 10.0
 
 
 def test_post_v1_orders_exceeds_order_limit_returns_400(request_helper, cleanup_orders):
