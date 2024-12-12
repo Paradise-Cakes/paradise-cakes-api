@@ -17,9 +17,9 @@ def test_patch_v1_dessert_returns_200(
     assert response.headers.get("Content-Type") == "application/json"
     assert response.json() == {
         "dessert_id": dessert_id,
-        "name": "Chocolate Cupcakes",
-        "description": "A delicious chocolate cupcake",
-        "dessert_type": "cupcake",
+        "name": "Chocolate Cake",
+        "description": "its a chocolate cake",
+        "dessert_type": "cake",
         "created_at": response.json().get("created_at"),
         "last_updated_at": response.json().get("last_updated_at"),
         "visible": True,
