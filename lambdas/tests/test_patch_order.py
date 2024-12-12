@@ -41,26 +41,6 @@ def test_handler_valid_event_patch_order(orders_dynamodb_stub):
                 "approved": {"BOOL": False},
                 "custom_order": {"BOOL": False},
                 "order_total": {"N": "0.00"},
-                "desserts": {
-                    "L": [
-                        {
-                            "M": {
-                                "dessert_id": {"S": "DESSERT-1"},
-                                "dessert_name": {"S": "Chocolate Cake"},
-                                "size": {"S": "6 inch"},
-                                "quantity": {"N": "2"},
-                            }
-                        },
-                        {
-                            "M": {
-                                "dessert_id": {"S": "DESSERT-2"},
-                                "dessert_name": {"S": "Vanilla Cake"},
-                                "size": {"S": "6 inch"},
-                                "quantity": {"N": "1"},
-                            }
-                        },
-                    ]
-                },
                 "last_updated_at": {"N": "123456789"},
             }
         },
@@ -87,26 +67,6 @@ def test_handler_valid_event_patch_order(orders_dynamodb_stub):
                 "approved": {"BOOL": True},
                 "custom_order": {"BOOL": False},
                 "order_total": {"N": "20.00"},
-                "desserts": {
-                    "L": [
-                        {
-                            "M": {
-                                "dessert_id": {"S": "DESSERT-1"},
-                                "dessert_name": {"S": "Chocolate Cake"},
-                                "size": {"S": "6 inch"},
-                                "quantity": {"N": "2"},
-                            }
-                        },
-                        {
-                            "M": {
-                                "dessert_id": {"S": "DESSERT-2"},
-                                "dessert_name": {"S": "Vanilla Cake"},
-                                "size": {"S": "6 inch"},
-                                "quantity": {"N": "1"},
-                            }
-                        },
-                    ]
-                },
                 "last_updated_at": {"N": "1734026222"},
             }
         },
@@ -160,21 +120,8 @@ def test_handler_valid_event_patch_order(orders_dynamodb_stub):
             "approved": True,
             "custom_order": False,
             "order_total": 20.00,
-            "desserts": [
-                {
-                    "dessert_id": "DESSERT-1",
-                    "dessert_name": "Chocolate Cake",
-                    "size": "6 inch",
-                    "quantity": 2,
-                },
-                {
-                    "dessert_id": "DESSERT-2",
-                    "dessert_name": "Vanilla Cake",
-                    "size": "6 inch",
-                    "quantity": 1,
-                },
-            ],
             "last_updated_at": 1734026222,
+            "desserts": [],
         },
     )
 

@@ -85,4 +85,3 @@ class PatchOrderRequest(Base):
     order_status: Optional[str] = None
     approved: Optional[bool] = None
     order_total: Optional[Decimal] = None
-    desserts: Optional[List[Dessert]] = []
