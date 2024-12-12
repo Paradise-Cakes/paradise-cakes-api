@@ -60,17 +60,10 @@ def test_post_v1_orders_exceeds_order_limit_returns_400(request_helper, cleanup_
     )
 
 
-def test_post_v1_orders_exceeds_dessert_quantity_limit_returns_400(
-    request_helper, cleanup_orders
-):
+def test_post_v1_orders_exceeds_dessert_quantity_limit_returns_400(request_helper):
     response = request_helper.post(
         "/v1/orders",
         body=order.order_record_with_too_many_desserts(),
-    )
-    cleanup_orders.append(
-        {
-            "order_id": response.json().get("order_id"),
-        }
     )
 
     assert response.status_code == 400
