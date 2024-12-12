@@ -8,6 +8,7 @@ from src.routes import (
     get_dessert,
     get_desserts,
     get_display_images,
+    get_order,
     get_orders,
     patch_dessert,
     post_confirm_signup,
@@ -47,6 +48,7 @@ app.add_middleware(
 
 app.include_router(get_desserts.router)
 app.include_router(get_dessert.router)
+app.include_router(get_order.router)
 app.include_router(get_orders.router)
 app.include_router(post_order.router)
 app.include_router(post_signup.router)

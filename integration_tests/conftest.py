@@ -141,6 +141,52 @@ def function_orders(dynamodb_client):
 
 
 @pytest.fixture(scope="function")
+def function_order(dynamodb_client):
+    order_id = f"ORDER-{str(uuid.uuid4())}"
+
+    records = [
+        {
+            "order_id": {"S": order_id},
+            "customer_first_name": {"S": "John"},
+            "customer_last_name": {"S": "Cena"},
+            "customer_full_name": {"S": "John Cena"},
+            "customer_email": {"S": "john.cena@gmail.com"},
+            "customer_phone_number": {"S": "1234567890"},
+            "delivery_zip_code": {"S": "12345"},
+            "delivery_address_line_1": {"S": "123 Main St"},
+            "delivery_address_line_2": {"S": "Apt 1"},
+            "delivery_date": {"S": "01-01-2022"},
+            "delivery_time": {"N": "12"},
+            "order_status": {"S": "NEW"},
+            "order_date": {"S": "12-31-2021"},
+            "order_time": {"N": "12"},
+            "approved": {"BOOL": False},
+            "custom_order": {"BOOL": False},
+            "order_total": {"N": "0.00"},
+            "desserts": {
+                "L": [
+                    {
+                        "M": {
+                            "dessert_id": {"S": "DESSERT-1"},
+                            "dessert_name": {"S": "Chocolate Cake"},
+                            "size": {"S": "slice"},
+                            "quantity": {"N": "2"},
+                        }
+                    }
+                ]
+            },
+        }
+    ]
+
+    for record in records:
+        dynamodb_client.put_item(
+            TableName="orders",
+            Item=record,
+        )
+
+    return {"order_id": order_id, "records": records}
+
+@pytest.fixture(scope="function")
 def cleanup_orders(dynamodb_client):
     orders_to_cleanup = []
     yield orders_to_cleanup
@@ -170,8 +216,8 @@ def function_dessert(dynamodb_client):
     records = [
         {
             "dessert_id": {"S": dessert_id},
-            "name": {"S": "INT_TEST_DESSERT_NAME"},
-            "description": {"S": "INT_TEST_DESCRIPTION"},
+            "name": {"S": "Chocolate Cake"},
+            "description": {"S": "its a chocolate cake"},
             "dessert_type": {"S": "cake"},
             "created_at": {"N": f"{int(datetime.now(tz=timezone.utc).timestamp())}"},
             "last_updated_at": {
