@@ -30,6 +30,12 @@ order_type_count_table = DynamoConnection(
     ),
 ).table
 
+prices_table = DynamoConnection(
+    region_name=os.environ.get("DYNAMODB_REGION", "us-east-1"),
+    endpoint_url=os.environ.get("DYNAMODB_ENDPOINT_URL", None),
+    table_name=os.environ.get("DYNAMODB_PRICES_TABLE_NAME", "prices"),
+).table
+
 
 class PostOrderResponse(Order):
     pass
@@ -37,6 +43,22 @@ class PostOrderResponse(Order):
 
 class OrderLimitExceededException(Exception):
     pass
+
+
+def calculate_order_total(desserts):
+    total = Decimal("0.00")
+    for dessert in desserts:
+        dessert_id = dessert.dessert_id
+        size = dessert.size
+        quantity = dessert.quantity
+
+        response = prices_table.get_item(Key={"dessert_id": dessert_id, "size": size})
+        price = Decimal(response.get("Item").get("base_price")) - Decimal(
+            response.get("Item").get("discount")
+        )
+        total += price * quantity
+
+    return total
 
 
 def count_orders_for_date(delivery_date):
@@ -112,8 +134,6 @@ def post_order(request: Request, body: PostOrderRequest):
             order_id="",
             order_date=datetime.now().strftime("%m-%d-%Y"),
             order_time=int(datetime.now().timestamp()),
-            # TODO: calculate order_total by summing the total cost of each dessert
-            # TODO: look up the cost of each dessert using dessert_id and size
             order_total=0.00,
             customer_full_name=f"{body.customer_first_name} {body.customer_last_name}",
             last_updated_at=int(arrow.utcnow().timestamp()),
@@ -149,6 +169,7 @@ def post_order(request: Request, body: PostOrderRequest):
 
         order_id = f"{order_type}-{order_count}"
         new_order.order_id = order_id
+        new_order.order_total = calculate_order_total(new_order.desserts)
 
         logger.info(f"Creating new order for {order_id}")
 
