@@ -52,6 +52,9 @@ def get_orders(
     if "Items" not in dynamo_response:
         raise HTTPException(status_code=404, detail="No orders found")
 
+    logger.info(f"Found {len(dynamo_response.get('Items'))} orders")
+    logger.info(dynamo_response.get("Items"))
+
     orders = [Order(**o).clean() for o in dynamo_response.get("Items")]
 
     logger.info(f"Returning {len(orders)} orders")
