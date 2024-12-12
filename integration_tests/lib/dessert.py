@@ -32,3 +32,26 @@ def dessert_record_no_optional_fields():
         "description": "A delicious chocolate cupcake",
         "dessert_type": "cupcake",
     }
+
+
+def dessert_record_update():
+    return {
+        "prices": [
+            {"size": "single", "base_price": 25.00, "discount": 0.00},
+            {"size": "dozen", "base_price": 45.00, "discount": 0.00},
+        ],
+        "ingredients": ["eggs"],
+        "images": [
+            {
+                "position": 2,
+                "file_name": "image1.jpg",
+                "file_type": "jpg",
+            },
+            {
+                "position": 1,
+                "file_name": "image2.jpg",
+                "file_type": "jpg",
+            },
+        ],
+        "visible": True,
+    }

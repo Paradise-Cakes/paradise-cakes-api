@@ -12,6 +12,7 @@ from src.lib.response import fastapi_gateway_response
 from src.models import Order, PostOrderRequest
 
 MAX_ORDERS_FOR_DAY = 2
+MAX_DESSERT_QUANTITY = 2
 
 logger = Logger()
 router = APIRouter()
@@ -30,6 +31,12 @@ order_type_count_table = DynamoConnection(
     ),
 ).table
 
+prices_table = DynamoConnection(
+    region_name=os.environ.get("DYNAMODB_REGION", "us-east-1"),
+    endpoint_url=os.environ.get("DYNAMODB_ENDPOINT_URL", None),
+    table_name=os.environ.get("DYNAMODB_PRICES_TABLE_NAME", "prices"),
+).table
+
 
 class PostOrderResponse(Order):
     pass
@@ -37,6 +44,28 @@ class PostOrderResponse(Order):
 
 class OrderLimitExceededException(Exception):
     pass
+
+
+class DessertLimitExceededException(Exception):
+    pass
+
+
+def calculate_order_total(desserts):
+    logger.info("Calculating order total")
+    total = Decimal("0.00")
+    for dessert in desserts:
+        dessert_id = dessert.dessert_id
+        size = dessert.size
+        quantity = dessert.quantity
+
+        response = prices_table.get_item(Key={"dessert_id": dessert_id, "size": size})
+        if "Item" in response:
+            price = Decimal(response.get("Item").get("base_price")) - Decimal(
+                response.get("Item").get("discount")
+            )
+            total += price * quantity
+
+    return total
 
 
 def count_orders_for_date(delivery_date):
@@ -112,10 +141,9 @@ def post_order(request: Request, body: PostOrderRequest):
             order_id="",
             order_date=datetime.now().strftime("%m-%d-%Y"),
             order_time=int(datetime.now().timestamp()),
-            # TODO: calculate order_total by summing the total cost of each dessert
-            # TODO: look up the cost of each dessert using dessert_id and size
             order_total=0.00,
             customer_full_name=f"{body.customer_first_name} {body.customer_last_name}",
+            last_updated_at=int(arrow.utcnow().timestamp()),
         )
 
         new_order_delivery_date = new_order.delivery_date
@@ -125,6 +153,12 @@ def post_order(request: Request, body: PostOrderRequest):
             raise OrderLimitExceededException(
                 f"Order limit exceeded for date: {new_order_delivery_date}. Max orders: {MAX_ORDERS_FOR_DAY}"
             )
+
+        for dessert in new_order.desserts:
+            if dessert.quantity > MAX_DESSERT_QUANTITY:
+                raise DessertLimitExceededException(
+                    f"Dessert quantity limit exceeded for dessert: {dessert.dessert_id}. Max quantity: {MAX_DESSERT_QUANTITY}"
+                )
 
         logger.info("Incrementing order type counter")
         order_type_count_response = order_type_count_table.get_item(
@@ -148,6 +182,7 @@ def post_order(request: Request, body: PostOrderRequest):
 
         order_id = f"{order_type}-{order_count}"
         new_order.order_id = order_id
+        new_order.order_total = calculate_order_total(new_order.desserts)
 
         logger.info(f"Creating new order for {order_id}")
 
@@ -166,5 +201,9 @@ def post_order(request: Request, body: PostOrderRequest):
         return fastapi_gateway_response(201, {}, response.clean())
 
     except OrderLimitExceededException as e:
+        logger.error(e)
+        return fastapi_gateway_response(400, {}, {"error": str(e)})
+
+    except DessertLimitExceededException as e:
         logger.error(e)
         return fastapi_gateway_response(400, {}, {"error": str(e)})

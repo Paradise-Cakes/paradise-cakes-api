@@ -1,9 +1,15 @@
-def test_get_v1_desserts_get_dessert_returns_200(
+from lib import dessert
+
+
+def test_patch_v1_dessert_returns_200(
     request_helper, function_dessert, cleanup_desserts
 ):
     dessert_id = function_dessert.get("dessert_id")
 
-    response = request_helper.get(f"/v1/desserts/{dessert_id}")
+    response = request_helper.patch(
+        f"/v1/desserts/{dessert_id}",
+        body=dessert.dessert_record_update(),
+    )
     response.raise_for_status()
     cleanup_desserts.append({"dessert_id": dessert_id})
 
@@ -16,46 +22,32 @@ def test_get_v1_desserts_get_dessert_returns_200(
         "dessert_type": "cake",
         "created_at": response.json().get("created_at"),
         "last_updated_at": response.json().get("last_updated_at"),
-        "visible": False,
+        "visible": True,
         "prices": [
             {
                 "dessert_id": dessert_id,
-                "size": "slice",
-                "base_price": 5.00,
+                "size": "single",
+                "base_price": 25.00,
                 "discount": 0.00,
             },
             {
                 "dessert_id": dessert_id,
-                "size": "whole",
-                "base_price": 40.00,
+                "size": "dozen",
+                "base_price": 45.00,
                 "discount": 0.00,
             },
         ],
-        "ingredients": ["flour", "sugar", "cocoa", "butter", "eggs"],
+        "ingredients": ["eggs"],
         "images": [
             {
-                "image_id": "IMAGE-1",
-                "url": "https://example.com/image1.jpg",
-                "upload_url": "https://example.com/upload-url",
-                "position": 1,
+                "position": 2,
                 "file_name": "image1.jpg",
                 "file_type": "jpg",
             },
             {
-                "image_id": "IMAGE-2",
-                "url": "https://example.com/image2.jpg",
-                "upload_url": "https://example.com/upload-url",
-                "position": 2,
+                "position": 1,
                 "file_name": "image2.jpg",
                 "file_type": "jpg",
             },
         ],
     }
-
-
-def test_get_v1_desserts_get_dessert_returns_404(request_helper):
-    response = request_helper.get("/v1/desserts/i-dont-exist")
-
-    assert response.status_code == 404
-    assert response.headers.get("Content-Type") == "application/json"
-    assert response.json() == {"detail": "Dessert not found"}

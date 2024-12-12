@@ -8,8 +8,10 @@ from src.routes import (
     get_dessert,
     get_desserts,
     get_display_images,
+    get_order,
     get_orders,
     patch_dessert,
+    patch_order,
     post_confirm_signup,
     post_dessert,
     post_forgot_password,
@@ -47,8 +49,10 @@ app.add_middleware(
 
 app.include_router(get_desserts.router)
 app.include_router(get_dessert.router)
+app.include_router(get_order.router)
 app.include_router(get_orders.router)
 app.include_router(post_order.router)
+app.include_router(patch_order.router)
 app.include_router(post_signup.router)
 app.include_router(post_signin.router)
 app.include_router(post_confirm_signup.router)

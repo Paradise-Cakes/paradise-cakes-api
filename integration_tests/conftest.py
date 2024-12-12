@@ -28,6 +28,35 @@ def dynamodb_client():
 
 
 @pytest.fixture(scope="function")
+def function_prices(dynamodb_client):
+    def _create_prices(dessert_id):
+        records = [
+            {
+                "dessert_id": {"S": dessert_id},
+                "size": {"S": "slice"},
+                "base_price": {"N": "5.00"},
+                "discount": {"N": "0.00"},
+            },
+            {
+                "dessert_id": {"S": dessert_id},
+                "size": {"S": "whole"},
+                "base_price": {"N": "40.00"},
+                "discount": {"N": "0.00"},
+            },
+        ]
+
+        for record in records:
+            dynamodb_client.put_item(
+                TableName="prices",
+                Item=record,
+            )
+
+        return {"dessert_id": dessert_id, "records": records}
+
+    return _create_prices
+
+
+@pytest.fixture(scope="function")
 def function_orders(dynamodb_client):
     order_ids = [
         f"ORDER-{str(uuid.uuid4())}",
@@ -66,6 +95,7 @@ def function_orders(dynamodb_client):
                     }
                 ]
             },
+            "last_updated_at": {"N": "1734036429"},
         },
         {
             "order_id": {"S": order_ids[1]},
@@ -97,6 +127,7 @@ def function_orders(dynamodb_client):
                     }
                 ]
             },
+            "last_updated_at": {"N": "1734036429"},
         },
         {
             "order_id": {"S": order_ids[2]},
@@ -128,6 +159,7 @@ def function_orders(dynamodb_client):
                     }
                 ]
             },
+            "last_updated_at": {"N": "1734036429"},
         },
     ]
 
@@ -141,26 +173,51 @@ def function_orders(dynamodb_client):
 
 
 @pytest.fixture(scope="function")
-def cleanup_orders(dynamodb_client):
-    orders_to_cleanup = []
-    yield orders_to_cleanup
+def function_order(dynamodb_client):
+    order_id = f"ORDER-{str(uuid.uuid4())}"
 
-    response = dynamodb_client.describe_table(TableName="orders")
-    print(response["Table"]["KeySchema"])
+    records = [
+        {
+            "order_id": {"S": order_id},
+            "customer_first_name": {"S": "John"},
+            "customer_last_name": {"S": "Cena"},
+            "customer_full_name": {"S": "John Cena"},
+            "customer_email": {"S": "john.cena@gmail.com"},
+            "customer_phone_number": {"S": "1234567890"},
+            "delivery_zip_code": {"S": "12345"},
+            "delivery_address_line_1": {"S": "123 Main St"},
+            "delivery_address_line_2": {"S": "Apt 1"},
+            "delivery_date": {"S": "01-01-2022"},
+            "delivery_time": {"N": "12"},
+            "order_status": {"S": "NEW"},
+            "order_date": {"S": "12-31-2021"},
+            "order_time": {"N": "12"},
+            "approved": {"BOOL": False},
+            "custom_order": {"BOOL": False},
+            "order_total": {"N": "0.00"},
+            "desserts": {
+                "L": [
+                    {
+                        "M": {
+                            "dessert_id": {"S": "DESSERT-1"},
+                            "dessert_name": {"S": "Chocolate Cake"},
+                            "size": {"S": "slice"},
+                            "quantity": {"N": "2"},
+                        }
+                    }
+                ]
+            },
+            "last_updated_at": {"N": "1734036429"},
+        }
+    ]
 
-    # Cleanup logic
-    for order in orders_to_cleanup:
-        try:
-            dynamodb_client.delete_item(
-                Key={
-                    "order_id": {"S": order.get("order_id")},
-                },
-                TableName="orders",
-            )
-            print(f"Deleted test order: {order.get('order_id')}")
-        except Exception as e:
-            print(f"Failed to delete order {order.get('order_id')}: {e}")
-            raise e
+    for record in records:
+        dynamodb_client.put_item(
+            TableName="orders",
+            Item=record,
+        )
+
+    return {"order_id": order_id, "records": records}
 
 
 @pytest.fixture(scope="function")
@@ -170,8 +227,8 @@ def function_dessert(dynamodb_client):
     records = [
         {
             "dessert_id": {"S": dessert_id},
-            "name": {"S": "INT_TEST_DESSERT_NAME"},
-            "description": {"S": "INT_TEST_DESCRIPTION"},
+            "name": {"S": "Chocolate Cake"},
+            "description": {"S": "its a chocolate cake"},
             "dessert_type": {"S": "cake"},
             "created_at": {"N": f"{int(datetime.now(tz=timezone.utc).timestamp())}"},
             "last_updated_at": {
@@ -270,6 +327,26 @@ def function_dessert(dynamodb_client):
 
 
 @pytest.fixture(scope="function")
+def cleanup_orders(dynamodb_client):
+    orders_to_cleanup = []
+    yield orders_to_cleanup
+
+    # Cleanup logic
+    for order in orders_to_cleanup:
+        try:
+            dynamodb_client.delete_item(
+                Key={
+                    "order_id": {"S": order.get("order_id")},
+                },
+                TableName="orders",
+            )
+            print(f"Deleted test order: {order.get('order_id')}")
+        except Exception as e:
+            print(f"Failed to delete order {order.get('order_id')}: {e}")
+            raise e
+
+
+@pytest.fixture(scope="function")
 def cleanup_desserts(dynamodb_client):
     desserts_to_cleanup = []
     yield desserts_to_cleanup
@@ -302,4 +379,26 @@ def cleanup_desserts(dynamodb_client):
             print(f"Deleted test dessert: {dessert.get('dessert_id')}")
         except Exception as e:
             print(f"Failed to delete dessert {dessert.get('dessert_id')}: {e}")
+            raise e
+
+
+@pytest.fixture(scope="function")
+def cleanup_prices(dynamodb_client):
+    prices_to_cleanup = []
+    yield prices_to_cleanup
+
+    for price in prices_to_cleanup:
+        dessert_id = price.get("dessert_id").get("S")
+        size = price.get("size").get("S")
+        try:
+            dynamodb_client.delete_item(
+                Key={
+                    "dessert_id": {"S": dessert_id},
+                    "size": {"S": size},
+                },
+                TableName="prices",
+            )
+            print(f"Deleted test price: {dessert_id} - {size}")
+        except Exception as e:
+            print(f"Failed to delete price {dessert_id} - {size}: {e}")
             raise e

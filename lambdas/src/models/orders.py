@@ -29,6 +29,7 @@ class Order(Base):
     order_time: int
     approved: bool = False
     custom_order: bool = False
+    last_updated_at: int
 
     # optional fields if it's a custom order request
     order_total: Optional[Decimal] = None  # calculated in the backend
@@ -78,3 +79,9 @@ class PostOrderRequest(Base):
                 "delivery_time": 1734004800,
             }
         }
+
+
+class PatchOrderRequest(Base):
+    order_status: Optional[str] = None
+    approved: Optional[bool] = None
+    order_total: Optional[Decimal] = None

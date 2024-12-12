@@ -15,10 +15,10 @@ def order_record(
     return {
         "desserts": [
             {
-                "dessert_id": f"INTEGRATION_TEST-{uuid.uuid4()}",
+                "dessert_id": "DESSERT-1",
                 "dessert_name": "Lemon Blueberry Cake",
-                "size": "6 inch",
-                "quantity": 1,
+                "size": "slice",
+                "quantity": 2,
             }
         ],
         "customer_first_name": "Anthony",
@@ -29,5 +29,27 @@ def order_record(
         "delivery_address_line_1": "123 Main St",
         "delivery_address_line_2": "Apt 1",
         "delivery_date": delivery_date or random_delivery_date,
+        "delivery_time": 1734004800,
+    }
+
+
+def order_record_with_too_many_desserts():
+    return {
+        "desserts": [
+            {
+                "dessert_id": "DESSERT-1",
+                "dessert_name": "Lemon Blueberry Cake",
+                "size": "slice",
+                "quantity": 3,
+            }
+        ],
+        "customer_first_name": "Anthony",
+        "customer_last_name": "Soprano",
+        "customer_email": "anthony.soprano@gmail.com",
+        "customer_phone_number": "555-555-5555",
+        "delivery_zip_code": "07001",
+        "delivery_address_line_1": "123 Main St",
+        "delivery_address_line_2": "Apt 1",
+        "delivery_date": "12-12-2024",
         "delivery_time": 1734004800,
     }
