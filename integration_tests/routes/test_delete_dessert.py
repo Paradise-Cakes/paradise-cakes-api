@@ -10,8 +10,8 @@ def test_delete_v1_desserts_delete_dessert_returns_200(
     assert response.headers.get("Content-Type") == "application/json"
     assert response.json() == {
         "dessert_id": dessert_id,
-        "name": "INT_TEST_DESSERT_NAME",
-        "description": "INT_TEST_DESCRIPTION",
+        "name": "Chocolate Cake",
+        "description": "its a chocolate cake",
         "dessert_type": "cake",
         "created_at": response.json().get("created_at"),
         "last_updated_at": response.json().get("last_updated_at"),

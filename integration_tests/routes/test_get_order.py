@@ -49,7 +49,7 @@ def test_get_v1_orders_get_order_returns_200(
         "delivery_zip_code": "12345",
         "delivery_address_line_1": "123 Main St",
         "delivery_address_line_2": "Apt 1",
-        "delivery_date": "01-01-2024",
+        "delivery_date": "01-01-2022",
         "delivery_time": 12,
         "order_status": "NEW",
         "order_date": "12-31-2021",
@@ -67,7 +67,7 @@ def test_get_v1_orders_get_order_returns_200(
         ],
     }
 
-  
+
 def test_get_v1_orders_get_order_returns_404(request_helper):
     response = request_helper.get("/v1/orders/i-dont-exist")
 
