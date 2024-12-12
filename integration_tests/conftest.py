@@ -29,106 +29,115 @@ def dynamodb_client():
 
 @pytest.fixture(scope="function")
 def function_orders(dynamodb_client):
-  order_ids = [
-      f"ORDER-{str(uuid.uuid4())}",
-      f"ORDER-{str(uuid.uuid4())}",
-      f"ORDER-{str(uuid.uuid4())}",
-  ]
+    order_ids = [
+        f"ORDER-{str(uuid.uuid4())}",
+        f"ORDER-{str(uuid.uuid4())}",
+        f"ORDER-{str(uuid.uuid4())}",
+    ]
 
-  records = [
-      {
-          "order_id": {"S": order_ids[0]},
-          "customer_first_name": {"S": "John"},
-          "customer_last_name": {"S": "Cena"},
-          "customer_full_name": {"S": "John Cena"},
-          "customer_email": {"S": "john.cena@gmail.com"},
-          "customer_phone_number": {"S": "1234567890"},
-          "delivery_zip_code": {"S": "12345"},
-          "delivery_address_line_1": {"S": "123 Main St"},
-          "delivery_address_line_2": {"S": "Apt 1"},
-          "delivery_date": {"S": "2022-01-01"},
-          "delivery_time": {"N": "12"},
-          "order_status": {"S": "NEW"},
-          "order_date": {"S": "2021-12-31"},
-          "order_time": {"N": "12"},
-          "approved": {"BOOL": False},
-          "custom_order": {"BOOL": False},
-          "order_total": {"N": "0.00"},
-          "dessers": {"L": [
-              {
-                  "M": {
-                      "dessert_id": {"S": "DESSERT-1"},
-                      "size": {"S": "slice"},
-                      "quantity": {"N": "2"},
-                  }
-              }
-          ]},
-      },
-      {
-          "order_id": {"S": order_ids[1]},
-          "customer_first_name": {"S": "Jane"},
-          "customer_last_name": {"S": "Doe"},
-          "customer_full_name": {"S": "Jane Doe"},
-          "customer_email": {"S": "jane.doe@gmail.com"},
-          "customer_phone_number": {"S": "0987654321"},
-          "delivery_zip_code": {"S": "54321"},
-          "delivery_address_line_1": {"S": "456 Elm St"},
-          "delivery_address_line_2": {"S": "Apt 2"},
-          "delivery_date": {"S": "2022-02-02"},
-          "delivery_time": {"N": "14"},
-          "order_status": {"S": "NEW"},
-          "order_date": {"S": "2022-02-01"},
-          "order_time": {"N": "14"},
-          "approved": {"BOOL": False},
-          "custom_order": {"BOOL": False},
-          "order_total": {"N": "0.00"},
-          "dessers": {"L": [
-              {
-                  "M": {
-                      "dessert_id": {"S": "DESSERT-2"},
-                      "size": {"S": "whole"},
-                      "quantity": {"N": "1"},
-                  }
-              }
-          ]},
-      },
-      {
-          "order_id": {"S": order_ids[2]},
-          "customer_first_name": {"S": "James"},
-          "customer_last_name": {"S": "Bond"},
-          "customer_full_name": {"S": "James Bond"},
-          "customer_email": {"S": "james.bond@gmail.com"},
-          "customer_phone_number": {"S": "1357924680"},
-          "delivery_zip_code": {"S": "67890"},
-          "delivery_address_line_1": {"S": "789 Oak St"},
-          "delivery_address_line_2": {"S": "Apt 3"},
-          "delivery_date": {"S": "2022-03-03"},
-          "delivery_time": {"N": "16"},
-          "order_status": {"S": "NEW"},
-          "order_date": {"S": "2022-03-02"},
-          "order_time": {"N": "16"},
-          "approved": {"BOOL": False},
-          "custom_order": {"BOOL": False},
-          "order_total": {"N": "0.00"},
-          "dessers": {"L": [
-              {
-                  "M": {
-                      "dessert_id": {"S": "DESSERT-3"},
-                      "size": {"S": "slice"},
-                      "quantity": {"N": "3"},
-                  }
-              }
-          ]},
-      }
-  ]
+    records = [
+        {
+            "order_id": {"S": order_ids[0]},
+            "customer_first_name": {"S": "John"},
+            "customer_last_name": {"S": "Cena"},
+            "customer_full_name": {"S": "John Cena"},
+            "customer_email": {"S": "john.cena@gmail.com"},
+            "customer_phone_number": {"S": "1234567890"},
+            "delivery_zip_code": {"S": "12345"},
+            "delivery_address_line_1": {"S": "123 Main St"},
+            "delivery_address_line_2": {"S": "Apt 1"},
+            "delivery_date": {"S": "01-01-2022"},
+            "delivery_time": {"N": "12"},
+            "order_status": {"S": "NEW"},
+            "order_date": {"S": "12-31-2021"},
+            "order_time": {"N": "12"},
+            "approved": {"BOOL": False},
+            "custom_order": {"BOOL": False},
+            "order_total": {"N": "0.00"},
+            "desserts": {
+                "L": [
+                    {
+                        "M": {
+                            "dessert_id": {"S": "DESSERT-1"},
+                            "dessert_name": {"S": "Chocolate Cake"},
+                            "size": {"S": "slice"},
+                            "quantity": {"N": "2"},
+                        }
+                    }
+                ]
+            },
+        },
+        {
+            "order_id": {"S": order_ids[1]},
+            "customer_first_name": {"S": "Jane"},
+            "customer_last_name": {"S": "Doe"},
+            "customer_full_name": {"S": "Jane Doe"},
+            "customer_email": {"S": "jane.doe@gmail.com"},
+            "customer_phone_number": {"S": "0987654321"},
+            "delivery_zip_code": {"S": "54321"},
+            "delivery_address_line_1": {"S": "456 Elm St"},
+            "delivery_address_line_2": {"S": "Apt 2"},
+            "delivery_date": {"S": "02-02-2022"},
+            "delivery_time": {"N": "14"},
+            "order_status": {"S": "NEW"},
+            "order_date": {"S": "01-02-2022"},
+            "order_time": {"N": "14"},
+            "approved": {"BOOL": False},
+            "custom_order": {"BOOL": False},
+            "order_total": {"N": "0.00"},
+            "desserts": {
+                "L": [
+                    {
+                        "M": {
+                            "dessert_id": {"S": "DESSERT-2"},
+                            "dessert_name": {"S": "Cheesecake"},
+                            "size": {"S": "whole"},
+                            "quantity": {"N": "1"},
+                        }
+                    }
+                ]
+            },
+        },
+        {
+            "order_id": {"S": order_ids[2]},
+            "customer_first_name": {"S": "James"},
+            "customer_last_name": {"S": "Bond"},
+            "customer_full_name": {"S": "James Bond"},
+            "customer_email": {"S": "james.bond@gmail.com"},
+            "customer_phone_number": {"S": "1357924680"},
+            "delivery_zip_code": {"S": "67890"},
+            "delivery_address_line_1": {"S": "789 Oak St"},
+            "delivery_address_line_2": {"S": "Apt 3"},
+            "delivery_date": {"S": "03-02-2023"},
+            "delivery_time": {"N": "16"},
+            "order_status": {"S": "NEW"},
+            "order_date": {"S": "03-02-2023"},
+            "order_time": {"N": "16"},
+            "approved": {"BOOL": False},
+            "custom_order": {"BOOL": False},
+            "order_total": {"N": "0.00"},
+            "desserts": {
+                "L": [
+                    {
+                        "M": {
+                            "dessert_id": {"S": "DESSERT-3"},
+                            "dessert_name": {"S": "Carrot Cake"},
+                            "size": {"S": "slice"},
+                            "quantity": {"N": "3"},
+                        }
+                    }
+                ]
+            },
+        },
+    ]
 
-  for record in records:
-      dynamodb_client.put_item(
-          TableName="orders",
-          Item=record,
-      )
+    for record in records:
+        dynamodb_client.put_item(
+            TableName="orders",
+            Item=record,
+        )
 
-  return {"order_ids": order_ids, "records": records}
+    return {"order_ids": order_ids, "records": records}
 
 
 @pytest.fixture(scope="function")
