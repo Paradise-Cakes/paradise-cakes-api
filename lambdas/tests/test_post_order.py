@@ -508,3 +508,48 @@ def test_handler_rejects_order_when_max_orders_exceeded(orders_dynamodb_stub):
         400,
         {"error": "Order limit exceeded for date: 12-12-2024. Max orders: 2"},
     )
+
+
+@freeze_time("2024-12-12 12:00:00")
+def test_handler_rejects_order_when_dessert_quanitity_exceeded(orders_dynamodb_stub):
+    orders_dynamodb_stub.add_response(
+        "query",
+        {"Items": []},
+        expected_params={
+            "IndexName": "delivery_date_index",
+            "KeyConditionExpression": "delivery_date = :date",
+            "ExpressionAttributeValues": {":date": "12-12-2024"},
+            "TableName": "orders",
+        },
+    )
+
+    response = test_client.post(
+        "/orders",
+        json={
+            "desserts": [
+                {
+                    "dessert_id": "UNIT_TEST-6aa579b6-524d-4d1e-b534-a480b0f1110",
+                    "dessert_name": "Lemon Blueberry Cake",
+                    "size": "6 inch",
+                    "quantity": 3,
+                }
+            ],
+            "customer_first_name": "Anthony",
+            "customer_last_name": "Viera",
+            "customer_email": "anthony.soprano@gmail.com",
+            "customer_phone_number": "555-555-5555",
+            "delivery_zip_code": "07001",
+            "delivery_address_line_1": "123 Main St",
+            "delivery_address_line_2": "Apt 1",
+            "delivery_date": "12-12-2024",
+            "delivery_time": 1734004800,
+        },
+    )
+
+    pytest.helpers.assert_responses_equal(
+        response,
+        400,
+        {
+            "error": "Dessert quantity limit exceeded for dessert: UNIT_TEST-6aa579b6-524d-4d1e-b534-a480b0f1110. Max quantity: 2"
+        },
+    )

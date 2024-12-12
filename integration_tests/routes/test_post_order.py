@@ -34,7 +34,6 @@ def test_post_v1_orders_exceeds_order_limit_returns_400(request_helper, cleanup_
     cleanup_orders.append(
         {
             "order_id": response_1.json().get("order_id"),
-            "delivery_date": response_1.json().get("delivery_date"),
         }
     )
 
@@ -47,7 +46,6 @@ def test_post_v1_orders_exceeds_order_limit_returns_400(request_helper, cleanup_
     cleanup_orders.append(
         {
             "order_id": response_2.json().get("order_id"),
-            "delivery_date": response_2.json().get("delivery_date"),
         }
     )
 
@@ -59,4 +57,24 @@ def test_post_v1_orders_exceeds_order_limit_returns_400(request_helper, cleanup_
     assert (
         response_3.json().get("error")
         == f"Order limit exceeded for date: {delivery_date}. Max orders: 2"
+    )
+
+
+def test_post_v1_orders_exceeds_dessert_quantity_limit_returns_400(
+    request_helper, cleanup_orders
+):
+    response = request_helper.post(
+        "/v1/orders",
+        body=order.order_record_with_too_many_desserts(),
+    )
+    cleanup_orders.append(
+        {
+            "order_id": response.json().get("order_id"),
+        }
+    )
+
+    assert response.status_code == 400
+    assert (
+        response.json().get("error")
+        == "Dessert quantity limit exceeded for dessert: DESSERT-1. Max quantity: 2"
     )

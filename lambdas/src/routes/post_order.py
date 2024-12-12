@@ -12,6 +12,7 @@ from src.lib.response import fastapi_gateway_response
 from src.models import Order, PostOrderRequest
 
 MAX_ORDERS_FOR_DAY = 2
+MAX_DESSERT_QUANTITY = 2
 
 logger = Logger()
 router = APIRouter()
@@ -42,6 +43,10 @@ class PostOrderResponse(Order):
 
 
 class OrderLimitExceededException(Exception):
+    pass
+
+
+class DessertLimitExceededException(Exception):
     pass
 
 
@@ -149,6 +154,12 @@ def post_order(request: Request, body: PostOrderRequest):
                 f"Order limit exceeded for date: {new_order_delivery_date}. Max orders: {MAX_ORDERS_FOR_DAY}"
             )
 
+        for dessert in new_order.desserts:
+            if dessert.quantity > MAX_DESSERT_QUANTITY:
+                raise DessertLimitExceededException(
+                    f"Dessert quantity limit exceeded for dessert: {dessert.dessert_id}. Max quantity: {MAX_DESSERT_QUANTITY}"
+                )
+
         logger.info("Incrementing order type counter")
         order_type_count_response = order_type_count_table.get_item(
             Key={"order_type": order_type}
@@ -190,5 +201,9 @@ def post_order(request: Request, body: PostOrderRequest):
         return fastapi_gateway_response(201, {}, response.clean())
 
     except OrderLimitExceededException as e:
+        logger.error(e)
+        return fastapi_gateway_response(400, {}, {"error": str(e)})
+
+    except DessertLimitExceededException as e:
         logger.error(e)
         return fastapi_gateway_response(400, {}, {"error": str(e)})
