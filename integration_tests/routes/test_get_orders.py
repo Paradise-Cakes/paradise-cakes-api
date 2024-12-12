@@ -36,6 +36,7 @@ def test_get_v1_orders_get_orders_by_delivery_date_returns_200(
                     "quantity": 2,
                 }
             ],
+            "last_updated_at": 1734036429,
         }
     ]
 
@@ -79,6 +80,7 @@ def test_get_v1_orders_get_orders_by_customer_full_name_returns_200(
                     "quantity": 2,
                 }
             ],
+            "last_updated_at": 1734036429,
         }
     ]
 
@@ -122,5 +124,6 @@ def test_get_v1_orders_get_orders_by_order_date_returns_200(
                     "quantity": 2,
                 }
             ],
+            "last_updated_at": 1734036429,
         }
     ]
