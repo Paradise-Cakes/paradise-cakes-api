@@ -60,8 +60,7 @@ def calculate_order_total(desserts):
             )
             total += price * quantity
 
-        return total
-    return 0
+    return total
 
 
 def count_orders_for_date(delivery_date):

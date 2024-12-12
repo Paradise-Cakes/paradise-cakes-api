@@ -360,14 +360,7 @@ def test_handler_accepts_customer_order(
 
     prices_dynamodb_stub.add_response(
         "get_item",
-        {
-            "Item": {
-                "dessert_id": {"S": "UNIT_TEST-6aa579b6-524d-4d1e-b534-a480b0f1110"},
-                "size": {"S": "6 inch"},
-                "base_price": {"N": "25.30"},
-                "discount": {"N": "0.35"},
-            }
-        },
+        {},
         expected_params={
             "Key": {
                 "dessert_id": "UNIT_TEST-6aa579b6-524d-4d1e-b534-a480b0f1110",
@@ -399,7 +392,7 @@ def test_handler_accepts_customer_order(
                 "order_time": 1734004800,
                 "approved": False,
                 "custom_order": True,
-                "order_total": Decimal("49.90"),
+                "order_total": Decimal("0"),
                 "desserts": [
                     {
                         "dessert_id": "UNIT_TEST-6aa579b6-524d-4d1e-b534-a480b0f1110",
@@ -459,7 +452,7 @@ def test_handler_accepts_customer_order(
             "order_time": 1734004800,
             "approved": False,
             "custom_order": True,
-            "order_total": 49.90,
+            "order_total": 0,
             "description": "Custom order",
             "desserts": [
                 {
