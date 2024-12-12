@@ -28,6 +28,35 @@ def dynamodb_client():
 
 
 @pytest.fixture(scope="function")
+def function_prices(dynamodb_client):
+    def _create_prices(dessert_id):
+        records = [
+            {
+                "dessert_id": {"S": dessert_id},
+                "size": {"S": "slice"},
+                "base_price": {"N": "5.00"},
+                "discount": {"N": "0.00"},
+            },
+            {
+                "dessert_id": {"S": dessert_id},
+                "size": {"S": "whole"},
+                "base_price": {"N": "40.00"},
+                "discount": {"N": "0.00"},
+            },
+        ]
+
+        for record in records:
+            dynamodb_client.put_item(
+                TableName="prices",
+                Item=record,
+            )
+
+        return {"dessert_id": dessert_id, "records": records}
+
+    return _create_prices
+
+
+@pytest.fixture(scope="function")
 def function_orders(dynamodb_client):
     order_ids = [
         f"ORDER-{str(uuid.uuid4())}",
@@ -186,28 +215,6 @@ def function_order(dynamodb_client):
 
     return {"order_id": order_id, "records": records}
 
-@pytest.fixture(scope="function")
-def cleanup_orders(dynamodb_client):
-    orders_to_cleanup = []
-    yield orders_to_cleanup
-
-    response = dynamodb_client.describe_table(TableName="orders")
-    print(response["Table"]["KeySchema"])
-
-    # Cleanup logic
-    for order in orders_to_cleanup:
-        try:
-            dynamodb_client.delete_item(
-                Key={
-                    "order_id": {"S": order.get("order_id")},
-                },
-                TableName="orders",
-            )
-            print(f"Deleted test order: {order.get('order_id')}")
-        except Exception as e:
-            print(f"Failed to delete order {order.get('order_id')}: {e}")
-            raise e
-
 
 @pytest.fixture(scope="function")
 def function_dessert(dynamodb_client):
@@ -316,6 +323,26 @@ def function_dessert(dynamodb_client):
 
 
 @pytest.fixture(scope="function")
+def cleanup_orders(dynamodb_client):
+    orders_to_cleanup = []
+    yield orders_to_cleanup
+
+    # Cleanup logic
+    for order in orders_to_cleanup:
+        try:
+            dynamodb_client.delete_item(
+                Key={
+                    "order_id": {"S": order.get("order_id")},
+                },
+                TableName="orders",
+            )
+            print(f"Deleted test order: {order.get('order_id')}")
+        except Exception as e:
+            print(f"Failed to delete order {order.get('order_id')}: {e}")
+            raise e
+
+
+@pytest.fixture(scope="function")
 def cleanup_desserts(dynamodb_client):
     desserts_to_cleanup = []
     yield desserts_to_cleanup
@@ -348,4 +375,26 @@ def cleanup_desserts(dynamodb_client):
             print(f"Deleted test dessert: {dessert.get('dessert_id')}")
         except Exception as e:
             print(f"Failed to delete dessert {dessert.get('dessert_id')}: {e}")
+            raise e
+
+
+@pytest.fixture(scope="function")
+def cleanup_prices(dynamodb_client):
+    prices_to_cleanup = []
+    yield prices_to_cleanup
+
+    for price in prices_to_cleanup:
+        dessert_id = price.get("dessert_id").get("S")
+        size = price.get("size").get("S")
+        try:
+            dynamodb_client.delete_item(
+                Key={
+                    "dessert_id": {"S": dessert_id},
+                    "size": {"S": size},
+                },
+                TableName="prices",
+            )
+            print(f"Deleted test price: {dessert_id} - {size}")
+        except Exception as e:
+            print(f"Failed to delete price {dessert_id} - {size}: {e}")
             raise e

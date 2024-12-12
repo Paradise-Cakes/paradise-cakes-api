@@ -46,6 +46,7 @@ class OrderLimitExceededException(Exception):
 
 
 def calculate_order_total(desserts):
+    logger.info("Calculating order total")
     total = Decimal("0.00")
     for dessert in desserts:
         dessert_id = dessert.dessert_id
@@ -53,12 +54,14 @@ def calculate_order_total(desserts):
         quantity = dessert.quantity
 
         response = prices_table.get_item(Key={"dessert_id": dessert_id, "size": size})
-        price = Decimal(response.get("Item").get("base_price")) - Decimal(
-            response.get("Item").get("discount")
-        )
-        total += price * quantity
+        if "Item" in response:
+            price = Decimal(response.get("Item").get("base_price")) - Decimal(
+                response.get("Item").get("discount")
+            )
+            total += price * quantity
 
-    return total
+        return total
+    return 0
 
 
 def count_orders_for_date(delivery_date):

@@ -15,10 +15,10 @@ def order_record(
     return {
         "desserts": [
             {
-                "dessert_id": f"INTEGRATION_TEST-{uuid.uuid4()}",
+                "dessert_id": "DESSERT-1",
                 "dessert_name": "Lemon Blueberry Cake",
-                "size": "6 inch",
-                "quantity": 1,
+                "size": "slice",
+                "quantity": 3,
             }
         ],
         "customer_first_name": "Anthony",

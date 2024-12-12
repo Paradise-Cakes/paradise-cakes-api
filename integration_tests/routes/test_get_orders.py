@@ -2,7 +2,6 @@ def test_get_v1_orders_get_orders_by_delivery_date_returns_200(
     request_helper, function_orders, cleanup_orders
 ):
     order_ids = [order_id for order_id in function_orders["order_ids"]]
-    print(order_ids)
 
     response = request_helper.get("/v1/orders?delivery_date=01-01-2022")
     response.raise_for_status()
@@ -39,6 +38,7 @@ def test_get_v1_orders_get_orders_by_delivery_date_returns_200(
             ],
         }
     ]
+
 
 def test_get_v1_orders_get_orders_by_customer_full_name_returns_200(
     request_helper, function_orders, cleanup_orders
@@ -81,6 +81,7 @@ def test_get_v1_orders_get_orders_by_customer_full_name_returns_200(
             ],
         }
     ]
+
 
 def test_get_v1_orders_get_orders_by_order_date_returns_200(
     request_helper, function_orders, cleanup_orders
