@@ -91,6 +91,7 @@ def test_handler_valid_event_existing_order_type(
                         "quantity": 2,
                     }
                 ],
+                "last_updated_at": 1734004800,
             },
             "TableName": "orders",
         },
@@ -148,6 +149,7 @@ def test_handler_valid_event_existing_order_type(
                     "quantity": 2,
                 }
             ],
+            "last_updated_at": 1734004800,
         },
     )
 
@@ -215,6 +217,7 @@ def test_handler_valid_event_new_order_type(
                         "quantity": 2,
                     }
                 ],
+                "last_updated_at": 1734004800,
             },
             "TableName": "orders",
         },
@@ -272,6 +275,7 @@ def test_handler_valid_event_new_order_type(
                     "quantity": 2,
                 }
             ],
+            "last_updated_at": 1734004800,
         },
     )
 
@@ -340,6 +344,7 @@ def test_handler_accepts_customer_order(
                         "quantity": 2,
                     }
                 ],
+                "last_updated_at": 1734004800,
             },
             "TableName": "orders",
         },
@@ -400,6 +405,7 @@ def test_handler_accepts_customer_order(
                     "quantity": 2,
                 }
             ],
+            "last_updated_at": 1734004800,
         },
     )
 

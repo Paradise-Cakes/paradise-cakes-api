@@ -10,6 +10,7 @@ from src.routes import (
     get_display_images,
     get_order,
     get_orders,
+    patch_order,
     patch_dessert,
     post_confirm_signup,
     post_dessert,
@@ -51,6 +52,7 @@ app.include_router(get_dessert.router)
 app.include_router(get_order.router)
 app.include_router(get_orders.router)
 app.include_router(post_order.router)
+app.include_router(patch_order.router)
 app.include_router(post_signup.router)
 app.include_router(post_signin.router)
 app.include_router(post_confirm_signup.router)

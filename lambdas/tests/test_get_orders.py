@@ -65,6 +65,7 @@ def test_handler_valid_event_get_orders_for_order_date(orders_dynamodb_stub):
                             },
                         ]
                     },
+                    "last_updated_at": {"N": "1734004800"},
                 }
             ],
         },
@@ -113,6 +114,7 @@ def test_handler_valid_event_get_orders_for_order_date(orders_dynamodb_stub):
                         "quantity": 1,
                     },
                 ],
+                "last_updated_at": 1734004800,
             }
         ],
     )
@@ -162,6 +164,7 @@ def test_handler_valid_event_get_orders_for_delivery_date(orders_dynamodb_stub):
                             },
                         ]
                     },
+                    "last_updated_at": {"N": "1734004800"},
                 }
             ],
         },
@@ -210,6 +213,7 @@ def test_handler_valid_event_get_orders_for_delivery_date(orders_dynamodb_stub):
                         "quantity": 1,
                     },
                 ],
+                "last_updated_at": 1734004800,
             }
         ],
     )
@@ -259,6 +263,7 @@ def test_handler_valid_event_get_orders_for_customer_full_name(orders_dynamodb_s
                             },
                         ]
                     },
+                    "last_updated_at": {"N": "1734004800"},
                 }
             ],
         },
@@ -307,6 +312,7 @@ def test_handler_valid_event_get_orders_for_customer_full_name(orders_dynamodb_s
                         "quantity": 1,
                     },
                 ],
+                "last_updated_at": 1734004800,
             }
         ],
     )

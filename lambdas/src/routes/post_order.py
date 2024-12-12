@@ -116,6 +116,7 @@ def post_order(request: Request, body: PostOrderRequest):
             # TODO: look up the cost of each dessert using dessert_id and size
             order_total=0.00,
             customer_full_name=f"{body.customer_first_name} {body.customer_last_name}",
+            last_updated_at=int(arrow.utcnow().timestamp()),
         )
 
         new_order_delivery_date = new_order.delivery_date
