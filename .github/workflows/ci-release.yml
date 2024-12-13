@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && 'main' || 'non-main' }}
+  group: ${{ github.ref == 'refs/heads/main' && 'main-branch' || 'feature-branches' }}
   cancel-in-progress: true
 
 jobs:
