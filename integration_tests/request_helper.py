@@ -15,11 +15,14 @@ class RequestHelper:
 
         return response
 
-    def post(self, path: str, body: dict = None, headers: dict = None):
+    def post(
+        self, path: str, body: dict = None, headers: dict = None, data: dict = None
+    ):
         response = requests.post(
             f"{self.url}{path}",
             headers=headers if headers else self.headers,
             json=body,
+            data=data,
         )
 
         return response

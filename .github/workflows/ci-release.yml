@@ -12,6 +12,10 @@ permissions:
   pull-requests: write
   contents: read
 
+concurrency:
+  group: ${{ github.ref == 'refs/heads/main' && 'main-branch' || 'feature-branches' }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -204,6 +208,8 @@ jobs:
         run: bash ${GITHUB_WORKSPACE}/ci/install.sh
 
       - name: Run Integration Tests
+        env:
+          DEV_USER_POOL_ID: ${{ secrets.DEV_USER_POOL_ID }}
         run: bash ${GITHUB_WORKSPACE}/ci/int_test.sh
 
   tf-prod:

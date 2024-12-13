@@ -5,6 +5,11 @@ import uuid
 
 from datetime import datetime, timezone
 from request_helper import RequestHelper
+from botocore.exceptions import ClientError
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 @pytest.fixture(scope="session")
@@ -402,3 +407,24 @@ def cleanup_prices(dynamodb_client):
         except Exception as e:
             print(f"Failed to delete price {dessert_id} - {size}: {e}")
             raise e
+
+
+@pytest.fixture(scope="function")
+def cleanup_cognito_users():
+    client = boto3.client("cognito-idp", region_name="us-east-1")
+    users_to_cleanup = []
+
+    def cleanup_user(email):
+        try:
+            client.admin_delete_user(
+                UserPoolId=os.getenv("DEV_USER_POOL_ID"),
+                Username=email,
+            )
+        except ClientError as e:
+            print(f"Failed to delete user {email}: {e}")
+            raise e
+
+    yield users_to_cleanup
+
+    for user in users_to_cleanup:
+        cleanup_user(user.get("email"))

@@ -53,3 +53,11 @@ def order_record_with_too_many_desserts():
         "delivery_date": "12-12-2024",
         "delivery_time": 1734004800,
     }
+
+
+def order_record_update():
+    return {
+        "order_status": "APPROVED",
+        "approved": True,
+        "order_total": 50.00,
+    }

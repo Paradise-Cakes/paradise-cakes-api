@@ -57,6 +57,7 @@ def test_handler_valid_event_signup(cognito_stub):
             "message": "User created",
             "UserConfirmed": True,
             "UserSub": "123456789",
+            "email": "anthony.viera@gmail.com",
             "given_name": "Anthony",
             "family_name": "Viera",
         },
@@ -91,6 +92,41 @@ def test_handler_invalid_event_signup_username_exists(cognito_stub):
 
     pytest.helpers.assert_responses_equal(
         response, 400, {"detail": "User already exists with that email"}
+    )
+
+
+def test_handler_invalid_event_signup_password_too_easy(cognito_stub):
+    cognito_stub.add_client_error(
+        "sign_up",
+        service_error_code="InvalidPasswordException",
+        expected_params={
+            "ClientId": "123456789",
+            "Username": "anthony.viera@gmail.com",
+            "Password": "password",
+            "UserAttributes": [
+                {"Name": "email", "Value": "anthony.viera@gmail.com"},
+                {"Name": "given_name", "Value": "Anthony"},
+                {"Name": "family_name", "Value": "Viera"},
+            ],
+        },
+    )
+
+    response = test_client.post(
+        "/signup",
+        data={
+            "email": "anthony.viera@gmail.com",
+            "password": "password",
+            "first_name": "Anthony",
+            "last_name": "Viera",
+        },
+    )
+
+    pytest.helpers.assert_responses_equal(
+        response,
+        400,
+        {
+            "detail": "Password must have uppercase, lowercase, number, special character, and be at least 8 characters long"
+        },
     )
 
 
