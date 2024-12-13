@@ -3,7 +3,9 @@ import os
 import boto3
 from aws_lambda_powertools import Logger
 from botocore.exceptions import ClientError
-from fastapi import APIRouter, Form, HTTPException
+from dotenv import load_dotenv
+from fastapi import APIRouter, Form
+from fastapi.exceptions import HTTPException
 
 from src.lib.response import fastapi_gateway_response
 
@@ -11,6 +13,8 @@ logger = Logger()
 router = APIRouter()
 
 cognito_client = boto3.client("cognito-idp", region_name="us-east-1")
+
+load_dotenv()
 
 
 @logger.inject_lambda_context(log_event=True)
@@ -22,6 +26,7 @@ def post_signup(
     last_name: str = Form(...),
 ):
     logger.info(f"Creating user with email {email}")
+    logger.info(os.environ.get("COGNITO_APP_CLIENT_ID"))
 
     try:
         response = cognito_client.sign_up(
@@ -49,5 +54,10 @@ def post_signup(
         if e.response["Error"]["Code"] == "UsernameExistsException":
             raise HTTPException(
                 status_code=400, detail="User already exists with that email"
+            )
+        if e.response["Error"]["Code"] == "InvalidPasswordException":
+            raise HTTPException(
+                status_code=400,
+                detail="Password must have uppercase, lowercase, number, and special character",
             )
         raise HTTPException(status_code=400, detail=str(e))
