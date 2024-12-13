@@ -58,6 +58,6 @@ def post_signup(
         if e.response["Error"]["Code"] == "InvalidPasswordException":
             raise HTTPException(
                 status_code=400,
-                detail="Password must have uppercase, lowercase, number, and special character",
+                detail="Password must have uppercase, lowercase, number, special character, and be at least 8 characters long",
             )
         raise HTTPException(status_code=400, detail=str(e))

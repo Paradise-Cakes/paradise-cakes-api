@@ -125,7 +125,7 @@ def test_handler_invalid_event_signup_password_too_easy(cognito_stub):
         response,
         400,
         {
-            "detail": "Password must have uppercase, lowercase, number, and special character"
+            "detail": "Password must have uppercase, lowercase, number, special character, and be at least 8 characters long"
         },
     )
 
