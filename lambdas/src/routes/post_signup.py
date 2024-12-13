@@ -39,6 +39,7 @@ def post_signup(
             {},
             {
                 "message": "User created",
+                "email": email,
                 "given_name": first_name,
                 "family_name": last_name,
                 **response,

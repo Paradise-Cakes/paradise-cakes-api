@@ -57,6 +57,7 @@ def test_handler_valid_event_signup(cognito_stub):
             "message": "User created",
             "UserConfirmed": True,
             "UserSub": "123456789",
+            "email": "anthony.viera@gmail.com",
             "given_name": "Anthony",
             "family_name": "Viera",
         },

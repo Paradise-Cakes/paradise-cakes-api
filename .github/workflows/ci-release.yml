@@ -204,6 +204,8 @@ jobs:
         run: bash ${GITHUB_WORKSPACE}/ci/install.sh
 
       - name: Run Integration Tests
+        env:
+          DEV_USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
         run: bash ${GITHUB_WORKSPACE}/ci/int_test.sh
 
   tf-prod:
