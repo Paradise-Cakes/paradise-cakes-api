@@ -39,5 +39,5 @@ def test_patch_v1_order_returns_200(request_helper, function_order, cleanup_orde
                 "quantity": 2,
             }
         ],
-        "last_updated_at": 1734036429,
+        "last_updated_at": response.json().get("last_updated_at"),
     }
