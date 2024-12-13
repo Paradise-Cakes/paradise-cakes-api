@@ -12,6 +12,10 @@ permissions:
   pull-requests: write
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && 'main' || 'non-main' }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
