@@ -34,6 +34,7 @@ class GetDessertResponse(Dessert):
     "/desserts/{dessert_id}",
     status_code=200,
     response_model=GetDessertResponse,
+    tags=["Desserts"],
 )
 def get_dessert(dessert_id: str):
     logger.info(f"Getting dessert with dessert_id {dessert_id}")

@@ -60,6 +60,7 @@ def generate_upload_url(dessert_id, dessert_image):
     "/desserts",
     status_code=201,
     response_model=PostDessertResponse,
+    tags=["Desserts"],
 )
 def post_dessert(request: Request, body: PostDessertRequest):
     logger.info("Creating new dessert")

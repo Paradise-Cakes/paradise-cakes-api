@@ -24,7 +24,7 @@ def get_user_info(access_token):
 
 
 @logger.inject_lambda_context(log_event=True)
-@router.post("/confirm_signup", status_code=200)
+@router.post("/confirm_signup", status_code=200, tags=["Authentication"])
 def post_confirm_signup(
     response: Response,
     email: str = Form(...),

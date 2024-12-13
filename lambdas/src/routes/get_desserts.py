@@ -27,6 +27,7 @@ desserts_table = DynamoConnection(
 @router.get(
     "/desserts",
     status_code=200,
+    tags=["Desserts"],
 )
 def get_desserts(dessert_type: str):
     logger.info(f"Getting desserts of type {dessert_type}")

@@ -28,6 +28,7 @@ class PatchOrderResponse(Order):
     "/orders/{order_id}",
     status_code=200,
     response_model=PatchOrderResponse,
+    tags=["Orders"],
 )
 def patch_order(request: Request, body: PatchOrderRequest, order_id: str):
     logger.info("Updating order")

@@ -28,6 +28,7 @@ class GetOrderResponse(Order):
     "/orders/{order_id}",
     status_code=200,
     response_model=GetOrderResponse,
+    tags=["Orders"],
 )
 def get_order(order_id: str):
     logger.info(f"Getting order with order_id {order_id}")

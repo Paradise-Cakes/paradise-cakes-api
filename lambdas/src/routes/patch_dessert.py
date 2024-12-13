@@ -38,6 +38,7 @@ class PatchDessertResponse(Dessert):
     "/desserts/{dessert_id}",
     status_code=200,
     response_model=PatchDessertResponse,
+    tags=["Desserts"],
 )
 def patch_dessert(request: Request, body: PatchDessertRequest, dessert_id: str):
     logger.info("Updating dessert")

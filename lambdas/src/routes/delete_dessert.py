@@ -36,6 +36,7 @@ class DeleteDessertResponse(Dessert):
     "/desserts/{dessert_id}",
     status_code=200,
     response_model=DeleteDessertResponse,
+    tags=["Desserts"],
 )
 def delete_dessert(request: Request, dessert_id: str):
     logger.info(f"Deleting dessert with ID: {dessert_id}")

@@ -18,7 +18,7 @@ load_dotenv()
 
 
 @logger.inject_lambda_context(log_event=True)
-@router.post("/signup", status_code=201)
+@router.post("/signup", status_code=201, tags=["Authentication"])
 def post_signup(
     email: str = Form(...),
     password: str = Form(...),

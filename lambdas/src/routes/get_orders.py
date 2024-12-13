@@ -24,6 +24,7 @@ orders_table = DynamoConnection(
 @router.get(
     "/orders",
     status_code=200,
+    tags=["Orders"],
 )
 def get_orders(
     order_date: str = None, customer_full_name: str = None, delivery_date: str = None
