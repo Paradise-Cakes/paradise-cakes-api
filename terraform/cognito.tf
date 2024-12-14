@@ -14,6 +14,14 @@ resource "aws_cognito_user_pool_client" "paradise_cakes_client" {
   allowed_oauth_flows          = ["code", "implicit"]
   allowed_oauth_scopes         = ["phone", "email", "openid", "aws.cognito.signin.user.admin", "profile"]
   supported_identity_providers = ["COGNITO"]
+
+  callback_urls = [
+    "https://megsparadisecakes.com",
+  ]
+
+  logout_urls = [
+    "https://megsparadisecakes.com",
+  ]
 }
 
 resource "aws_cognito_user_pool" "paradise_cakes_user_pool" {
