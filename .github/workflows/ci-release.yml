@@ -210,6 +210,10 @@ jobs:
       - name: Run Integration Tests
         env:
           DEV_USER_POOL_ID: ${{ secrets.DEV_USER_POOL_ID }}
+          COGNITO_APP_CLIENT_ID: ${{ secrets.COGNITO_APP_CLIENT_ID }}
+          DEV_TEST_EMAIL: ${{ secrets.DEV_TEST_EMAIL }}
+          DEV_TEST_EMAIL_PASSWORD: ${{ secrets.DEV_TEST_EMAIL_PASSWORD }}
+          DEV_EMAIL_PASSWORD: ${{ secrets.DEV_EMAIL_PASSWORD }}
         run: bash ${GITHUB_WORKSPACE}/ci/int_test.sh
 
   tf-prod:
