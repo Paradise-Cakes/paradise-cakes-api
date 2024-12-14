@@ -74,6 +74,7 @@ def post_confirm_signup(
             {"message": "User confirmed and signed in", **user_info},
         )
     except ClientError as e:
+        logger.error(str(e))
         if e.response["Error"]["Code"] == "CodeMismatchException":
             raise HTTPException(status_code=400, detail="Invalid confirmation code")
         if e.response["Error"]["Code"] == "ExpiredCodeException":

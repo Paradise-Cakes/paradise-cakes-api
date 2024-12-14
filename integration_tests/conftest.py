@@ -3,7 +3,7 @@ import pytest
 import boto3
 import uuid
 import imaplib
-import email
+import email as email_reader
 import re
 import time
 
@@ -41,30 +41,36 @@ def cognito_client():
     return boto3.client("cognito-idp", region_name="us-east-1")
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def email_client():
-    email = os.environ.get("TEST_EMAIL")
-    password = os.environ.get("TEST_EMAIL_PASSWORD")
+    email = os.environ.get("DEV_TEST_EMAIL")
+    password = os.environ.get("DEV_TEST_EMAIL_PASSWORD")
 
     mail = imaplib.IMAP4_SSL("imap.gmail.com")
     mail.login(email, password)
     mail.select("inbox")
 
-    return {"client": mail, "email": email, "password": password}
+    return {"client": mail, "email": email}
 
 
 @pytest.fixture(scope="function")
 def function_signup_and_verification_code(email_client, cognito_client):
-    user_pool_id = os.getenv("DEV_USER_POOL_ID")
     email = email_client["email"]
-    password = email_client["password"]
     mail_client = email_client["client"]
+    password = os.getenv("DEV_EMAIL_PASSWORD")
 
-    cognito_client.admin_create_user(
-        UserPoolId=user_pool_id,
+    cognito_client.sign_up(
+        ClientId=os.environ.get("COGNITO_APP_CLIENT_ID"),
         Username=email,
-        DesiredDeliveryMediums=["EMAIL"],
+        Password=password,
+        UserAttributes=[
+            {"Name": "email", "Value": email},
+            {"Name": "given_name", "Value": "John"},
+            {"Name": "family_name", "Value": "Cena"},
+        ],
     )
+    time.sleep(10)  # Wait for the email to arrive
+    mail_client.noop()  # Re-sync the mailbox
 
     subject_filter = "Your verification code"
     result, data = mail_client.search(None, f'(SUBJECT "{subject_filter}")')
@@ -73,16 +79,30 @@ def function_signup_and_verification_code(email_client, cognito_client):
         raise Exception("No emails found with the specified subject")
 
     # Get the most recent email
-    email_ids = data[0].split()
+    email_ids = sorted(data[0].split(), key=int)
     latest_email_id = email_ids[-1]
 
     # Fetch the email
     result, data = mail_client.fetch(latest_email_id, "(RFC822)")
     raw_email = data[0][1].decode("utf-8")
-    msg = email.message_from_string(raw_email)
+    msg = email_reader.message_from_string(raw_email)
+    payload = None
+
+    # Handle multipart emails
+    if msg.is_multipart():
+        for part in msg.get_payload():
+            # Check if this part is text/html
+            if part.get_content_type() == "text/html":
+                payload = part.get_payload(
+                    decode=True
+                ).decode()  # Decode bytes to string
+                break
+    else:
+        # Single-part email (assume plain text)
+        payload = msg.get_payload(decode=True).decode()
 
     # Extract the confirmation code
-    match = re.search(r"Your confirmation code is (\d+)", msg.get_payload())
+    match = re.search(r"Your confirmation code is (\d+)", payload)
     confirmation_code = match.group(1) if match else None
 
     if match:
