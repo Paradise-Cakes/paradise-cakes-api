@@ -22,7 +22,7 @@ def test_post_v1_confirm_signup_returns_200(
 
 
 def test_post_v1_confirm_signup_invalid_confirmation_code_returns_400(
-    request_helper, function_signup_and_verification_code
+    request_helper, function_signup_and_verification_code, cleanup_cognito_users
 ):
     email = function_signup_and_verification_code["email"]
     password = function_signup_and_verification_code["password"]
@@ -35,6 +35,7 @@ def test_post_v1_confirm_signup_invalid_confirmation_code_returns_400(
             "confirmation_code": "123456",
         },
     )
+    cleanup_cognito_users.append({"email": email})
 
     assert response.status_code == 400
     assert response.json().get("detail") == "Invalid confirmation code"
