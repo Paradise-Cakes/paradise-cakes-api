@@ -5,7 +5,18 @@ from tests.support import default_context
 
 
 def test_lambda_handler():
-    result = lambda_handler({}, default_context)
+    result = lambda_handler(
+        {
+            "response": {
+                "autoConfirmUser": False,
+                "autoVerifyEmail": False,
+            }
+        },
+        default_context,
+    )
     assert result == {
-        "message": "Hello from customize_emails_trigger!",
+        "response": {
+            "autoConfirmUser": True,
+            "autoVerifyEmail": True,
+        }
     }
