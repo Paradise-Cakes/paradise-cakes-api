@@ -40,7 +40,7 @@ resource "aws_lambda_function" "customize_emails_trigger" {
   architectures = ["x86_64"]
 
   image_config {
-    command = ["src.customize_emails_trigger.lambda_handler"]
+    command = ["src.customize_emails_trigger.handler"]
   }
 
   timeout     = 30
