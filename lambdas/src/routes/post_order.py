@@ -129,6 +129,7 @@ def count_orders_for_date(delivery_date):
             },
         },
     },
+    tags=["Orders"],
 )
 def post_order(request: Request, body: PostOrderRequest):
     logger.info("checking if order limit has been exceeded")

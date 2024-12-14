@@ -24,7 +24,7 @@ def get_user_info(access_token):
 
 
 @logger.inject_lambda_context(log_event=True)
-@router.post("/signin", status_code=200)
+@router.post("/signin", status_code=200, tags=["Authentication"])
 def post_signin(response: Response, email: str = Form(...), password: str = Form(...)):
     try:
         auth_response = cognito_client.initiate_auth(

@@ -8,8 +8,8 @@ def test_patch_v1_order_returns_200(request_helper, function_order, cleanup_orde
         f"/v1/orders/{order_id}",
         body=order.order_record_update(),
     )
-    response.raise_for_status()
     cleanup_orders.append({"order_id": order_id})
+    response.raise_for_status()
 
     assert response.status_code == 200
     assert response.headers.get("Content-Type") == "application/json"

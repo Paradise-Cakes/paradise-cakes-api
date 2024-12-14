@@ -21,7 +21,7 @@ def global_post_logout(access_token):
 
 
 @logger.inject_lambda_context(log_event=True)
-@router.post("/logout", status_code=200)
+@router.post("/logout", status_code=200, tags=["Authentication"])
 def post_logout(response: Response, request: Request):
     access_token = request.cookies.get("access_token")
     if access_token:

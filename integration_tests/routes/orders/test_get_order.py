@@ -4,8 +4,8 @@ def test_get_v1_orders_get_order_returns_200(
     order_id = function_order.get("order_id")
 
     response = request_helper.get(f"/v1/orders/{order_id}")
-    response.raise_for_status()
     cleanup_orders.append({"order_id": order_id})
+    response.raise_for_status()
 
     assert response.status_code == 200
     assert response.headers.get("Content-Type") == "application/json"

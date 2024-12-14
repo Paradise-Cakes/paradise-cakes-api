@@ -16,6 +16,7 @@ s3_client = boto3.client("s3")
 @router.get(
     "/display-images",
     status_code=200,
+    tags=["Display Images"],
 )
 def get_display_images():
     logger.info(f"Getting display images")

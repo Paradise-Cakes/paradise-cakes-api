@@ -4,8 +4,8 @@ def test_get_v1_orders_get_orders_by_delivery_date_returns_200(
     order_ids = [order_id for order_id in function_orders["order_ids"]]
 
     response = request_helper.get("/v1/orders?delivery_date=01-01-2022")
-    response.raise_for_status()
     cleanup_orders.extend([{"order_id": order_id} for order_id in order_ids])
+    response.raise_for_status()
 
     assert response.status_code == 200
     assert response.headers.get("Content-Type") == "application/json"
@@ -47,8 +47,8 @@ def test_get_v1_orders_get_orders_by_customer_full_name_returns_200(
     order_ids = [order_id for order_id in function_orders["order_ids"]]
 
     response = request_helper.get("/v1/orders?customer_full_name=John Cena")
-    response.raise_for_status()
     cleanup_orders.extend([{"order_id": order_id} for order_id in order_ids])
+    response.raise_for_status()
 
     assert response.status_code == 200
     assert response.headers.get("Content-Type") == "application/json"
@@ -90,8 +90,8 @@ def test_get_v1_orders_get_orders_by_order_date_returns_200(
     order_ids = [order_id for order_id in function_orders["order_ids"]]
 
     response = request_helper.get("/v1/orders?order_date=12-31-2021")
-    response.raise_for_status()
     cleanup_orders.extend([{"order_id": order_id} for order_id in order_ids])
+    response.raise_for_status()
 
     assert response.status_code == 200
     assert response.headers.get("Content-Type") == "application/json"

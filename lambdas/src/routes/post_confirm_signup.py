@@ -24,7 +24,7 @@ def get_user_info(access_token):
 
 
 @logger.inject_lambda_context(log_event=True)
-@router.post("/confirm_signup", status_code=200)
+@router.post("/confirm_signup", status_code=200, tags=["Authentication"])
 def post_confirm_signup(
     response: Response,
     email: str = Form(...),
@@ -69,7 +69,9 @@ def post_confirm_signup(
         user_info = get_user_info(access_token)
 
         return fastapi_gateway_response(
-            200, {}, {"message": "User confirmed and signed in", **user_info}
+            200,
+            response.headers,
+            {"message": "User confirmed and signed in", **user_info},
         )
     except ClientError as e:
         if e.response["Error"]["Code"] == "CodeMismatchException":

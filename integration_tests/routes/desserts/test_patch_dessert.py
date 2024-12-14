@@ -10,8 +10,8 @@ def test_patch_v1_dessert_returns_200(
         f"/v1/desserts/{dessert_id}",
         body=dessert.dessert_record_update(),
     )
-    response.raise_for_status()
     cleanup_desserts.append({"dessert_id": dessert_id})
+    response.raise_for_status()
 
     assert response.status_code == 200
     assert response.headers.get("Content-Type") == "application/json"
