@@ -27,6 +27,10 @@ resource "aws_cognito_user_pool_client" "paradise_cakes_client" {
 resource "aws_cognito_user_pool" "paradise_cakes_user_pool" {
   name = "paradise-cakes-user-pool"
 
+  lambda_config {
+    custom_message = aws_lambda_function.customize_emails_trigger.arn
+  }
+
   password_policy {
     minimum_length    = 8
     require_lowercase = true
