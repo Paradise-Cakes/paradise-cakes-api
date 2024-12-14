@@ -32,9 +32,4 @@ def post_resend_confirmation_code(email: str = Form(...)):
             raise HTTPException(
                 status_code=400, detail="Limit exceeded, please try again later"
             )
-        if e.response["Error"]["Code"] == "NotAuthorizedException":
-            raise HTTPException(
-                status_code=400,
-                detail="Invalid password",
-            )
         raise HTTPException(status_code=400, detail=str(e))

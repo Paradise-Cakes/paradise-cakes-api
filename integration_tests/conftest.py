@@ -1,17 +1,18 @@
-import os
-import pytest
-import boto3
-import uuid
-import imaplib
 import email as email_reader
+import imaplib
+import os
 import re
 import time
-
+import uuid
 from datetime import datetime, timezone
-from request_helper import RequestHelper
+
+import boto3
+import pytest
 from botocore.exceptions import ClientError
 from dotenv import load_dotenv
+from request_helper import RequestHelper
 
+from lib.auth_utils import get_user_confirmation_code_from_email
 
 load_dotenv()
 
@@ -54,6 +55,25 @@ def email_client():
 
 
 @pytest.fixture(scope="function")
+def function_signup(cognito_client):
+    email = os.environ.get("DEV_TEST_EMAIL")
+    password = os.getenv("DEV_EMAIL_PASSWORD")
+
+    cognito_client.sign_up(
+        ClientId=os.environ.get("COGNITO_APP_CLIENT_ID"),
+        Username=email,
+        Password=password,
+        UserAttributes=[
+            {"Name": "email", "Value": email},
+            {"Name": "given_name", "Value": "John"},
+            {"Name": "family_name", "Value": "Cena"},
+        ],
+    )
+
+    return {"email": email, "password": password}
+
+
+@pytest.fixture(scope="function")
 def function_signup_and_verification_code(email_client, cognito_client):
     email = email_client["email"]
     mail_client = email_client["client"]
@@ -69,50 +89,40 @@ def function_signup_and_verification_code(email_client, cognito_client):
             {"Name": "family_name", "Value": "Cena"},
         ],
     )
-    time.sleep(10)  # Wait for the email to arrive
-    mail_client.noop()  # Re-sync the mailbox
+    confirmation_code = get_user_confirmation_code_from_email(mail_client)
 
-    subject_filter = "Your verification code"
-    result, data = mail_client.search(None, f'(SUBJECT "{subject_filter}")')
+    return {
+        "email": email,
+        "password": password,
+        "confirmation_code": confirmation_code,
+    }
 
-    if result != "OK":
-        raise Exception("No emails found with the specified subject")
 
-    # Get the most recent email
-    email_ids = sorted(data[0].split(), key=int)
-    latest_email_id = email_ids[-1]
+@pytest.fixture(scope="function")
+def function_confirmed_account(email_client, cognito_client):
+    email = os.environ.get("DEV_TEST_EMAIL")
+    password = os.getenv("DEV_EMAIL_PASSWORD")
+    mail_client = email_client["client"]
 
-    # Fetch the email
-    result, data = mail_client.fetch(latest_email_id, "(RFC822)")
-    raw_email = data[0][1].decode("utf-8")
-    msg = email_reader.message_from_string(raw_email)
-    payload = None
+    cognito_client.sign_up(
+        ClientId=os.environ.get("COGNITO_APP_CLIENT_ID"),
+        Username=email,
+        Password=password,
+        UserAttributes=[
+            {"Name": "email", "Value": email},
+            {"Name": "given_name", "Value": "John"},
+            {"Name": "family_name", "Value": "Cena"},
+        ],
+    )
+    confirmation_code = get_user_confirmation_code_from_email(mail_client)
 
-    # Handle multipart emails
-    if msg.is_multipart():
-        for part in msg.get_payload():
-            # Check if this part is text/html
-            if part.get_content_type() == "text/html":
-                payload = part.get_payload(
-                    decode=True
-                ).decode()  # Decode bytes to string
-                break
-    else:
-        # Single-part email (assume plain text)
-        payload = msg.get_payload(decode=True).decode()
+    cognito_client.confirm_sign_up(
+        ClientId=os.environ.get("COGNITO_APP_CLIENT_ID"),
+        Username=email,
+        ConfirmationCode=confirmation_code,
+    )
 
-    # Extract the confirmation code
-    match = re.search(r"Your confirmation code is (\d+)", payload)
-    confirmation_code = match.group(1) if match else None
-
-    if match:
-        return {
-            "email": email,
-            "password": password,
-            "confirmation_code": confirmation_code,
-        }
-
-    raise Exception("Confirmation code not found in email")
+    return {"email": email}
 
 
 @pytest.fixture(scope="function")

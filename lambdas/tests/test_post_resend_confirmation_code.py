@@ -87,28 +87,6 @@ def test_handler_limit_exceeded(cognito_stub):
     )
 
 
-def test_handler_invalid_password(cognito_stub):
-    cognito_stub.add_client_error(
-        "resend_confirmation_code",
-        service_error_code="NotAuthorizedException",
-        expected_params={
-            "ClientId": "123456789",
-            "Username": "anthony.viera@gmail.com",
-        },
-    )
-
-    response = test_client.post(
-        "/resend_confirmation_code",
-        data={"email": "anthony.viera@gmail.com"},
-    )
-
-    pytest.helpers.assert_responses_equal(
-        response,
-        400,
-        {"detail": "Invalid password"},
-    )
-
-
 def test_handler_client_error(cognito_stub):
     cognito_stub.add_client_error(
         "resend_confirmation_code",

@@ -19,7 +19,7 @@ def post_forgot_password(email: str = Form(...)):
     logger.info(f"Sending reset password request to email {email}")
 
     try:
-        response = cognito_client.forgot_password(
+        cognito_client.forgot_password(
             ClientId=os.environ.get("COGNITO_APP_CLIENT_ID"), Username=email
         )
         return fastapi_gateway_response(

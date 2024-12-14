@@ -8,7 +8,12 @@ resource "aws_cognito_user_pool_client" "paradise_cakes_client" {
     "ALLOW_USER_SRP_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH",
     "ALLOW_USER_PASSWORD_AUTH",
+    "ALLOW_ADMIN_USER_PASSWORD_AUTH"
   ]
+
+  allowed_oauth_flows          = ["code", "implicit"]
+  allowed_oauth_scopes         = ["phone", "email", "openid", "aws.cognito.signin.user.admin", "profile"]
+  supported_identity_providers = ["COGNITO"]
 }
 
 resource "aws_cognito_user_pool" "paradise_cakes_user_pool" {
