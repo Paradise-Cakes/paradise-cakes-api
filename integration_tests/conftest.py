@@ -506,7 +506,8 @@ def cleanup_cognito_users(cognito_client):
             print(f"Failed to delete user {email}: {e}")
             raise e
 
-    yield users_to_cleanup
-
-    for user in users_to_cleanup:
-        cleanup_user(user.get("email"))
+    try:
+        yield users_to_cleanup
+    finally:
+        for user in users_to_cleanup:
+            cleanup_user(user.get("email"))
