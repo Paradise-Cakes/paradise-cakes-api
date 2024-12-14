@@ -4,8 +4,8 @@ def test_get_v1_desserts_get_dessert_returns_200(
     dessert_id = function_dessert.get("dessert_id")
 
     response = request_helper.get(f"/v1/desserts/{dessert_id}")
-    response.raise_for_status()
     cleanup_desserts.append({"dessert_id": dessert_id})
+    response.raise_for_status()
 
     assert response.status_code == 200
     assert response.headers.get("Content-Type") == "application/json"

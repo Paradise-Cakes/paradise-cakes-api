@@ -8,8 +8,8 @@ def test_post_v1_signup_returns_201(request_helper, cleanup_cognito_users):
             "last_name": "Soprano",
         },
     )
-    response.raise_for_status()
     cleanup_cognito_users.append(response.json())
+    response.raise_for_status()
 
     assert response.status_code == 201
     assert response.headers.get("Content-Type") == "application/json"

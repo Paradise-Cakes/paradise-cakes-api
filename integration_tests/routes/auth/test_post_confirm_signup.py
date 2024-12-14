@@ -13,8 +13,8 @@ def test_post_v1_confirm_signup_returns_200(
             "confirmation_code": confirmation_code,
         },
     )
-    response.raise_for_status()
     cleanup_cognito_users.append(response.json())
+    response.raise_for_status()
 
     assert response.status_code == 200
     assert response.headers.get("Content-Type") == "application/json"
