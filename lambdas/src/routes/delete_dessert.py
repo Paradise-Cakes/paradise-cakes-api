@@ -56,7 +56,9 @@ def delete_dessert(request: Request, dessert_id: str):
     # check if the dessert has any images and delete them
     if "images" in get_dessert_response["Item"]:
         for image in get_dessert_response["Item"]["images"]:
-            bucket_name = os.environ.get("DESSERT_IMAGES_BUCKET_NAME")
+            bucket_name = os.environ.get(
+                "DESSERT_IMAGES_BUCKET_NAME", "pc-dessert-images-bucket-dev"
+            )
             s3_client.delete_object(
                 Bucket=bucket_name, Key=f"{dessert_id}/{image['image_id']}"
             )

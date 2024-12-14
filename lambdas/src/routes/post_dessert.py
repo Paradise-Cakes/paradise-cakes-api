@@ -41,8 +41,7 @@ class PostDessertResponse(Dessert):
     pass
 
 
-def generate_upload_url(dessert_id, dessert_image):
-    bucket_name = os.environ.get("DESSERT_IMAGES_BUCKET_NAME")
+def generate_upload_url(dessert_id, dessert_image, bucket_name):
     upload_url = s3_client.generate_presigned_url(
         ClientMethod="put_object",
         Params={
@@ -118,13 +117,17 @@ def post_dessert(request: Request, body: PostDessertRequest):
         for price in formatted_prices:
             batch.put_item(Item=price)
 
-    dessert_images_bucket = os.environ.get("DESSERT_IMAGES_BUCKET_NAME")
+    dessert_images_bucket = os.environ.get(
+        "DESSERT_IMAGES_BUCKET_NAME", "pc-dessert-images-bucket-dev"
+    )
     for image in new_dessert.images:
         image_id = str(uuid.uuid4())
         object_url = f"https://{dessert_images_bucket}.s3.amazonaws.com/{new_dessert.dessert_id}/{image_id}"
         image.image_id = image_id
         image.url = object_url
-        image.upload_url = generate_upload_url(new_dessert.dessert_id, image)
+        image.upload_url = generate_upload_url(
+            new_dessert.dessert_id, image, dessert_images_bucket
+        )
 
     desserts_table.put_item(Item={**new_dessert.clean()})
     response = PostDessertResponse(**new_dessert.model_dump())

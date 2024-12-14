@@ -2,6 +2,10 @@ import os
 import pytest
 import boto3
 import uuid
+import imaplib
+import email
+import re
+import time
 
 from datetime import datetime, timezone
 from request_helper import RequestHelper
@@ -30,6 +34,65 @@ def request_helper(api_url):
 @pytest.fixture(scope="session")
 def dynamodb_client():
     return boto3.client("dynamodb", region_name="us-east-1")
+
+
+@pytest.fixture(scope="session")
+def cognito_client():
+    return boto3.client("cognito-idp", region_name="us-east-1")
+
+
+@pytest.fixture(scope="session")
+def email_client():
+    email = os.environ.get("TEST_EMAIL")
+    password = os.environ.get("TEST_EMAIL_PASSWORD")
+
+    mail = imaplib.IMAP4_SSL("imap.gmail.com")
+    mail.login(email, password)
+    mail.select("inbox")
+
+    return {"client": mail, "email": email, "password": password}
+
+
+@pytest.fixture(scope="function")
+def function_signup_and_verification_code(email_client, cognito_client):
+    user_pool_id = os.getenv("DEV_USER_POOL_ID")
+    email = email_client["email"]
+    password = email_client["password"]
+    mail_client = email_client["client"]
+
+    cognito_client.admin_create_user(
+        UserPoolId=user_pool_id,
+        Username=email,
+        DesiredDeliveryMediums=["EMAIL"],
+    )
+
+    subject_filter = "Your verification code"
+    result, data = mail_client.search(None, f'(SUBJECT "{subject_filter}")')
+
+    if result != "OK":
+        raise Exception("No emails found with the specified subject")
+
+    # Get the most recent email
+    email_ids = data[0].split()
+    latest_email_id = email_ids[-1]
+
+    # Fetch the email
+    result, data = mail_client.fetch(latest_email_id, "(RFC822)")
+    raw_email = data[0][1].decode("utf-8")
+    msg = email.message_from_string(raw_email)
+
+    # Extract the confirmation code
+    match = re.search(r"Your confirmation code is (\d+)", msg.get_payload())
+    confirmation_code = match.group(1) if match else None
+
+    if match:
+        return {
+            "email": email,
+            "password": password,
+            "confirmation_code": confirmation_code,
+        }
+
+    raise Exception("Confirmation code not found in email")
 
 
 @pytest.fixture(scope="function")
@@ -410,13 +473,12 @@ def cleanup_prices(dynamodb_client):
 
 
 @pytest.fixture(scope="function")
-def cleanup_cognito_users():
-    client = boto3.client("cognito-idp", region_name="us-east-1")
+def cleanup_cognito_users(cognito_client):
     users_to_cleanup = []
 
     def cleanup_user(email):
         try:
-            client.admin_delete_user(
+            cognito_client.admin_delete_user(
                 UserPoolId=os.getenv("DEV_USER_POOL_ID"),
                 Username=email,
             )

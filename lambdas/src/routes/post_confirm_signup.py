@@ -69,7 +69,9 @@ def post_confirm_signup(
         user_info = get_user_info(access_token)
 
         return fastapi_gateway_response(
-            200, {}, {"message": "User confirmed and signed in", **user_info}
+            200,
+            response.headers,
+            {"message": "User confirmed and signed in", **user_info},
         )
     except ClientError as e:
         if e.response["Error"]["Code"] == "CodeMismatchException":
