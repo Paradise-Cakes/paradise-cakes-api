@@ -1,10 +1,7 @@
-def test_get_v1_orders_get_order_returns_200(
-    request_helper, function_order, cleanup_orders
-):
-    order_id = function_order.get("order_id")
+def test_get_v1_orders_get_order_returns_200(request_helper, function_order):
+    order_id = function_order().get("order_id")
 
     response = request_helper.get(f"/v1/orders/{order_id}")
-    cleanup_orders.append({"order_id": order_id})
     response.raise_for_status()
 
     assert response.status_code == 200

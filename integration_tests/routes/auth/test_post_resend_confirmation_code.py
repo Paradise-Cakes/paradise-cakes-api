@@ -1,6 +1,4 @@
-def test_post_v1_resend_confirmation_code_returns_200(
-    request_helper, function_signup, cleanup_cognito_users
-):
+def test_post_v1_resend_confirmation_code_returns_200(request_helper, function_signup):
     email = function_signup["email"]
 
     response = request_helper.post(
@@ -9,7 +7,6 @@ def test_post_v1_resend_confirmation_code_returns_200(
             "email": email,
         },
     )
-    cleanup_cognito_users.append({"email": email})
     response.raise_for_status()
 
     assert response.status_code == 200

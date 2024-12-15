@@ -3,11 +3,10 @@ import re
 import time
 
 
-def get_user_confirmation_code_from_email(mail_client):
+def get_user_confirmation_code_from_email(mail_client, subject_filter, code_text):
     time.sleep(10)  # Wait for the email to arrive
     mail_client.noop()  # Re-sync the mailbox
 
-    subject_filter = "Your verification code"
     result, data = mail_client.search(None, f'(SUBJECT "{subject_filter}")')
 
     if result != "OK":
@@ -37,7 +36,7 @@ def get_user_confirmation_code_from_email(mail_client):
         payload = msg.get_payload(decode=True).decode()
 
     # Extract the confirmation code
-    match = re.search(r"Your confirmation code is (\d+)", payload)
+    match = re.search(rf"{code_text} <b>(\d+)</b>", payload)
     confirmation_code = match.group(1) if match else None
 
     return confirmation_code

@@ -26,7 +26,6 @@ def post_signup(
     last_name: str = Form(...),
 ):
     logger.info(f"Creating user with email {email}")
-    logger.info(os.environ.get("COGNITO_APP_CLIENT_ID"))
 
     try:
         response = cognito_client.sign_up(
@@ -51,6 +50,7 @@ def post_signup(
             },
         )
     except ClientError as e:
+        logger.error(str(e))
         if e.response["Error"]["Code"] == "UsernameExistsException":
             raise HTTPException(
                 status_code=400, detail="User already exists with that email"
