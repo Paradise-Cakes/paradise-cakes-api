@@ -164,6 +164,7 @@ jobs:
             --backend-config="key=paradise-cakes-dev-api.tfstate"
 
       - name: TEMPORARY STEP DELETE AFTER
+        run: |
           cd ${GITHUB_WORKSPACE}/terraform
           terraform import aws_cloudwatch_log_group.app /aws/lambda/paradise-cakes-api-us-east-1
           terraform import aws_cloudwatch_log_group.customize_emails_trigger /aws/lambda/customize-emails-trigger
@@ -265,6 +266,7 @@ jobs:
             --backend-config="key=paradise-cakes-api.tfstate"
 
       - name: TEMPORARY STEP DELETE AFTER
+        run: |
           cd ${GITHUB_WORKSPACE}/terraform
           terraform import aws_cloudwatch_log_group.app /aws/lambda/paradise-cakes-api-us-east-1
 
