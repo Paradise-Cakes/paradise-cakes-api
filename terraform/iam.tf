@@ -1,5 +1,5 @@
-resource "aws_iam_role" "lambda_execution_role" {
-  name = "lambda-execution-role"
+resource "aws_iam_role" "pc_api_role" {
+  name = "pc-api-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -79,7 +79,7 @@ resource "aws_iam_policy" "paradise_cakes_api_policy" {
 
 resource "aws_iam_role_policy_attachment" "api_gateway_attachment" {
   policy_arn = aws_iam_policy.paradise_cakes_api_policy.arn
-  role       = aws_iam_role.lambda_execution_role.name
+  role       = aws_iam_role.pc_api_role.name
 }
 
 data "aws_iam_policy_document" "user_assume_role_policy" {

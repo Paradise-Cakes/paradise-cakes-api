@@ -1,14 +1,13 @@
 from lib import order
 
 
-def test_patch_v1_order_returns_200(request_helper, function_order, cleanup_orders):
-    order_id = function_order.get("order_id")
+def test_patch_v1_order_returns_200(request_helper, function_order):
+    order_id = function_order().get("order_id")
 
     response = request_helper.patch(
         f"/v1/orders/{order_id}",
         body=order.order_record_update(),
     )
-    cleanup_orders.append({"order_id": order_id})
     response.raise_for_status()
 
     assert response.status_code == 200

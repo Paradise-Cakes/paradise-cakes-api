@@ -1,16 +1,13 @@
 from lib import dessert
 
 
-def test_patch_v1_dessert_returns_200(
-    request_helper, function_dessert, cleanup_desserts
-):
+def test_patch_v1_dessert_returns_200(request_helper, function_dessert):
     dessert_id = function_dessert.get("dessert_id")
 
     response = request_helper.patch(
         f"/v1/desserts/{dessert_id}",
         body=dessert.dessert_record_update(),
     )
-    cleanup_desserts.append({"dessert_id": dessert_id})
     response.raise_for_status()
 
     assert response.status_code == 200

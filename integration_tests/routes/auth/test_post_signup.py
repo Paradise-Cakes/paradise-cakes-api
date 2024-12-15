@@ -8,7 +8,7 @@ def test_post_v1_signup_returns_201(request_helper, cleanup_cognito_users):
             "last_name": "Soprano",
         },
     )
-    cleanup_cognito_users.append(response.json())
+    cleanup_cognito_users.append(response.json().get("email"))
     response.raise_for_status()
 
     assert response.status_code == 201
@@ -17,37 +17,23 @@ def test_post_v1_signup_returns_201(request_helper, cleanup_cognito_users):
     assert response.json().get("UserConfirmed") == False
 
 
-def test_post_v1_signup_username_exists_returns_400(
-    request_helper, cleanup_cognito_users
-):
-    response_1 = request_helper.post(
+def test_post_v1_signup_username_exists_returns_400(request_helper, function_signup):
+    email = function_signup["email"]
+    response = request_helper.post(
         "/v1/signup",
         data={
-            "email": "anthony.soprano@gmail.com",
+            "email": email,
             "password": "Password123$",
             "first_name": "Anthony",
             "last_name": "Soprano",
         },
     )
-    response_1.raise_for_status()
-    cleanup_cognito_users.append(response_1.json())
 
-    response_2 = request_helper.post(
-        "/v1/signup",
-        data={
-            "email": "anthony.soprano@gmail.com",
-            "password": "Password123$",
-            "first_name": "Anthony",
-            "last_name": "Soprano",
-        },
-    )
-    assert response_2.status_code == 400
-    assert response_2.json().get("detail") == "User already exists with that email"
+    assert response.status_code == 400
+    assert response.json().get("detail") == "User already exists with that email"
 
 
-def test_post_v1_signup_invalid_password_returns_400(
-    request_helper, cleanup_cognito_users
-):
+def test_post_v1_signup_invalid_password_returns_400(request_helper):
     response = request_helper.post(
         "/v1/signup",
         data={
@@ -57,6 +43,7 @@ def test_post_v1_signup_invalid_password_returns_400(
             "last_name": "Soprano",
         },
     )
+
     assert response.status_code == 400
     assert (
         response.json().get("detail")
