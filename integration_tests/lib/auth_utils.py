@@ -18,6 +18,8 @@ def get_user_confirmation_code_from_email(mail_client, subject_filter, code_text
 
     # Fetch the email
     result, data = mail_client.fetch(latest_email_id, "(RFC822)")
+    print(data)
+    print(data[0][1])
     raw_email = data[0][1].decode("utf-8")
     msg = email_reader.message_from_string(raw_email)
     payload = None
