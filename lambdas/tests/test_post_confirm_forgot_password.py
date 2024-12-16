@@ -28,7 +28,7 @@ def test_handler_valid_event_confirm_forgot_password(cognito_stub):
             "ClientId": "123456789",
             "Username": "anthony.soprano@gmail.com",
             "ConfirmationCode": "123",
-            "Password": "3r@fv3sagv#",
+            "Password": "3r@Fv3sagv#",
         },
     )
 
@@ -37,7 +37,7 @@ def test_handler_valid_event_confirm_forgot_password(cognito_stub):
         data={
             "email": "anthony.soprano@gmail.com",
             "code": "123",
-            "password": "3r@fv3sagv#",
+            "password": "3r@Fv3sagv#",
         },
     )
 

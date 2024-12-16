@@ -9,7 +9,7 @@ def test_post_v1_confirm_forgot_password_returns_200(
         data={
             "email": email,
             "code": reset_code,
-            "password": "3r@fv3sagv#",
+            "password": "3r@Fv3sagv#",
         },
     )
     print(response.text)
