@@ -12,6 +12,7 @@ def test_post_v1_confirm_forgot_password_returns_200(
             "password": "3r@fv3sagv#",
         },
     )
+    print(response.text)
 
     assert response.status_code == 200
     assert response.headers.get("Content-Type") == "application/json"

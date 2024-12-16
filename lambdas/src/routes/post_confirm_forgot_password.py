@@ -31,4 +31,5 @@ def post_confirm_forgot_password(
             200, {}, {"message": f"Password reset for {email} successful"}
         )
     except ClientError as e:
+        logger.error(str(e))
         raise HTTPException(status_code=400, detail=str(e))
