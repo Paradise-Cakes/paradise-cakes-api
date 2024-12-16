@@ -12,6 +12,7 @@ from src.routes import (
     get_orders,
     patch_dessert,
     patch_order,
+    post_confirm_forgot_password,
     post_confirm_signup,
     post_dessert,
     post_forgot_password,
@@ -63,6 +64,7 @@ app.include_router(post_dessert.router)
 app.include_router(patch_dessert.router)
 app.include_router(delete_dessert.router)
 app.include_router(get_display_images.router)
+app.include_router(post_confirm_forgot_password.router)
 
 
 def lambda_handler(event, context):

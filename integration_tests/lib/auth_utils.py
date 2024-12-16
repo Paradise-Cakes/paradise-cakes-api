@@ -1,6 +1,18 @@
-import email as email_reader
 import re
 import time
+
+
+def fetch_email(mail_client, email_id):
+    result, data = mail_client.fetch(email_id, "(RFC822)")
+
+    if result != "OK":
+        raise Exception("Failed to fetch email")
+
+    for item in data:
+        if isinstance(item, tuple) and isinstance(item[1], bytes):
+            return item[1].decode("utf-8")
+
+    raise Exception("Failed to fetch email")
 
 
 def get_user_confirmation_code_from_email(mail_client, subject_filter, code_text):
@@ -17,26 +29,10 @@ def get_user_confirmation_code_from_email(mail_client, subject_filter, code_text
     latest_email_id = email_ids[-1]
 
     # Fetch the email
-    result, data = mail_client.fetch(latest_email_id, "(RFC822)")
-    raw_email = data[0][1].decode("utf-8")
-    msg = email_reader.message_from_string(raw_email)
-    payload = None
-
-    # Handle multipart emails
-    if msg.is_multipart():
-        for part in msg.get_payload():
-            # Check if this part is text/html
-            if part.get_content_type() == "text/html":
-                payload = part.get_payload(
-                    decode=True
-                ).decode()  # Decode bytes to string
-                break
-    else:
-        # Single-part email (assume plain text)
-        payload = msg.get_payload(decode=True).decode()
+    email_msg = fetch_email(mail_client, latest_email_id)
 
     # Extract the confirmation code
-    match = re.search(rf"{code_text} <b>(\d+)</b>", payload)
+    match = re.search(rf"{code_text} <b>(\d+)</b>", email_msg)
     confirmation_code = match.group(1) if match else None
 
     return confirmation_code

@@ -75,24 +75,11 @@ def function_signup(cognito_client, cleanup_cognito_users):
 
 
 @pytest.fixture(scope="function")
-def function_signup_and_verification_code(
-    email_client, cognito_client, cleanup_cognito_users
-):
-    email = email_client["email"]
+def function_signup_and_verification_code(email_client, function_signup):
     mail_client = email_client["client"]
-    password = os.getenv("DEV_EMAIL_PASSWORD")
+    email = function_signup["email"]
+    password = function_signup["password"]
 
-    cognito_client.sign_up(
-        ClientId=os.environ.get("COGNITO_APP_CLIENT_ID"),
-        Username=email,
-        Password=password,
-        UserAttributes=[
-            {"Name": "email", "Value": email},
-            {"Name": "given_name", "Value": "John"},
-            {"Name": "family_name", "Value": "Cena"},
-        ],
-    )
-    cleanup_cognito_users.append(email)
     confirmation_code = get_user_confirmation_code_from_email(
         mail_client, "Welcome to Paradise Cakes!", "Your verification code is:"
     )
@@ -105,33 +92,38 @@ def function_signup_and_verification_code(
 
 
 @pytest.fixture(scope="function")
-def function_confirmed_account(email_client, cognito_client, cleanup_cognito_users):
-    email = os.environ.get("DEV_TEST_EMAIL")
-    password = os.getenv("DEV_EMAIL_PASSWORD")
-    mail_client = email_client["client"]
-
-    cognito_client.sign_up(
-        ClientId=os.environ.get("COGNITO_APP_CLIENT_ID"),
-        Username=email,
-        Password=password,
-        UserAttributes=[
-            {"Name": "email", "Value": email},
-            {"Name": "given_name", "Value": "John"},
-            {"Name": "family_name", "Value": "Cena"},
-        ],
-    )
-    confirmation_code = get_user_confirmation_code_from_email(
-        mail_client, "Welcome to Paradise Cakes!", "Your verification code is:"
-    )
+def function_confirmed_account(
+    cognito_client,
+    function_signup_and_verification_code,
+):
+    email = function_signup_and_verification_code["email"]
+    confirmation_code = function_signup_and_verification_code["confirmation_code"]
 
     cognito_client.confirm_sign_up(
         ClientId=os.environ.get("COGNITO_APP_CLIENT_ID"),
         Username=email,
         ConfirmationCode=confirmation_code,
     )
-    cleanup_cognito_users.append(email)
 
     return {"email": email}
+
+
+@pytest.fixture(scope="function")
+def function_forgot_password_code(
+    email_client, cognito_client, function_confirmed_account
+):
+    mail_client = email_client["client"]
+    email = function_confirmed_account["email"]
+
+    cognito_client.forgot_password(
+        ClientId=os.environ.get("COGNITO_APP_CLIENT_ID"), Username=email
+    )
+
+    reset_code = get_user_confirmation_code_from_email(
+        mail_client, "Reset Your Password", "Your reset code is:"
+    )
+
+    return {"email": email, "reset_code": reset_code}
 
 
 @pytest.fixture(scope="function")
