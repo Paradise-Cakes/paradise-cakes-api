@@ -12,6 +12,7 @@ from src.routes import (
     get_orders,
     patch_dessert,
     patch_order,
+    post_confirm_forgot_password,
     post_confirm_signup,
     post_dessert,
     post_forgot_password,
@@ -20,7 +21,6 @@ from src.routes import (
     post_resend_confirmation_code,
     post_signin,
     post_signup,
-    post_confirm_forgot_password,
 )
 
 app = FastAPI(title="Paradise Cakes API", version="1.0.0", root_path="/v1")
