@@ -61,3 +61,24 @@ resource "aws_lambda_permission" "allow_cognito_invocation" {
   source_arn    = aws_cognito_user_pool.paradise_cakes_user_pool.arn
 }
 
+resource "aws_lambda_function" "paradise_cakes_api_lambda_authorizer" {
+  image_uri     = local.lambda_image
+  package_type  = "Image"
+  function_name = "paradise-cakes-api-lambda-authorizer"
+  role          = aws_iam_role.pc_api_role.arn
+
+  image_config {
+    command = ["src.api_authorizer.handler.lambda_handler"]
+  }
+
+  timeout     = 30
+  memory_size = 256
+
+  environment {
+    variables = {
+      COGNITO_USER_POOL_ID = aws_cognito_user_pool.paradise_cakes_user_pool.id
+    }
+  }
+}
+
+
