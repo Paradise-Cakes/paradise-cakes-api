@@ -6,7 +6,7 @@ logger = Logger()
 @logger.inject_lambda_context(log_event=True)
 def lambda_handler(event, context):
     logger.info(event)
-    
+
     # Extract the token from the Authorization header
     token = event.get("authorizationToken", "")
 
