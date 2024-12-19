@@ -100,14 +100,20 @@ resource "aws_cognito_identity_pool" "orders_identity_pool" {
 }
 
 resource "aws_cognito_user_group" "paradise_cakes_admin_group" {
-  name         = "paradise-cakes-admin-group"
+  name         = "admins"
   description  = "paradise cakes admin group"
   user_pool_id = aws_cognito_user_pool.paradise_cakes_user_pool.id
 }
 
 resource "aws_cognito_user_group" "paradise_cakes_user_group" {
-  name         = "paradise-cakes-user-group"
+  name         = "users"
   description  = "paradise cakes user group"
+  user_pool_id = aws_cognito_user_pool.paradise_cakes_user_pool.id
+}
+
+resource "aws_cognito_user_group" "paradise_cakes_guest_group" {
+  name         = "guests"
+  description  = "paradise cakes guest group"
   user_pool_id = aws_cognito_user_pool.paradise_cakes_user_pool.id
 }
 
