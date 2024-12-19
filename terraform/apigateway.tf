@@ -1,5 +1,5 @@
 module "api_gateway" {
-  source = "git@github.com:Paradise-Cakes/pc-terraform-modules.git//apiGateway?ref=v1.6.0"
+  source = "git@github.com:Paradise-Cakes/pc-terraform-modules.git//apiGateway?ref=v1.7.0"
 
   app_arn                 = aws_lambda_function.app.arn
   api_gateway_name        = "paradise-cakes-api-gateway"
